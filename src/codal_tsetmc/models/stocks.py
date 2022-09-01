@@ -1,6 +1,3 @@
-from dataclasses import replace
-from termios import PARODD
-from tokenize import Name
 from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
 import pandas as pd
@@ -32,7 +29,7 @@ class Stocks(Base):
 
     id = Column(Integer, primary_key=True)
     symbol = Column(String)
-    name = Column(String)
+    title = Column(String)
     group_name = Column(String)
     group_code = Column(Integer)
     instId = Column(String)
@@ -343,7 +340,7 @@ class Stocks(Base):
         return dict(zip(keys, main_response))
 
     def __repr__(self):
-        return f"{self.name}-{self.symbol}-{self.group_name}"
+        return f"{self.title}-{self.symbol}-{self.group_name}"
 
     def __str__(self):
         return self.symbol

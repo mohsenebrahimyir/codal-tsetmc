@@ -71,7 +71,7 @@ def get_stock_detail(stock_id: str) -> Stocks:
     except:
         return
     try:
-        stock["name"] = re.findall(r"Title='([\D]*)',", r.text)[0]
+        stock["title"] = re.findall(r"Title='([\D]*)',", r.text)[0]
     except:
         return
     try:
@@ -145,6 +145,6 @@ def fill_stock_table():
 
     print("Add all groups, you can download stock price by following codes")
     print("from codal_tsetmc import downloader")
-    print(" downloader.download_all() # for downloading all data")
+    print("downloader.download_all() # for downloading all data")
     print("downloader.download_group(group_id) # to download specefic group data")
     print("downloader.download_stock(stock) to downloand stock specefic")

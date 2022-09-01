@@ -6,7 +6,7 @@ from .exception import BadValueInput
 from .string_edit import *
 from .company import get_dict_from_xml_api
 from codal_tsetmc.models import (
-    CompanyStatus, CompanyTypes, Companies, 
+    CompanyStatuses, CompanyTypes, Companies, 
     ReportTypes, LetterTypes, Auditors
 )
 
@@ -128,7 +128,7 @@ class CodalQuery:
     ## تنظیم وضعیت ناشز
     def set_publisher_status(self, name: str = None) -> None:
         BadValueInput(name).string_type()
-        code = CompanyStatus.query.filter_by(name=name).first().code
+        code = CompanyStatuses.query.filter_by(name=name).first().code
         self.params['PublisherStatus'] = code if bool(code) else -1
 
     ## تنظیم گروع اطلاعیه

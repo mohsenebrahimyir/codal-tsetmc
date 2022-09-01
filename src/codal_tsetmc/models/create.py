@@ -10,7 +10,7 @@ from .stocks import (
 from .companies import (
     Companies,
     CompanyTypes,
-    CompanyStatus,
+    CompanyStatuses,
     ReportTypes,
     LetterTypes,
     Auditors,
@@ -26,7 +26,7 @@ def create():
     StockAdjusted.__table__.create(db.engine)
     Companies.__table__.create(db.engine)
     CompanyTypes.__table__.create(db.engine)
-    CompanyStatus.__table__.create(db.engine)
+    CompanyStatuses.__table__.create(db.engine)
     ReportTypes.__table__.create(db.engine)
     LetterTypes.__table__.create(db.engine)
     Auditors.__table__.create(db.engine)
