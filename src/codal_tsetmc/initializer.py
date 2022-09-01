@@ -21,13 +21,13 @@ def init_db():
 
 
 def fill_db():
-    print("downloading company and stock details from COSAL and TSETMC")
+    print("downloading company and stock details from CODAL and TSETMC")
     print("may take few minutes")
 
     fill_stock_table()
     print("Stock table is available now, example:")
     print("from codal_tsetmc import Stocks")
-    print('stock = Stocks.query.filter_by(symbol="کگل").first()')
+    print('stock = Stocks.query.filter_by(name="کگل").first()')
 
 
     a = input("Do you want to download all price? [y,(n)]")

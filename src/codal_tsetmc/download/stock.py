@@ -7,7 +7,7 @@ from codal_tsetmc.models import Stocks
 
 
 def get_stock_ids():
-    url = "http://tsetmc.com/tsev2/data/MarketWatchPlus.aspx"
+    url = "http://tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"
     r = requests.get(url)
     ids = set(re.findall(r"\d{15,20}", r.text))
     return list(ids)
@@ -63,7 +63,7 @@ def get_stock_detail(stock_id: str) -> Stocks:
     )
     stock["baseVol"] = float(re.findall(r"BaseVol=([\.\d]*),", r.text)[0])
     try:
-        stock["symbol"] = re.findall(r"LVal18AFC='([\D]*)',", r.text)[0]
+        stock["name"] = re.findall(r"LVal18AFC='([\D]*)',", r.text)[0]
     except:
         return
     try:
@@ -90,7 +90,7 @@ def get_stock_detail(stock_id: str) -> Stocks:
     except:
         stock["estimatedEps"] = None
     stock["group_code"] = re.findall(r"CSecVal='([\w\d]*)|$',", r.text)[0]
-    if stock["symbol"] == "',DEven='',LSecVal='',CgrValCot='',Flow='',InstrumentID='":
+    if stock["name"] == "',DEven='',LSecVal='',CgrValCot='',Flow='',InstrumentID='":
         return False
 
     create_or_update_stock_from_dict(stock_id, stock)

@@ -10,12 +10,13 @@ import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 
 
-def get_stock_dividend_history(stock_id: int) -> pd.DataFrame:
+def get_stock_dividend_history(code: str) -> pd.DataFrame:
     """Get stock dividend from the web.
 
     params:
     ----------------
-    symbol: str
+    code: str
+        code -> symbol
         http://www.tsetmc.com/tsev2/data/DPSData.aspx?s=فولاد
         string after s=
 
@@ -27,9 +28,9 @@ def get_stock_dividend_history(stock_id: int) -> pd.DataFrame:
 
     example
     ----------------
-    df = get_stock_dividend_history(فولاد)
+    df = get_stock_dividend_history('44891482026867833')
     """
-    symbol = Stocks.query.filter_by(insCode=stock_id).first().name
+    symbol = Stocks.query.filter_by(code=code).first().symbol
     url = f"http://www.tsetmc.com/tsev2/data/DPSData.aspx?s={symbol}"
     r = requests.get(url).content.decode("utf-8").replace(";", "\n").replace("@", ",")
     df = (
@@ -75,7 +76,7 @@ async def update_stock_dividend(code: str):
         try:
             # need to updata new dividend data
             if last_date is None or str(last_date) < now:
-                symbol = Stocks.query.filter_by(insCode=code).first().name
+                symbol = Stocks.query.filter_by(code=code).first().symbol
                 url = f"http://www.tsetmc.com/tsev2/data/DPSData.aspx?s={symbol}"
             else:  # The dividend data for this code is updateed
                 return

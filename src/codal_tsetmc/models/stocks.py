@@ -28,7 +28,7 @@ class Stocks(Base):
     __tablename__ = "stocks"
 
     id = Column(Integer, primary_key=True)
-    symbol = Column(String)
+    name = Column(String)
     title = Column(String)
     group_name = Column(String)
     group_code = Column(Integer)
@@ -59,6 +59,7 @@ class Stocks(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.symbol = self.name
 
     @property
     def df(self) -> pd.DataFrame:
@@ -340,10 +341,10 @@ class Stocks(Base):
         return dict(zip(keys, main_response))
 
     def __repr__(self):
-        return f"{self.title}-{self.symbol}-{self.group_name}"
+        return f"{self.title}-{self.name}-{self.group_name}"
 
     def __str__(self):
-        return self.symbol
+        return self.name
 
     @staticmethod
     def get_group():
@@ -374,7 +375,7 @@ class StockPrice(Base):
     last = Column(Float)
 
     def __repr__(self):
-        return f"{self.stock.symbol}, {self.date}, {self.close:.0f}"
+        return f"{self.stock.name}, {self.date}, {self.close:.0f}"
 
 
 class StockClient(Base):
@@ -400,7 +401,7 @@ class StockClient(Base):
         return self.legal_sell_volume - self.legal_buy_volume
 
     def __repr__(self):
-        return f"{self.stock.symbol}, {self.date}, {self.change_of_ownership()}"
+        return f"{self.stock.name}, {self.date}, {self.change_of_ownership()}"
 
 
 class StockDividend(Base):
@@ -412,7 +413,7 @@ class StockDividend(Base):
     dividend = Column(Float)
 
     def __repr__(self):
-        return f"{self.stock.symbol}, {self.date}, {self.dividend}"
+        return f"{self.stock.name}, {self.date}, {self.dividend}"
 
 
 class StockCapital(Base):
@@ -425,7 +426,7 @@ class StockCapital(Base):
     new_capital = Column(BIGINT)
 
     def __repr__(self):
-        return f"{self.stock.symbol}, {self.date}, {self.new_capital/self.old_capital*100:.2f}"
+        return f"{self.stock.name}, {self.date}, {self.new_capital/self.old_capital*100:.2f}"
 
 
 class StockAdjusted(Base):
@@ -438,9 +439,9 @@ class StockAdjusted(Base):
     new_price = Column(Float)
 
     def __repr__(self):
-        return f"{self.stock.symbol}, {self.date}, {self.new_price/self.old_price*100:.2f}"
+        return f"{self.stock.name}, {self.date}, {self.new_price/self.old_price*100:.2f}"
 
 
-def get_asset(symbol):
-    symbol = symbol.replace("ی", "ي").replace("ک", "ك")
-    return Stocks.query.filter_by(symbol=symbol).first()
+def get_asset(name):
+    name = name.replace("ی", "ي").replace("ک", "ك")
+    return Stocks.query.filter_by(name=name).first()
