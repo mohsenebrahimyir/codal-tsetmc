@@ -98,7 +98,7 @@ def get_stock_detail(stock_id: str) -> Stocks:
     try:
         db.session.commit()
     except:
-        print(f"stock with code {stock_id} exist")
+        print(f"stock {stock_id} exist", end="\r", flush=True)
         db.session.rollback()
     return stock
 
@@ -139,12 +139,6 @@ def fill_stock_table():
     for i, stock in enumerate(stocks):
         get_stock_detail(stock)
         print(
-            f"downloading stocks details, changes: {(i+1)/len(stocks)*100:.1f}% completed",
-            end="\r",
+            f"{(i+1)/len(stocks)*100:.1f}% completed",
+            end="\r", flush=True
         )
-
-    print("Add all groups, you can download stock price by following codes")
-    print("from codal_tsetmc import downloader")
-    print("downloader.download_all() # for downloading all data")
-    print("downloader.download_group(group_id) # to download specefic group data")
-    print("downloader.download_stock(stock) to downloand stock specefic")

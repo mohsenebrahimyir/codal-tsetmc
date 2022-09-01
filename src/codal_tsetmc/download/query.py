@@ -2,6 +2,8 @@ import pandas as pd
 import urllib.parse as urlparse
 from urllib.parse import urlencode
 
+import codal_tsetmc.config as db
+
 from .exception import BadValueInput
 from .string_edit import *
 from .company import get_dict_from_xml_api
@@ -234,6 +236,108 @@ class CodalQuery:
     def set_publisher(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Publisher"] = str(status).lower()
+
+
+
+class Categories:
+    #TODO: ...
+    """_summary_
+    """
+
+    def __init__(self) -> None:
+        self.url = 'https://search.codal.ir/api/search/v1/'
+
+    def get_data(self):
+        #TODO: ...
+        """_summary_
+        Returns:
+            _type_: _description_
+        """
+
+        api = get_dict_from_xml_api(self.url + "categories")
+        report_types = []
+        company_types = []
+        letter_types = []
+        categories = []
+
+        for item in api:
+            publisher_types_items = item.pop("PublisherTypes")
+            if item["Code"] != -1:
+                for publisher_type in publisher_types_items:
+                    letter_types_items = publisher_type.pop("LetterTypes")
+                    for letter_type in letter_types_items:
+                        if letter_type not in letter_types:
+                            letter_types += [{
+                                "code": letter_type["Id"],
+                                "name": letter_type["Name"]
+                            }]
+                        categories += [{
+                            "report_types_code": item["Code"],
+                            "company_types_code": publisher_type["Code"],
+                            "letter_type_code": letter_type["Id"],
+                        }]
+            else:
+                for publisher_type in publisher_types_items:
+                    company_types += [{
+                        "code": publisher_type["Code"],
+                        "name": publisher_type["Name"]
+                    }]
+
+            report_types += [{"code": item["Code"], "name": item["Name"]}]
+
+        self.report_types = pd.DataFrame(report_types) \
+            .sort_values("code").reset_index(drop=True)
+        self.company_types = pd.DataFrame(company_types) \
+            .sort_values("code").reset_index(drop=True)
+        self.letter_types = pd.DataFrame(letter_types) \
+            .drop_duplicates().sort_values("code").reset_index(drop=True)
+        self.categories = pd.DataFrame(categories) \
+            .drop_duplicates().reset_index(drop=True)
+        self.company_statuses = pd.DataFrame({
+            {"code": -1, "name": 'همه موارد'},
+            {"code": 0, "name": 'پذیرفته شده در بورس تهران'},
+            {"code": 1, "name": 'پذیرفته شده در فرابورس ایران'},
+            {"code": 2, "name": 'ثبت شده پذیرفته نشده'},
+            {"code": 3, "name": 'ثبت نشده نزد سازمان'},
+            {"code": 4, "name": 'پذیرفته شده در بورس کالای ایران'},
+            {"code": 5, "name": 'پذیرفته شده دربورس انرژی ایران'},
+        }).sort_values("code").reset_index(drop=True)
+
+        api = get_dict_from_xml_api(self.url + "financialYears")
+        self.financial_years = pd.DataFrame(api)
+        self.financial_years.columns = ["date"]
+
+        api = get_dict_from_xml_api(self.url + "auditors")
+        self.auditors = pd.DataFrame(api)
+        self.auditors.columns = ["name", "code"]
+        self.auditors.sort_values("code").reset_index(drop=True, inplace=True)
+
+    def fill_categories_table(self):
+        self.get_data()
+        self.company_statuses.to_sql(
+            "company_statuses", db.engine,
+            if_exists="overwrite", index=False
+        )
+        self.report_types.to_sql(
+            "report_types", db.engine,
+            if_exists="overwrite", index=False
+        )
+        self.company_types.to_sql(
+            "company_types", db.engine,
+            if_exists="overwrite", index=False
+        )
+        self.letter_types.to_sql(
+            "letter_types", db.engine,
+            if_exists="overwrite", index=False
+        )
+        self.financial_years.to_sql(
+            "financial_years", db.engine,
+            if_exists="overwrite", index=False
+        )
+        self.auditors.to_sql(
+            "auditors", db.engine,
+            if_exists="overwrite", index=False
+        )
 
 
 if __name__ == '__main__':

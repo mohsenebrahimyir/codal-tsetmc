@@ -1,17 +1,8 @@
-from .query import CodalQuery
+from .query import Categories, CodalQuery
 from .company import (
     get_dict_from_xml_api,
-    Categories,
-    fill_company_status,
-    fill_company_types,
-    fill_report_types,
-    fill_letter_types,
     get_companies,
-    fill_companies_table,
-    get_auditors,
-    fill_auditors_table,
-    get_financial_years,
-    fill_financial_years,
+    fill_companies_table
 )
 from .stock import (
     fill_stock_table, get_stock_detail, get_stock_groups, get_stock_ids

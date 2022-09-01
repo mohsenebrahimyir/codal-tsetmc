@@ -1,7 +1,11 @@
 import os
 
-from codal_tsetmc import db, models, get_all_price
-from codal_tsetmc.download import fill_stock_table
+from codal_tsetmc import db, models
+from codal_tsetmc.download import (
+    Categories,
+    fill_stock_table,
+    fill_companies_table
+)
 
 
 def init_db():
@@ -23,21 +27,9 @@ def init_db():
 def fill_db():
     print("downloading company and stock details from CODAL and TSETMC")
     print("may take few minutes")
-
     fill_stock_table()
-    print("Stock table is available now, example:")
-    print("from codal_tsetmc import Stocks")
-    print('stock = Stocks.query.filter_by(name="کگل").first()')
-
-
-    a = input("Do you want to download all price? [y,(n)]")
-    if a == "y":
-        print("Downloading price:")
-        get_all_price()
-    else:
-        print("if you want download all prices use codal_tsetmc.get_all_price() ")
-        print("if you want download price history of a specfic stock use: ")
-        print("stock.update_price()")
-        print("or use codal_tsetmc.update_group_price(id) ")
-        print("For more info go to:")
-        print("https://github.com/mohsenebrahimyir/codal-tsetmc")
+    fill_companies_table()
+    cat = Categories()
+    cat.fill_categories_table()
+    print("For more info go to:")
+    print("https://github.com/mohsenebrahimyir/codal-tsetmc")
