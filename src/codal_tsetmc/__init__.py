@@ -20,13 +20,18 @@ from .download import (
 )
 from codal_tsetmc.models import (
     Stocks,
-    Companies,
     StockPrice,
     StockClient,
     StockDividend,
     StockCapital,
     StockAdjusted,
-    get_asset
+    get_asset,
+    Companies,
+    CompanyTypes,
+    CompanyStatuses,
+    ReportTypes,
+    LetterTypes,
+    Auditors,
 )
 
 from .initializer import init_db, fill_db

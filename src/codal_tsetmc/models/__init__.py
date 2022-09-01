@@ -11,7 +11,7 @@ from .stocks import (
 from .companies import (
     Companies,
     CompanyTypes,
-    CompanyStatus,
+    CompanyStatuses,
     ReportTypes,
     LetterTypes,
     Auditors,
