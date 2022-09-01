@@ -2,6 +2,8 @@ import os
 
 import codal_tsetmc.config as db
 from .download import (
+    Categories,
+    CodalQuery,
     get_all_price,
     get_all_client,
     get_stock_detail,
@@ -17,6 +19,8 @@ from .download import (
     update_stock_dividend,
     update_stock_capital,
     update_stock_adjusted,
+    get_companies,
+    fill_companies_table,
 )
 from codal_tsetmc.models import (
     Stocks,
