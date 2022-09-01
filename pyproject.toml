@@ -1,12 +1,12 @@
 [tool.poetry]
 name = "codal-tsetmc"
-version = "1.0.0"
+version = "1.0.2"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = ["Mohsen Ebrahimi <mohsenebrahimy.ir@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://ghodsizadeh.github.io/codal-tsetmc/"
-repository = "https://github.com/ghodsizadeh/codal-tsetmc.git"
+homepage = "https://mohsenebrahimyir.github.io/codal-tsetmc/"
+repository = "https://github.com/mohsenebrahimyir/codal-tsetmc.git"
 packages = [
     { include = "codal_tsetmc", from = 'src' }
 ]
@@ -23,7 +23,7 @@ aiohttp = "^3.8.1"
 cchardet = "^2.1.7"
 aiodns = "^3.0.0"
 PyYAML = "^6.0"
-tehran_stocks = "1.0"
+tehran_stocks = "^1.0.9"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.16.0"

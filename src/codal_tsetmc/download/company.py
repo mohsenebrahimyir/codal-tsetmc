@@ -1,47 +1,32 @@
 import pandas as pd
 import urllib
 import json
+from urllib.request import urlopen
+
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Companies
 
-from string_edit import *
+from .string_edit import *
+
+
+def get_dict_from_xml_api(url: str) -> dict:
+    with urlopen(url) as file:
+        string_json = file.read().decode('utf-8')
+    return json.loads(string_json)
 
 
 def get_companies():
-    """
-    Download companies detail and save them to the database.
-    better not use it alone.
-    Its not useful after first setup. ;)
-    
-    params
-    TODO: fill parameter of functions
-    ----------------
-    symbol:
-    name:
-    isic:
-    type:
-    status:
+    #TODO: ...
+    """_summary_
+
+    Returns:
+        _type_: _description_
     """
     url = 'https://search.codal.ir/api/search/v1/companies'
-    with urllib.request.urlopen(url) as file:
-        r = file.read().decode('utf-8')
 
-    return json.loads(r)
+    return get_dict_from_xml_api(url)
 
-
-def create_or_update_stock_from_dict(company_id, stock):
-    if exist := Companies.query.filter_by(isic=company_id).first():
-        print(f"stock with isic {company_id} exist")
-        exist.symbol = stock["sy"]
-        exist.name = stock["n"]
-        exist.type = stock["t"]
-        exist.status = stock["st"]
-    else:
-        print(f"creating stock with code {company_id}")
-        db.session.add(Companies(**stock))
-
-
-def fill_company_table():
+def fill_companies_table():
     pass
 
 
@@ -59,16 +44,14 @@ class Categories:
         Returns:
             _type_: _description_
         """
-        with urllib.request.urlopen(self.url) as file:
-            data = file.read().decode('utf-8')
 
-        self.data = json.loads(data)
+        self.data = get_dict_from_xml_api(self.url)
         report_types = []
         company_types = []
         letter_types = []
         categories = []
 
-        for item in json.loads(data):
+        for item in self.data:
             publisher_types_items = item.pop("PublisherTypes")
             if item["Code"] != -1:
                 for publisher_type in publisher_types_items:
@@ -112,6 +95,22 @@ class Categories:
         }).sort_values("code").reset_index(drop=True)
 
 
+def fill_company_status():
+    pass
+
+
+def fill_report_types():
+    pass
+
+
+def fill_company_types():
+    pass
+
+
+def fill_letter_types():
+    pass
+
+
 def get_financial_years():
     #TODO: ...
     """_summary_
@@ -120,13 +119,15 @@ def get_financial_years():
         _type_: _description_
     """
     url = 'https://search.codal.ir/api/search/v1/financialYears'
-    with urllib.request.urlopen(url) as file:
-        com = file.read().decode('utf-8')
-
-    df = pd.read_json(com)
+    com = get_dict_from_xml_api(url)
+    df = pd.DataFrame(com)
     df.columns = ["date"]
 
     return df
+
+
+def fill_financial_years():
+    pass
 
 
 def get_auditors():
@@ -137,10 +138,12 @@ def get_auditors():
         _type_: _description_
     """
     url = 'https://search.codal.ir/api/search/v1/auditors'
-    with urllib.request.urlopen(url) as file:
-        com = file.read().decode('utf-8')
-
-    df = pd.read_json(com)
+    com = get_dict_from_xml_api(url)
+    df = pd.DataFrame(com)
     df.columns = ["name", "code"]
 
     return df.sort_values("code").reset_index(drop=True)
+
+
+def fill_auditors_table():
+    pass

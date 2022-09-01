@@ -10,7 +10,7 @@ with open(path.join(THISDIRECTORY, "README.md")) as f:
 
 setup(
     name="codal-tsetmc",
-    version="0.0.0.1",
+    version="1.0.2",
     description="Data Downloader for stock market and finantial statement",
     url="http://github.com/mohsenebrahimyir/codal-tsetmc",
     author="Mohsen Ebrahimi",
@@ -25,7 +25,10 @@ setup(
         "codal_tsetmc.models",
         "codal_tsetmc.config",
     ],
-    install_requires=["wheel", "pandas", "sqlalchemy", "requests", "jdatetime"],
+    install_requires=[
+        "wheel", "pandas", "sqlalchemy",
+        "requests", "jdatetime", "tehran_stocks"
+    ],
     zip_safe=False,
     python_requires=">=3.8",
     scripts=["bin/ct-get", "bin/ct-get.bat"],

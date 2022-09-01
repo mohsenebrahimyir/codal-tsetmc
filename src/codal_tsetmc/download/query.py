@@ -1,20 +1,14 @@
-import json
 import pandas as pd
 import urllib.parse as urlparse
 from urllib.parse import urlencode
-from urllib.request import urlopen
-from exception import BadValueInput
 
-from string_edit import *
+from .exception import BadValueInput
+from .string_edit import *
+from .company import get_dict_from_xml_api
 from codal_tsetmc.models import (
-    CompanyStatus, CompanyTypes, Companies, ReportTypes, LetterTypes, Auditors
+    CompanyStatus, CompanyTypes, Companies, 
+    ReportTypes, LetterTypes, Auditors
 )
-
-
-def get_dict_from_xml_api(url: str) -> dict:
-    with urlopen(url) as file:
-        rjson = file.read().decode('utf-8')
-    return json.loads(rjson)
 
 
 class CodalQuery:
@@ -123,7 +117,7 @@ class CodalQuery:
     ## تنظیم نام نماد
     def set_symbol(self, symbol: str = None) -> None:
         BadValueInput(symbol).string_type()
-        symbol = Auditors.query.filter_by(symbol=symbol).first().symbol
+        symbol = Companies.query.filter_by(symbol=symbol).first().symbol
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
     ## تنظیم شماره ISIC
