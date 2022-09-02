@@ -22,6 +22,27 @@ def get_dict_from_xml_api(url: str) -> dict:
     return json.loads(string_json)
 
 
+def fill_table_of_db_with_df(
+    data: pd.DataFrame,
+    table: str,
+    columns: str,
+    conditions: str = ""
+):
+    try:
+        q = f"select {columns} from {table} {conditions}"
+        temp = pd.read_sql(q, db.engine)
+        data = data[~data[columns].isin(temp[columns])]
+    except:
+        pass
+
+    data.to_sql(
+        table, db.engine,
+        if_exists="append",
+        index=False
+    )
+    print(f"{table} update.")
+
+
 def get_companies():
     #TODO: ...
     """_summary_
@@ -44,8 +65,4 @@ def fill_companies_table():
         _type_: _description_
     """
     df = get_companies()
-    df.to_sql(
-        "companies", db.engine,
-        if_exists="replace", index_label= "id"
-    )
-
+    fill_table_of_db_with_df(df, "companies", "symbol")
