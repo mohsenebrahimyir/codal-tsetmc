@@ -46,6 +46,6 @@ def fill_companies_table():
     df = get_companies()
     df.to_sql(
         "companies", db.engine,
-        if_exists="overwrite", index=False
+        if_exists="replace", index_label= "id"
     )
 

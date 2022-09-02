@@ -11,8 +11,6 @@ from codal_tsetmc.download import (
 def init_db():
     print("creating database")
     path = os.path.join(db.HOME_PATH, db.CDL_TSE_FOLDER)
-
-
     try:
         os.mkdir(path)
         print("making package folder...")

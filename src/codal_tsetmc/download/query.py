@@ -130,26 +130,26 @@ class CodalQuery:
     ## تنظیم وضعیت ناشز
     def set_publisher_status(self, name: str = None) -> None:
         BadValueInput(name).string_type()
-        code = CompanyStatuses.query.filter_by(name=name).first().code
-        self.params['PublisherStatus'] = code if bool(code) else -1
+        code = CompanyStatuses.query.filter_by(name=name).first()
+        self.params['PublisherStatus'] = code.code if bool(code) else -1
 
     ## تنظیم گروع اطلاعیه
     def set_category(self, name: str = None) -> None:
         BadValueInput(name).string_type()
-        code = ReportTypes.query.filter_by(name=name).first().code
-        self.params["Category"] = code if bool(code) else -1
+        code = ReportTypes.query.filter_by(name=name).first()
+        self.params["Category"] = code.code if bool(code) else -1
 
     ## تنظیم نوع شرکت
     def set_company_type(self, name: str = "") -> None:
         BadValueInput(name).string_type()
-        code = CompanyTypes.query.filter_by(name=name).first().code
-        self.params["CompanyType"] = code if bool(code) else -1
+        code = CompanyTypes.query.filter_by(name=name).first()
+        self.params["CompanyType"] = code.code if bool(code) else -1
 
     ## تنظیم نوع اطلاعیه
     def set_letter_type(self, name: str = "") -> None:
         BadValueInput(name).string_type()
-        code = LetterTypes.query.filter_by(name=name).first().code
-        self.params["LetterType"] = code if bool(code) else -1
+        code = LetterTypes.query.filter_by(name=name).first()
+        self.params["LetterType"] = code.code if bool(code) else -1
 
     ## تنظیم موضوع اطلاعیه
     def set_subject(self, subject: str = "") -> None:
@@ -224,8 +224,8 @@ class CodalQuery:
     ## تنظیم موسسه حسابرسی شرکت
     def set_auditor_ref(self, name: str = None) -> None:
         BadValueInput(name).string_type()
-        code = Auditors.query.filter_by(name=name).first().code
-        self.params["AuditorRef"] =  code if bool(code) else -1
+        code = Auditors.query.filter_by(name=name).first()
+        self.params["AuditorRef"] = code.code if bool(code) else -1
 
     ## سالی مالی منتهی به
     def set_year_end_to_date(self, date: str = "1300/01/01") -> None:
@@ -294,14 +294,13 @@ class Categories:
         self.categories = pd.DataFrame(categories) \
             .drop_duplicates().reset_index(drop=True)
         self.company_statuses = pd.DataFrame({
-            {"code": -1, "name": 'همه موارد'},
-            {"code": 0, "name": 'پذیرفته شده در بورس تهران'},
-            {"code": 1, "name": 'پذیرفته شده در فرابورس ایران'},
-            {"code": 2, "name": 'ثبت شده پذیرفته نشده'},
-            {"code": 3, "name": 'ثبت نشده نزد سازمان'},
-            {"code": 4, "name": 'پذیرفته شده در بورس کالای ایران'},
-            {"code": 5, "name": 'پذیرفته شده دربورس انرژی ایران'},
-        }).sort_values("code").reset_index(drop=True)
+            "code": [-1, 0, 1, 2, 3, 4, 5],
+            "name": [
+                'همه موارد', 'پذیرفته شده در بورس تهران', 'پذیرفته شده در فرابورس ایران',
+                'ثبت شده پذیرفته نشده', 'ثبت نشده نزد سازمان',
+                'پذیرفته شده در بورس کالای ایران', 'پذیرفته شده دربورس انرژی ایران'
+            ]
+            }).sort_values("code").reset_index(drop=True)
 
         api = get_dict_from_xml_api(self.url + "financialYears")
         self.financial_years = pd.DataFrame(api)
@@ -316,27 +315,27 @@ class Categories:
         self.get_data()
         self.company_statuses.to_sql(
             "company_statuses", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
         self.report_types.to_sql(
             "report_types", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
         self.company_types.to_sql(
             "company_types", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
         self.letter_types.to_sql(
             "letter_types", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
         self.financial_years.to_sql(
             "financial_years", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
         self.auditors.to_sql(
             "auditors", db.engine,
-            if_exists="overwrite", index=False
+            if_exists="replace", index_label= "id"
         )
 
 
