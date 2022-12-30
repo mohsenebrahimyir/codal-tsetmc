@@ -53,7 +53,7 @@ def get_companies():
     url = 'https://search.codal.ir/api/search/v1/companies'
     com = get_dict_from_xml_api(url)
     df = pd.DataFrame(com)
-    df.columns = ["symbol", "name", "isic", "type", "status"]
+    df.columns = ["symbol", "name", "isic", "type_code", "status_code"]
     return df
 
 

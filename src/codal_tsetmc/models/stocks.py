@@ -44,6 +44,7 @@ class Stocks(Base):
     dividends = relationship("StockDividend", backref="stock")
     capitals = relationship("StockCapital", backref="stock")
     adjusteds = relationship("StockAdjusted", backref="stock")
+    companies = relationship('Companies', backref='stock')
     _cached = False
     _price_cached = False
     _client_cached = False
@@ -375,7 +376,7 @@ class StockPrice(Base):
     last = Column(Float)
 
     def __repr__(self):
-        return f"{self.stock.name}, {self.date}, {self.close:.0f}"
+        return f"({self.stock.name}, {self.date}, {self.close:.0f})"
 
 
 class StockClient(Base):
