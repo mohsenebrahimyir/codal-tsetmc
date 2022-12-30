@@ -16,17 +16,17 @@ from .companies import (
     Auditors,
 )
 
+def create_table(Model):
+    try:
+        Model.__table__.create(db.engine)
+    except:
+        pass
 
 def create():
-    Stocks.__table__.create(db.engine)
-    StockPrice.__table__.create(db.engine)
-    StockClient.__table__.create(db.engine)
-    StockCapital.__table__.create(db.engine)
-    StockDividend.__table__.create(db.engine)
-    StockAdjusted.__table__.create(db.engine)
-    Companies.__table__.create(db.engine)
-    CompanyTypes.__table__.create(db.engine)
-    CompanyStatuses.__table__.create(db.engine)
-    ReportTypes.__table__.create(db.engine)
-    LetterTypes.__table__.create(db.engine)
-    Auditors.__table__.create(db.engine)
+    models = [
+        Stocks, StockPrice, StockClient, StockCapital,
+        StockDividend, StockAdjusted, Companies, CompanyTypes,
+        CompanyStatuses, ReportTypes, LetterTypes, Auditors
+    ]
+    for model in models:
+        create_table(model)
