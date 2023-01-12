@@ -30,7 +30,7 @@ def get_stock_dividend_history(code: str) -> pd.DataFrame:
     ----------------
     df = get_stock_dividend_history('44891482026867833')
     """
-    symbol = Stocks.query.filter_by(code=code).first().symbol
+    symbol = Stocks.query.filter_by(code=code).first().name
     url = f"http://www.tsetmc.com/tsev2/data/DPSData.aspx?s={symbol}"
     r = requests.get(url).content.decode("utf-8").replace(";", "\n").replace("@", ",")
     df = (
@@ -76,7 +76,7 @@ async def update_stock_dividend(code: str):
         try:
             # need to updata new dividend data
             if last_date is None or str(last_date) < now:
-                symbol = Stocks.query.filter_by(code=code).first().symbol
+                symbol = Stocks.query.filter_by(code=code).first().name
                 url = f"http://www.tsetmc.com/tsev2/data/DPSData.aspx?s={symbol}"
             else:  # The dividend data for this code is updateed
                 return
