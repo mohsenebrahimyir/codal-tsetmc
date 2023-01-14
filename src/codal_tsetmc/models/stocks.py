@@ -63,7 +63,7 @@ class Stocks(Base):
         self.symbol()
 
     def symbol(self):
-        self.symbol = get_asset(self.name)
+        self.symbol = self.name.replace("ي", "ی").replace("ك", "ک")
 
     @property
     def df(self) -> pd.DataFrame:
