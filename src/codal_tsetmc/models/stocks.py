@@ -60,7 +60,7 @@ class Stocks(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.symbol = self.name
+        self.symbol = get_asset(self.name)
 
     @property
     def df(self) -> pd.DataFrame:

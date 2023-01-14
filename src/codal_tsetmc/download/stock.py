@@ -59,7 +59,8 @@ def get_stock_detail(stock_id: str) -> Stocks:
     }
 
     stock["insCode"] = (
-        stock_id if re.findall(r"InsCode='(\d*)',", r.text)[0] == stock_id else 0
+        stock_id if re.findall(r"InsCode='(\d*)',",
+                               r.text)[0] == stock_id else 0
     )
     stock["baseVol"] = float(re.findall(r"BaseVol=([\.\d]*),", r.text)[0])
     try:
@@ -75,11 +76,13 @@ def get_stock_detail(stock_id: str) -> Stocks:
     except:
         return
     try:
-        stock["sectorPe"] = float(re.findall(r"SectorPE='([\.\d]*)',", r.text)[0])
+        stock["sectorPe"] = float(re.findall(
+            r"SectorPE='([\.\d]*)',", r.text)[0])
     except:
         stock["sectorPe"] = None
     try:
-        stock["shareCount"] = float(re.findall(r"ZTitad=([\.\d]*),", r.text)[0])
+        stock["shareCount"] = float(
+            re.findall(r"ZTitad=([\.\d]*),", r.text)[0])
     except:
         stock["shareCount"] = None
 
