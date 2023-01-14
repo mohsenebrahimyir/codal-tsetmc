@@ -60,10 +60,9 @@ class Stocks(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.symbol()
 
     def symbol(self):
-        self.symbol = self.name.replace("ي", "ی").replace("ك", "ک")
+        return self.name.replace("ي", "ی").replace("ك", "ک")
 
     @property
     def df(self) -> pd.DataFrame:
