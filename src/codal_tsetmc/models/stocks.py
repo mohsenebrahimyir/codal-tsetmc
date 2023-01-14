@@ -60,6 +60,9 @@ class Stocks(Base):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.symbol()
+
+    def symbol(self):
         self.symbol = get_asset(self.name)
 
     @property
