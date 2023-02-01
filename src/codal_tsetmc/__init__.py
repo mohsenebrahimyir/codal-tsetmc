@@ -21,6 +21,8 @@ from .download import (
     update_stock_adjusted,
     get_companies,
     fill_companies_table,
+    get_commodity_price_history,
+    fill_commodity_price_table
 )
 from codal_tsetmc.models import (
     Stocks,

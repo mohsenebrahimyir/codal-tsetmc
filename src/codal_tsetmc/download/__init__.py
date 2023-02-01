@@ -5,6 +5,7 @@ from .company import (
     fill_companies_table
 )
 from .commodity import (
+    get_commodity_price_history,
     fill_commodity_price_table
 )
 from .stock import (
