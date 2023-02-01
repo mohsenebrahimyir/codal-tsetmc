@@ -1,6 +1,7 @@
 from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
 import pandas as pd
+import finplot as fplt
 import requests
 import jalali_pandas
 
@@ -27,34 +28,34 @@ def add_event(df, event, ratio):
 class Stocks(Base):
     __tablename__ = "stocks"
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    title = Column(String)
+    id         = Column(Integer, primary_key=True)
+    name       = Column(String)
+    title      = Column(String)
     group_name = Column(String)
     group_code = Column(Integer)
-    instId = Column(String)
-    insCode = Column(String)
-    code = Column(String, unique=True)
-    sectorPe = Column(Float)
-    shareCount = Column(Float)
+    instId     = Column(String)
+    insCode    = Column(String)
+    code       = Column(String, unique=True)
+    sectorPe     = Column(Float)
+    shareCount   = Column(Float)
     estimatedEps = Column(Float)
-    baseVol = Column(Float)
-    prices = relationship("StockPrice", backref="stock")
-    clients = relationship("StockClient", backref="stock")
+    baseVol      = Column(Float)
+    prices    = relationship("StockPrice", backref="stock")
+    clients   = relationship("StockClient", backref="stock")
     dividends = relationship("StockDividend", backref="stock")
-    capitals = relationship("StockCapital", backref="stock")
+    capitals  = relationship("StockCapital", backref="stock")
     adjusteds = relationship("StockAdjusted", backref="stock")
     companies = relationship('Companies', backref='stock')
     _cached = False
-    _price_cached = False
-    _client_cached = False
-    _capital_cached = False
+    _price_cached    = False
+    _client_cached   = False
+    _capital_cached  = False
     _dividend_cached = False
     _adjusted_cached = False
     _df_counter = 0
-    _price_counter = 0
-    _client_counter = 0
-    _capital_counter = 0
+    _price_counter    = 0
+    _client_counter   = 0
+    _capital_counter  = 0
     _dividend_counter = 0
     _adjusted_counter = 0
 
@@ -130,6 +131,22 @@ class Stocks(Base):
         self._price = df
 
         return self._price
+    
+    def plot_olhcv(self):
+
+        df = self.price
+        # create two plots
+        ax,ax2 = fplt.create_plot(self.symbol, rows=2)
+
+        # plot candle sticks
+        candle_src = fplt.PandasDataSource(df[['open','close','high','low']])
+        fplt.candlestick_ochl(candle_src, ax=ax)
+
+        # finally a volume bar chart in our second plot
+        volume_src = fplt.PandasDataSource(df[['open','close','volume']])
+        fplt.volume_ocv(volume_src, ax=ax2)
+
+        fplt.show()
 
     def update_price(self):
         from codal_tsetmc.download import update_stock_price
@@ -312,18 +329,18 @@ class Stocks(Base):
         main_response = r.text.split(";")[0]
         main_response = main_response.split(",")
 
-        self.time = main_response[0]
-        self.last_price = main_response[2]
-        self.last_close = main_response[3]
-        self.last_high = main_response[4]
-        self.last_low = main_response[5]
-        self.last_open = main_response[6]
-        self.trade_count = main_response[7]
+        self.time         = main_response[0]
+        self.last_price   = main_response[2]
+        self.last_close   = main_response[3]
+        self.last_high    = main_response[4]
+        self.last_low     = main_response[5]
+        self.last_open    = main_response[6]
+        self.trade_count  = main_response[7]
         self.trade_volume = main_response[8]
-        self.trade_value = main_response[9]
-        self.market_cap = main_response[10]
-        self.date_string = main_response[12]
-        self.time_string = main_response[13]
+        self.trade_value  = main_response[9]
+        self.market_cap   = main_response[10]
+        self.date_string  = main_response[12]
+        self.time_string  = main_response[13]
         del main_response[11]
         del main_response[1]
 

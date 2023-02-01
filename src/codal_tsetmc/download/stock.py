@@ -25,9 +25,9 @@ def get_stock_groups():
 def create_or_update_stock_from_dict(stock_id, stock):
     if exist := Stocks.query.filter_by(code=stock_id).first():
         print(f"stock with code {stock_id} exist")
-        exist.shareCount = stock["shareCount"]
-        exist.baseVol = stock["baseVol"]
-        exist.sectorPe = stock["sectorPe"]
+        exist.shareCount   = stock["shareCount"]
+        exist.baseVol      = stock["baseVol"]
+        exist.sectorPe     = stock["sectorPe"]
         exist.estimatedEps = stock["estimatedEps"]
     else:
         print(f"creating stock with code {stock_id}")
