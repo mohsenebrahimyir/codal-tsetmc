@@ -105,9 +105,9 @@ async def update_stock_dividend(code: str):
         )
         df["code"] = code
         try:
-            q = f"select dtyyyymmdd as date from stock_dividend where code = '{code}'"
+            q = f"select dtyyyymmdd from stock_dividend where code = '{code}'"
             temp = pd.read_sql(q, db.engine)
-            df = df[~df.dtyyyymmdd.isin(temp.date)]
+            df = df[~df.dtyyyymmdd.isin(temp.dtyyyymmdd)]
         except:
             pass
 

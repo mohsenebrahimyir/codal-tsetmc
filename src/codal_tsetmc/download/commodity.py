@@ -46,5 +46,5 @@ def fill_commodity_price_table():
     """
     symbols = ["price_dollar_rl", "ons", "bourse"]
     for symbol in symbols:
-        df = get_commodity_price_history()
-        fill_table_of_db_with_df(df, "commodity_price", "symbol")
+        df = get_commodity_price_history(symbol)
+        fill_table_of_db_with_df(df, "commodity_price", "dtyyyymmdd", f"where symbol = '{symbol}'")

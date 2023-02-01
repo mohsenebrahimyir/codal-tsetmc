@@ -6,7 +6,7 @@ import codal_tsetmc.config as db
 def fill_table_of_db_with_df(
     data: pd.DataFrame,
     table: str,
-    columns: str,
+    columns: str = "dtyyyymmdd",
     conditions: str = ""
 ):
     try:

@@ -94,9 +94,9 @@ async def update_stock_price(code: str):
         df["code"] = code
         df["date_shamsi"] = df["dtyyyymmdd"].apply(convert_to_shamsi)
         try:
-            q = f"select dtyyyymmdd as date from stock_price where code = '{code}'"
+            q = f"select dtyyyymmdd from stock_price where code = '{code}'"
             temp = pd.read_sql(q, db.engine)
-            df = df[~df.dtyyyymmdd.isin(temp.date)]
+            df = df[~df.dtyyyymmdd.isin(temp.dtyyyymmdd)]
         except:
             pass
         df.to_sql("stock_price", db.engine, if_exists="append", index=False)
