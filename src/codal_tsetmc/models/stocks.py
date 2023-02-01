@@ -151,9 +151,10 @@ class Stocks(Base):
 
         query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
         dollar = pd.read_sql(query, engine)
+        df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
         dollar = dollar.set_index("date").rename(columns={"close": "dollar"})
 
-        df = df[["jdate", "rial"]].merge(dollar[["dollar"]], how="outer")
+        df = df.merge(dollar[["dollar"]], how="outer")
         df["close"] = df["close"] / df["dollar"]
         df["value"] = df["value"] / df["dollar"]
         df = df[["jdate", "close", "volume", "value"]]
