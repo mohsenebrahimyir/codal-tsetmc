@@ -2,7 +2,7 @@ import pandas as pd
 
 import codal_tsetmc.config as db
 from codal_tsetmc.tools import get_dict_from_xml_api, fill_table_of_db_with_df
-from .string_edit import *
+from ..tools.string_edit import *
 
 
 def get_companies():

@@ -1,3 +1,5 @@
+from .exception import BadValueInput
+from .string_edit import *
 from .database import (
     fill_table_of_db_with_df
 )

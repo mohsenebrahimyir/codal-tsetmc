@@ -3,12 +3,15 @@ import urllib.parse as urlparse
 from urllib.parse import urlencode
 
 import codal_tsetmc.config as db
+from codal_tsetmc.tools import (
+    get_dict_from_xml_api,
+    fill_table_of_db_with_df
+)
 
-from .exception import BadValueInput
-from .string_edit import *
-from .company import get_dict_from_xml_api, fill_table_of_db_with_df
+from codal_tsetmc.tools.exception import BadValueInput
+from codal_tsetmc.tools.string_edit import *
 from codal_tsetmc.models import (
-    CompanyStatuses, CompanyTypes, Companies, 
+    CompanyStatuses, CompanyTypes, Companies,
     ReportTypes, LetterTypes, Auditors
 )
 
@@ -16,7 +19,7 @@ from codal_tsetmc.models import (
 class CodalQuery:
 
     def __init__(self):
-        ## جستوجی اطاعیه‌های سایت کودال
+        # جستوجی اطاعیه‌های سایت کودال
         self.base_url = "codal.ir"
         self.report_list_html = f"https://{self.base_url}/ReportList.aspx?"
         self.search_query_xml = f"https://search.{self.base_url}/api/search/v2/q?"
@@ -93,22 +96,22 @@ class CodalQuery:
 
         return urlparse.urlunparse(url_parts)
 
-    ## حذف تنظیمات
+    # حذف تنظیمات
     def remove_none(self, dictionary) -> dict:
         filtered = {k: v for k, v in dictionary.items() if v != -1}
         dictionary.clear()
         dictionary.update(filtered)
         return dictionary
 
-    ## تنظیم لیست گزارش
+    # تنظیم لیست گزارش
     def get_report_list_url(self) -> str:
         return self.get_query_url(False)
 
-    ## تنظیم کوئری جستوجو
+    # تنظیم کوئری جستوجو
     def get_api_search_url(self) -> str:
         return self.get_query_url(True)
 
-    ## تنظیم شماره صفحه
+    # تنظیم شماره صفحه
     def set_page_number(self, number: int = None) -> None:
         if bool(number):
             BadValueInput(number).integer_type()
@@ -116,59 +119,59 @@ class CodalQuery:
         else:
             self.params['PageNumber'] += 1
 
-    ## تنظیم نام نماد
+    # تنظیم نام نماد
     def set_symbol(self, symbol: str = None) -> None:
         BadValueInput(symbol).string_type()
         symbol = Companies.query.filter_by(symbol=symbol).first().symbol
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
-    ## تنظیم شماره ISIC
+    # تنظیم شماره ISIC
     def set_isic(self, isic: str = "") -> None:
         BadValueInput(isic).string_type()
         self.params['Isic'] = -1 if isic == "" else isic
 
-    ## تنظیم وضعیت ناشز
+    # تنظیم وضعیت ناشز
     def set_publisher_status(self, name: str = None) -> None:
         BadValueInput(name).string_type()
         code = CompanyStatuses.query.filter_by(name=name).first()
         self.params['PublisherStatus'] = code.code if bool(code) else -1
 
-    ## تنظیم گروع اطلاعیه
+    # تنظیم گروع اطلاعیه
     def set_category(self, name: str = None) -> None:
         BadValueInput(name).string_type()
         code = ReportTypes.query.filter_by(name=name).first()
         self.params["Category"] = code.code if bool(code) else -1
 
-    ## تنظیم نوع شرکت
+    # تنظیم نوع شرکت
     def set_company_type(self, name: str = "") -> None:
         BadValueInput(name).string_type()
         code = CompanyTypes.query.filter_by(name=name).first()
         self.params["CompanyType"] = code.code if bool(code) else -1
 
-    ## تنظیم نوع اطلاعیه
+    # تنظیم نوع اطلاعیه
     def set_letter_type(self, name: str = "") -> None:
         BadValueInput(name).string_type()
         code = LetterTypes.query.filter_by(name=name).first()
         self.params["LetterType"] = code.code if bool(code) else -1
 
-    ## تنظیم موضوع اطلاعیه
+    # تنظیم موضوع اطلاعیه
     def set_subject(self, subject: str = "") -> None:
         BadValueInput(subject).string_type()
         self.params["Subject"] = -1 if subject == "" else subject
 
-    ## تنظیم شماره پیگیری
+    # تنظیم شماره پیگیری
     def set_tracing_no(self, no: str = "") -> None:
         BadValueInput(no).int_str_type()
         self.params["TracingNo"] = -1 if no == "" else no
 
-    ## تنظیم کد اطلاعیه
+    # تنظیم کد اطلاعیه
     def set_letter_code(self, code: str = "") -> None:
         BadValueInput(code).int_str_type()
         self.params["LetterCode"] = -1 if code == "" else code
 
-    ## تنظیم طول دوره
+    # تنظیم طول دوره
     def set_length_period(self, period=-1) -> None:
-        ## طول دوره
+        # طول دوره
         lengthPeriod = {
             None: -1,
             'همه موارد': -1,
@@ -181,66 +184,65 @@ class CodalQuery:
         }
         self.params["Length"] = -1 if period == "" else lengthPeriod[period]
 
-    ## تنظیم از تاریخ
+    # تنظیم از تاریخ
     def set_from_date(self, date: str = "1300/01/01") -> None:
         BadValueInput(date).date_type()
         self.params["FromDate"] = -1 if date == "" else date
 
-    ## تنظیم تا تاریخ
+    # تنظیم تا تاریخ
     def set_to_date(self, date: str = "1500/01/01") -> None:
         BadValueInput(date).date_type()
         self.params["ToDate"] = -1 if date == "" else date
 
-    ## تنظیم حسابرسی شده
+    # تنظیم حسابرسی شده
     def set_audited(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Audited"] = str(status).lower()
 
-    ## تنظیم حسابرسی نشده
+    # تنظیم حسابرسی نشده
     def set_not_audited(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["NotAudited"] = str(status).lower()
 
-    ## تنظیم اصلی
+    # تنظیم اصلی
     def set_consolidatable(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Consolidatable"] = str(status).lower()
 
-    ## تنظیم تلفیقی
+    # تنظیم تلفیقی
     def set_not_consolidatable(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["NotConsolidatable"] = str(status).lower()
 
-    ## تنظیم فقط زیرمجموعه ها
+    # تنظیم فقط زیرمجموعه ها
     def set_childs(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Childs"] = str(status).lower()
 
-    ## تنظیم فقط شرکت اصلی
+    # تنظیم فقط شرکت اصلی
     def set_mains(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Mains"] = str(status).lower()
 
-    ## تنظیم موسسه حسابرسی شرکت
+    # تنظیم موسسه حسابرسی شرکت
     def set_auditor_ref(self, name: str = None) -> None:
         BadValueInput(name).string_type()
         code = Auditors.query.filter_by(name=name).first()
         self.params["AuditorRef"] = code.code if bool(code) else -1
 
-    ## سالی مالی منتهی به
+    # سالی مالی منتهی به
     def set_year_end_to_date(self, date: str = "1300/01/01") -> None:
         BadValueInput(date).date_type()
         self.params["YearEndToDate"] = -1 if date == "" else date
 
-    ## تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
+    # تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
     def set_publisher(self, status: bool = True) -> None:
         BadValueInput(status).boolian_type()
         self.params["Publisher"] = str(status).lower()
 
 
-
 class Categories:
-    #TODO: ...
+    # TODO: ...
     """_summary_
     """
 
@@ -248,7 +250,7 @@ class Categories:
         self.url = 'https://search.codal.ir/api/search/v1/'
 
     def get_data(self):
-        #TODO: ...
+        # TODO: ...
         """_summary_
         Returns:
             _type_: _description_
@@ -304,7 +306,7 @@ class Categories:
                 'پذیرفته شده در بورس کالای ایران',
                 'پذیرفته شده دربورس انرژی ایران'
             ]
-            }).sort_values("code").reset_index(drop=True)
+        }).sort_values("code").reset_index(drop=True)
 
         api = get_dict_from_xml_api(self.url + "auditors")
         self.auditors = pd.DataFrame(api)
@@ -317,12 +319,14 @@ class Categories:
 
     def fill_categories_table(self):
         self.get_data()
-        fill_table_of_db_with_df(self.company_statuses, "company_statuses", "code")
+        fill_table_of_db_with_df(
+            self.company_statuses, "company_statuses", "code")
         fill_table_of_db_with_df(self.report_types, "report_types", "code")
         fill_table_of_db_with_df(self.company_types, "company_types", "code")
         fill_table_of_db_with_df(self.letter_types, "letter_types", "code")
         fill_table_of_db_with_df(self.auditors, "auditors", "code")
-        fill_table_of_db_with_df(self.financial_years, "financial_years", "date")
+        fill_table_of_db_with_df(self.financial_years,
+                                 "financial_years", "date")
 
 
 if __name__ == '__main__':

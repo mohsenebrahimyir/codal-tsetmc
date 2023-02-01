@@ -1,5 +1,4 @@
 import re
-import pandas as pd
 
 FA_TO_EN_DIGITS = {
     "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5",

@@ -1,7 +1,5 @@
-from asyncio import tasks
 import requests
 import re
-import time
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 
