@@ -16,3 +16,7 @@ from .companies import (
     LetterTypes,
     Auditors,
 )
+
+from .commodities import (
+    CommodityPrice,
+)

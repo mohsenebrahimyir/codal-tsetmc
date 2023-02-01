@@ -1,7 +1,6 @@
 from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
 import pandas as pd
-import finplot as fplt
 import requests
 import jalali_pandas
 
@@ -46,14 +45,16 @@ class Stocks(Base):
     capitals = relationship("StockCapital", backref="stock")
     adjusteds = relationship("StockAdjusted", backref="stock")
     companies = relationship('Companies', backref='stock')
-    _cached = False
+    _df_cached = False
     _price_cached = False
+    _dollar_cached = False
     _client_cached = False
     _capital_cached = False
     _dividend_cached = False
     _adjusted_cached = False
     _df_counter = 0
     _price_counter = 0
+    _dollar_counter = 0
     _client_counter = 0
     _capital_counter = 0
     _dividend_counter = 0
@@ -63,18 +64,20 @@ class Stocks(Base):
         super().__init__(**kwargs)
 
     def symbol(self):
-        return self.name.replace("ي", "ی").replace("ك", "ک")
+        symbol = self.name.replace("ي", "ی").replace("ك", "ک")
+        self._symbol = symbol
+        return self._symbol
 
     @property
     def df(self) -> pd.DataFrame:
         """dataframe of stock price with date and OHLC"""
         self._df_counter += 1
-        if self._cached:
+        if self._df_cached:
             return self._df
         query = f"select * from stock_price where code = '{self.code}'"
         df = pd.read_sql(query, engine)
         if df.empty:
-            self._cached = True
+            self._df_cached = True
             self._df = df
             return self._df
         df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
@@ -82,7 +85,7 @@ class Stocks(Base):
         df = df.sort_values("date")
         df.reset_index(drop=True, inplace=True)
         df.set_index("date", inplace=True)
-        self._cached = True
+        self._df_cached = True
         self._df = df
 
         return self._df
@@ -124,29 +127,41 @@ class Stocks(Base):
 
         df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
         df.set_index("date", inplace=True)
-        df = df[["jdate", "open", "high", "low", "close", "volume", "natural"]]
+        df = df[["jdate", "open", "high", "low",
+                 "close", "volume", "value", "natural"]]
 
         self._price_cached = True
         self._price = df
 
         return self._price
 
-    def plot_olhcv(self):
+    @property
+    def dollar(self) -> pd.DataFrame:
+        """dataframe of stock dollar with date and close"""
+        self._dollar_counter += 1
+        if self._dollar_cached:
+            return self._dollar
 
         df = self.price
-        # create two plots
-        ax, ax2 = fplt.create_plot(self.name, rows=2)
 
-        # plot candle sticks
-        candle_src = fplt.PandasDataSource(
-            df[['open', 'close', 'high', 'low']])
-        fplt.candlestick_ochl(candle_src, ax=ax)
+        if df.empty:
+            self._dollar_cached = True
+            self._dollar = df
+            return self._dollar
 
-        # finally a volume bar chart in our second plot
-        volume_src = fplt.PandasDataSource(df[['open', 'close', 'volume']])
-        fplt.volume_ocv(volume_src, ax=ax2)
+        query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
+        dollar = pd.read_sql(query, engine)
+        dollar = dollar.set_index("date").rename(columns={"close": "dollar"})
 
-        return fplt
+        df = df[["jdate", "rial"]].merge(dollar[["dollar"]], how="outer")
+        df["close"] = df["close"] / df["dollar"]
+        df["value"] = df["value"] / df["dollar"]
+        df = df[["jdate", "close", "volume", "value"]]
+
+        self._dollar_cached = True
+        self._dollar = df
+
+        return self._dollar
 
     def update_price(self):
         from codal_tsetmc.download import update_stock_price

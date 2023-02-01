@@ -38,6 +38,10 @@ from codal_tsetmc.models import (
     Auditors,
 )
 
+from codal_tsetmc.tools import (
+    plot_olhcv
+)
+
 from .initializer import init_db, fill_db
 
 

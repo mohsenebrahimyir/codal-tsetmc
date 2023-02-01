@@ -1,8 +1,5 @@
-import string
 from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
-import pandas as pd
-import jalali_pandas
 
 
 class CompanyTypes(Base):
