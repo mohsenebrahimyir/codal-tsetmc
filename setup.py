@@ -27,7 +27,8 @@ setup(
     ],
     install_requires=[
         "wheel", "pandas", "sqlalchemy",
-        "requests", "jdatetime", "tehran_stocks"
+        "requests", "jdatetime", "tehran_stocks", 
+        "finplot"
     ],
     zip_safe=False,
     python_requires=">=3.8",
