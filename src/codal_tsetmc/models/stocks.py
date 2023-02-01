@@ -132,7 +132,7 @@ class Stocks(Base):
 
         return self._price
 
-    @property
+
     def plot_olhcv(self):
 
         df = self.price
