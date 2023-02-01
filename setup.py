@@ -26,9 +26,15 @@ setup(
         "codal_tsetmc.config",
     ],
     install_requires=[
-        "wheel", "pandas", "sqlalchemy",
-        "requests", "jdatetime", "tehran_stocks", 
-        "finplot"
+        "wheel",
+        "pandas",
+        "sqlalchemy",
+        "requests",
+        "jdatetime",
+        "tehran_stocks",
+        "finplot",
+        "selenium",
+        "webdriver_manager"
     ],
     zip_safe=False,
     python_requires=">=3.8",

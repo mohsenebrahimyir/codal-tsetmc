@@ -11,7 +11,7 @@ from codal_tsetmc.models import StockPrice, Stocks
 
 
 def convert_to_shamsi(date):
-    date = str(date) 
+    date = str(date)
     return jdate.fromgregorian(
         day=int(date[-2:]), month=int(date[4:6]), year=int(date[:4])
     ).strftime("%Y/%m/%d")

@@ -1,16 +1,11 @@
-from mailbox import NotEmptyError
 import os
-import re
-from symtable import Symbol
 import sys
 import time
-import xmltodict
 import numpy as np
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 
 from codal_tsetmc.models import Companies

@@ -9,7 +9,7 @@ import jalali_pandas
 def add_event(df, event, ratio):
     df = df.merge(event[["dtyyyymmdd", ratio]], how="outer", on="dtyyyymmdd")
     df = df.sort_values("dtyyyymmdd").reset_index(drop=True)
-    
+
     if ratio == "dividend":
         df[ratio] = df[ratio].shift(-1)
         df = df.dropna(subset=['close'])
@@ -28,34 +28,34 @@ def add_event(df, event, ratio):
 class Stocks(Base):
     __tablename__ = "stocks"
 
-    id         = Column(Integer, primary_key=True)
-    name       = Column(String)
-    title      = Column(String)
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    title = Column(String)
     group_name = Column(String)
     group_code = Column(Integer)
-    instId     = Column(String)
-    insCode    = Column(String)
-    code       = Column(String, unique=True)
-    sectorPe     = Column(Float)
-    shareCount   = Column(Float)
+    instId = Column(String)
+    insCode = Column(String)
+    code = Column(String, unique=True)
+    sectorPe = Column(Float)
+    shareCount = Column(Float)
     estimatedEps = Column(Float)
-    baseVol      = Column(Float)
-    prices    = relationship("StockPrice", backref="stock")
-    clients   = relationship("StockClient", backref="stock")
+    baseVol = Column(Float)
+    prices = relationship("StockPrice", backref="stock")
+    clients = relationship("StockClient", backref="stock")
     dividends = relationship("StockDividend", backref="stock")
-    capitals  = relationship("StockCapital", backref="stock")
+    capitals = relationship("StockCapital", backref="stock")
     adjusteds = relationship("StockAdjusted", backref="stock")
     companies = relationship('Companies', backref='stock')
     _cached = False
-    _price_cached    = False
-    _client_cached   = False
-    _capital_cached  = False
+    _price_cached = False
+    _client_cached = False
+    _capital_cached = False
     _dividend_cached = False
     _adjusted_cached = False
     _df_counter = 0
-    _price_counter    = 0
-    _client_counter   = 0
-    _capital_counter  = 0
+    _price_counter = 0
+    _client_counter = 0
+    _capital_counter = 0
     _dividend_counter = 0
     _adjusted_counter = 0
 
@@ -99,29 +99,28 @@ class Stocks(Base):
             self._price_cached = True
             self._price = df
             return self._price
-        
+
         df = df.rename(columns={"vol": "volume"})
 
         try:
             df = add_event(df, self.dividend, "dividend")
-            df["open"]    = df["open"]    / df["dividend_ratio"]
-            df["high"]    = df["high"]    / df["dividend_ratio"]
-            df["low"]     = df["low"]     / df["dividend_ratio"]
-            df["close"]   = df["close"]   / df["dividend_ratio"]
+            df["open"] = df["open"] / df["dividend_ratio"]
+            df["high"] = df["high"] / df["dividend_ratio"]
+            df["low"] = df["low"] / df["dividend_ratio"]
+            df["close"] = df["close"] / df["dividend_ratio"]
         except:
             pass
 
         try:
             df = add_event(df, self.capital, "capital")
-            df["open"]    = df["open"]    / df["capital_ratio"]
-            df["high"]    = df["high"]    / df["capital_ratio"]
-            df["low"]     = df["low"]     / df["capital_ratio"]
-            df["close"]   = df["close"]   / df["capital_ratio"]
-            df["volume"]  = df["volume"]  * df["capital_ratio"]
+            df["open"] = df["open"] / df["capital_ratio"]
+            df["high"] = df["high"] / df["capital_ratio"]
+            df["low"] = df["low"] / df["capital_ratio"]
+            df["close"] = df["close"] / df["capital_ratio"]
+            df["volume"] = df["volume"] * df["capital_ratio"]
             df["natural"] = df["natural"] * df["capital_ratio"]
         except:
             pass
-
 
         df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
         df.set_index("date", inplace=True)
@@ -132,21 +131,21 @@ class Stocks(Base):
 
         return self._price
 
-
     def plot_olhcv(self):
 
         df = self.price
         # create two plots
-        ax,ax2 = fplt.create_plot(self.name, rows=2)
+        ax, ax2 = fplt.create_plot(self.name, rows=2)
 
         # plot candle sticks
-        candle_src = fplt.PandasDataSource(df[['open','close','high','low']])
+        candle_src = fplt.PandasDataSource(
+            df[['open', 'close', 'high', 'low']])
         fplt.candlestick_ochl(candle_src, ax=ax)
 
         # finally a volume bar chart in our second plot
-        volume_src = fplt.PandasDataSource(df[['open','close','volume']])
+        volume_src = fplt.PandasDataSource(df[['open', 'close', 'volume']])
         fplt.volume_ocv(volume_src, ax=ax2)
-        
+
         return fplt
 
     def update_price(self):
@@ -330,18 +329,18 @@ class Stocks(Base):
         main_response = r.text.split(";")[0]
         main_response = main_response.split(",")
 
-        self.time         = main_response[0]
-        self.last_price   = main_response[2]
-        self.last_close   = main_response[3]
-        self.last_high    = main_response[4]
-        self.last_low     = main_response[5]
-        self.last_open    = main_response[6]
-        self.trade_count  = main_response[7]
+        self.time = main_response[0]
+        self.last_price = main_response[2]
+        self.last_close = main_response[3]
+        self.last_high = main_response[4]
+        self.last_low = main_response[5]
+        self.last_open = main_response[6]
+        self.trade_count = main_response[7]
         self.trade_volume = main_response[8]
-        self.trade_value  = main_response[9]
-        self.market_cap   = main_response[10]
-        self.date_string  = main_response[12]
-        self.time_string  = main_response[13]
+        self.trade_value = main_response[9]
+        self.market_cap = main_response[10]
+        self.date_string = main_response[12]
+        self.time_string = main_response[13]
         del main_response[11]
         del main_response[1]
 
