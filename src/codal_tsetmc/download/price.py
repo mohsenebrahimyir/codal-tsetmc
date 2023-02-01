@@ -44,7 +44,7 @@ def get_stock_price_history(stock_id: str) -> pd.DataFrame:
     url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={stock_id}&DateFrom=20000101&DateTo={now}&b=0"
     s = requests.get(url).content
     df = pd.read_csv(io.StringIO(s.decode("utf-8")))
-    df.columns = [i[1:].lower() for i in df.columns]
+    df.columns = [i[1:-1].lower() for i in df.columns]
     return df
 
 
