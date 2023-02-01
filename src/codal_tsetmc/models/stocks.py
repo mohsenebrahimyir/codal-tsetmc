@@ -137,7 +137,7 @@ class Stocks(Base):
 
         df = self.price
         # create two plots
-        ax,ax2 = fplt.create_plot(self.symbol, rows=2)
+        ax,ax2 = fplt.create_plot(self.name, rows=2)
 
         # plot candle sticks
         candle_src = fplt.PandasDataSource(df[['open','close','high','low']])
