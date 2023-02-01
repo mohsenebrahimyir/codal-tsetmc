@@ -131,7 +131,8 @@ class Stocks(Base):
         self._price = df
 
         return self._price
-    
+
+    @property
     def plot_olhcv(self):
 
         df = self.price
@@ -145,8 +146,8 @@ class Stocks(Base):
         # finally a volume bar chart in our second plot
         volume_src = fplt.PandasDataSource(df[['open','close','volume']])
         fplt.volume_ocv(volume_src, ax=ax2)
-
-        fplt.show()
+        
+        return fplt
 
     def update_price(self):
         from codal_tsetmc.download import update_stock_price
