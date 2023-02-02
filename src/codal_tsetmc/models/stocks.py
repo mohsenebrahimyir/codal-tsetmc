@@ -16,7 +16,7 @@ def add_event(df, event, ratio):
             (df["close"] - df[ratio].fillna(0))/df["close"]
         ).cumprod()
     elif ratio == "capital":
-        df[ratio] = df[ratio].shift(1)
+        df[ratio] = df[ratio].fillna(method="ffill")
         df = df.dropna(subset=['close'])
         df["cumulative"] = df[ratio].fillna(1).cumprod()
 
@@ -253,10 +253,12 @@ class Stocks(Base):
 
         df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
         df["jdate"] = df.date.jalali.to_jalali()
+        df.loc[df['new_capital'] > df['old_capital']]
         df["capital"] = df["old_capital"]/df["new_capital"]
         df = df.sort_values("date")
-        df.reset_index(drop=True, inplace=True)
+        df.loc[df['new_capital'].diff().fillna(1) > 0]
         df.set_index("date", inplace=True)
+
         self._capital_cached = True
         self._capital = df
 
