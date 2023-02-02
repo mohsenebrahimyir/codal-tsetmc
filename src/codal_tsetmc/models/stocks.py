@@ -154,6 +154,7 @@ class Stocks(Base):
         dollar["date"] = pd.to_datetime(dollar["dtyyyymmdd"], format="%Y%m%d")
         dollar = dollar.set_index("date").rename(columns={"close": "dollar"})
         df = df.merge(dollar[["dollar"]], how="outer", on="date")
+        df["dollar"] = df["dollar"].fillna(method="ffill")
         df["open"] = df["open"] / df["dollar"]
         df["low"] = df["low"] / df["dollar"]
         df["high"] = df["high"] / df["dollar"]
