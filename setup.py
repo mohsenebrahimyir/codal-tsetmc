@@ -10,7 +10,7 @@ with open(path.join(THISDIRECTORY, "README.md")) as f:
 
 setup(
     name="codal-tsetmc",
-    version="1.1.0",
+    version="1.2.0",
     description="Data Downloader for stock market and finantial statement",
     url="http://github.com/mohsenebrahimyir/codal-tsetmc",
     author="Mohsen Ebrahimi",
