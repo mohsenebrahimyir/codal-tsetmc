@@ -5,6 +5,8 @@ import aiohttp
 import pandas as pd
 import requests
 import io
+import json
+import requests
 
 import codal_tsetmc.config as db
 from codal_tsetmc.models import StockPrice, Stocks
@@ -147,3 +149,38 @@ def get_all_price():
         update_group_price(code[0])
 
     print("Price Download Finished.", " "*20)
+
+
+
+def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):
+    url = f'http://cdn.tsetmc.com/api/{data}/{code}/{date}'
+    cookies = {}
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+    }
+    response = requests.get(
+        url=url,
+        cookies=cookies,
+        headers=headers,
+        verify=False
+    )
+    
+    return json.loads(response.text)
+
+def get_number_of_shares_daily(code: str, date: str):
+    data = "Instrument/GetInstrumentHistory"
+    dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
+    return dict_data["instrumentHistory"]["zTitad"]
+
+def get_closing_price_daily(code: str, date: str):
+    data = "ClosingPrice/GetClosingPriceDaily"
+    dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
+    
+    return dict_data["closingPriceDaily"]["pClosing"]
+
+def get_market_value(code, date):
+    share = get_number_of_shares_daily(code, date)
+    price = get_closing_price_daily(code, date)
+
+    return price * share
