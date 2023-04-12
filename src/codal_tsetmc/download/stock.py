@@ -138,8 +138,14 @@ def fill_stock_table():
     print("Downloading group ids...")
     stocks = get_stock_ids()
     for i, stock in enumerate(stocks):
-        get_stock_detail(stock)
-        print(
-            f"{(i+1)/len(stocks)*100:.1f}% completed",
-            end="\r", flush=True
-        )
+        try:
+            get_stock_detail(stock)
+            print(
+                f"{(i+1)/len(stocks)*100:.1f}% completed",
+                end="\r", flush=True
+            )
+        except:
+            print(
+                f"{stock} failed ================="
+            )
+            pass

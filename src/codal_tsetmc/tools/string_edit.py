@@ -12,6 +12,32 @@ REMOVE_COMMA_AND_ADD_MINUS_SIGN = {
 
 FIX_DIGITS = {**FA_TO_EN_DIGITS, **REMOVE_COMMA_AND_ADD_MINUS_SIGN}
 
+
+TRANSLATE_FA_TO_EN = {
+        "درآمدهای عملیاتی": "operatingRevenue",
+        "بهاى تمام شده درآمدهای عملیاتی": "costOfGoodsSold",
+        "سود (زيان) ناخالص": "grossProfit",
+        "سود (زيان) عملياتي": "operatingProfit",
+        "هزينه‏‌هاى مالى": "costsOfFinancial",
+        "سود (زيان) عمليات در حال تداوم قبل از ماليات": "earingsBeforeTaxes",
+        "سود (زيان) خالص عمليات در حال تداوم": "earingsTaxes",
+        "سود (زيان) خالص": "netProfit",
+        "جمع دارایی‌های غیرجاری": "fixedAssets",
+        "موجودی مواد و کالا": "inventories",
+        "جمع دارایی‌های جاری": "currentAssets",
+        "جمع دارایی‌ها": "totalAssets",
+        "جمع حقوق مالکانه": "stockholdersEquity",
+        "جمع بدهی‌های غیرجاری": "fixedLiabilities",
+        "جمع بدهی‌های جاری": "currentLiabilities",
+        "جمع بدهی‌ها": "totalLiabilities",
+        "جریان ‌خالص ‌ورود‌ (خروج) ‌نقد حاصل از فعالیت‌های ‌عملیاتی": "netCashFlowFromOperations",
+        "جريان خالص ورود (خروج) نقد حاصل از فعاليت‌های سرمایه‌گذاری": "netCashFlowFromInvesting",
+        "جريان خالص ورود (خروج) نقد حاصل از فعالیت‌های تامين مالی": "netCashFlowFromFinancing"
+}
+
+
+
+
 def to_snake_case(name):
     #TODO: ...
     """_summary_
@@ -41,25 +67,3 @@ def df_col_to_snake_case(df):
     df.columns = map(to_snake_case, df.columns)
     return df
 
-
-TRANSLATE_FA_TO_EN = {
-        "درآمدهای عملیاتی": "operatingRevenue",
-        "بهاى تمام شده درآمدهای عملیاتی": "costOfGoodsSold",
-        "سود (زيان) ناخالص": "grossProfit",
-        "سود (زيان) عملياتي": "operatingProfit",
-        "هزينه‏‌هاى مالى": "costsOfFinancial",
-        "سود (زيان) عمليات در حال تداوم قبل از ماليات": "earingsBeforeTaxes",
-        "سود (زيان) خالص عمليات در حال تداوم": "earingsTaxes",
-        "سود (زيان) خالص": "netProfit",
-        "جمع دارایی‌های غیرجاری": "fixedAssets",
-        "موجودی مواد و کالا": "inventories",
-        "جمع دارایی‌های جاری": "currentAssets",
-        "جمع دارایی‌ها": "totalAssets",
-        "جمع حقوق مالکانه": "stockholdersEquity",
-        "جمع بدهی‌های غیرجاری": "fixedLiabilities",
-        "جمع بدهی‌های جاری": "currentLiabilities",
-        "جمع بدهی‌ها": "totalLiabilities",
-        "جریان ‌خالص ‌ورود‌ (خروج) ‌نقد حاصل از فعالیت‌های ‌عملیاتی": "netCashFlowFromOperations",
-        "جريان خالص ورود (خروج) نقد حاصل از فعاليت‌های سرمایه‌گذاری": "netCashFlowFromInvesting",
-        "جريان خالص ورود (خروج) نقد حاصل از فعالیت‌های تامين مالی": "netCashFlowFromFinancing"
-}

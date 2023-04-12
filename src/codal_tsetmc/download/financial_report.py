@@ -3,7 +3,7 @@ import json
 import requests
 import bs4
 import pandas as pd
-from codal_tsetmc.tools.string_edit import TRANSLATE_FA_TO_EN
+from codal_tsetmc.tools.string_edit import *
 
 
 def get_datasource(letter_serial: str, item: str = ""):
