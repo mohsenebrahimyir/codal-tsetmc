@@ -325,8 +325,8 @@ class Categories:
         fill_table_of_db_with_df(self.company_types, "company_types", "code")
         fill_table_of_db_with_df(self.letter_types, "letter_types", "code")
         fill_table_of_db_with_df(self.auditors, "auditors", "code")
-        fill_table_of_db_with_df(self.financial_years,
-                                 "financial_years", "date")
+        fill_table_of_db_with_df(self.financial_years, "financial_years", "date")
+
 
 
 if __name__ == '__main__':
