@@ -31,7 +31,6 @@ setup(
         "sqlalchemy",
         "requests",
         "jdatetime",
-        "tehran_stocks",
         "finplot",
     ],
     zip_safe=False,
