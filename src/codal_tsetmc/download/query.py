@@ -54,15 +54,19 @@ class CodalQuery:
             r"^.*LetterSerial=": "",
             r"\&.*$": ""
         })
-        df["PublishDateTime"] = df.PublishDateTime.replace(regex={
+        df["PublishDateTime"] = df["PublishDateTime"].replace(regex={
+            r"\:": "", r"\/": "", r"\s": ""
+        }).apply(pd.to_numeric)
+        df["SentDateTime"] = df["SentDateTime"].replace(regex={
             r"\:": "", r"\/": "", r"\s": ""
         }).apply(pd.to_numeric)
 
         df = df[[
             "TracingNo", "Symbol", "CompanyName", "Title",
-            "LetterCode", "PublishDateTime", "LetterSerial"
+            "LetterCode", "PublishDateTime", "SentDateTime", 
+            "LetterSerial"
         ]]
-        df.columns = map(to_snake_case, df.columns)
+        df = df_col_to_snake_case(df)
         self.letters = df
         return df
 

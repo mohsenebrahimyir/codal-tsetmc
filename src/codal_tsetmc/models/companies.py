@@ -71,3 +71,29 @@ class Auditors(Base):
 
     def __repr__(self):
         return f"({self.code}, {self.name})"
+    
+
+class FinancialStatement(Base):
+    __tablename__ = "financial_statement"
+    
+    id = Column(Integer, primary_key=True)
+    tracing_no = Column(Integer)
+    symbol = Column(String, ForeignKey("stocks.name"), index=True)
+    period = Column(Integer)
+    sent_date_time = Column(Integer)
+    publish_date_time = Column(Integer)
+    period_end_to_date = Column(Integer)
+    year_end_to_date = Column(Integer)
+    table_fa = Column(String)
+    table_en = Column(String)
+    alias_name = Column(String)
+    version_no = Column(Integer)
+    item_fa = Column(String)
+    item_en = Column(String)
+    value = Column(Integer)
+    is_audited = Column(Boolean)
+    is_consolidated = Column(Boolean)
+
+    def __repr__(self):
+        return f"(صورت مالی, {self.name})"
+
