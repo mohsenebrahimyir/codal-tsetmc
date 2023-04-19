@@ -47,7 +47,8 @@ class CodalQuery:
             "Publisher": "false",
         }
 
-    def get_letters(self, pages: int = 0) -> pd.DataFrame:
+    # گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
+    def get_letters(self, pages: int = 0, show = None) -> pd.DataFrame:
         letters = self.get_api_multi_page(pages)
         df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
         df["LetterSerial"] = df["Url"].replace(regex={
@@ -68,8 +69,13 @@ class CodalQuery:
         ]]
         df = df_col_to_snake_case(df)
         self.letters = df
-        return df
+        
+        if show:
+            return df
+        else:
+            print("letters is ready!")
 
+    # گرفتن اطلاعات کلی در همه صفحات
     def get_api_multi_page(self, pages: int = 0) -> dict:
         letters = self.get_api_sigle_page()
         pages = pages if bool(pages) else self.page
@@ -81,14 +87,16 @@ class CodalQuery:
         print("Done!"+" "*10)
 
         return letters
-
+    
+    # گرفتن اطلاعات کلی در یک صفحه
     def get_api_sigle_page(self) -> dict:
         url = self.get_api_search_url()
         response = get_dict_from_xml_api(url)
         self.total = response["Total"]
         self.page = response["Page"]
         return response["Letters"]
-
+    
+    # گرفتن لینک
     def get_query_url(self, api: bool = True) -> str:
         params = self.params
         BadValueInput(api).boolian_type()

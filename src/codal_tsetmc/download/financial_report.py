@@ -5,17 +5,7 @@ import pandas as pd
 import jalali_pandas
 from codal_tsetmc.tools.string_edit import *
 
-
-def datetime_to_num(dt):
-    try:
-        dt = dt.replace(":", "").replace("/", "").replace(" ", "")
-        return int(dt)
-    except:
-        return dt
-    
-
-
-def get_sheet_id(sheet: str):
+def get_sheet_id(sheet: str) -> str:
     SHEET_NAME_TO_ID = {
         "صورت وضعیت مالی": "0",
         "Balance Sheet": "0",
@@ -51,6 +41,8 @@ def get_sheet_id(sheet: str):
         "Consolidated Comprehensive Income Statement": "1097",
         "صورت تغییرات در حقوق مالکانه تلفیقی": "1099",
         "Consolidated Changes In Property Rights": "1099",
+        "توليد و فروش": "1197",
+        "Production and sales": "1197",
     }
 
     if sheet in SHEET_NAME_TO_ID.keys():
@@ -60,7 +52,7 @@ def get_sheet_id(sheet: str):
     else:
         return ""
 
-def get_reports_from_codal(letter_serial: str, sheet: str = ""):
+def get_letter(letter_serial: str, sheet: str = "") -> str:
     sheet_id = get_sheet_id(sheet)
     url = f"https://codal.ir/Reports/Decision.aspx?LetterSerial={letter_serial}&rt=0&let=6&ct=0&ft=-1{sheet_id}"
     return requests.get(
@@ -69,123 +61,113 @@ def get_reports_from_codal(letter_serial: str, sheet: str = ""):
         }
     )
 
-def get_datasource(letter_serial: str, sheet: str = ""):
-    letter = get_reports_from_codal(letter_serial, sheet)
+def get_datasource(letter: str) -> dict:
     regex = r"var datasource = (.*);\r\n\r\n\r\n</script>"
     data_json = re.search(regex, letter.text)
     return json.loads(data_json.group(1))
 
-def get_table_detail_v4(cells: dict):
-    df = pd.DataFrame(cells)
 
-    df["col"] = df["address"].str.slice(stop=1)
+def get_datasource_detail(datasource: dict) -> dict:
+    detail = removekey(datasource, "sheets")
+    detail['datasource_title_en'] = detail['title_En'].replace(" ", "")
+    detail["periodEndToDate"] = datetime_to_num(detail["periodEndToDate"])
+    detail["yearEndToDate"] = datetime_to_num(detail["yearEndToDate"])
+    detail["registerDateTime"] = datetime_to_num(detail["registerDateTime"])
+    detail["sentDateTime"] = datetime_to_num(detail["sentDateTime"])
+    detail["publishDateTime"] = datetime_to_num(detail["publishDateTime"])
+    return detail
+
+def get_sheet(datasource, sheet: str = "Income Statement") -> dict:
+    for sht in datasource["sheets"]:
+        if sht["title_En"] == sheet:
+            return sht
+
+def get_sheet_datail(sheet: dict) -> dict:
+    detail = removekey(sheet, "tables")
+    detail = removekey(detail, "sheetComponents")
+    return detail
+
+def get_sheet_components(sheet: dict) -> dict:
+    products = pd.DataFrame({"text": [], "value": []})
+    # units = pd.DataFrame({"text": [],  "value": []})
+    for id in sheet["sheetComponents"].keys():
+        detail = sheet["sheetComponents"][id][0]
+        if detail["typeName"] != "Date":
+            if detail["data"][0]["params"] == []:
+                df = pd.DataFrame(detail["data"])
+                products = pd.concat([products, df[["text", "value"]]])
+            else:
+                #TODO: add units of products
+                pass
+
+    return products
+
+def get_table(sheet: dict, table: str = "Income Statement") -> pd.DataFrame:
+    for tbl in sheet["tables"]:
+        if tbl["title_En"] == table:
+            return tbl
+
+def get_table_datail(table: dict) -> dict:
+    detail = removekey(table, "cells")
+    return detail
+
+def get_cells(table: dict) -> pd.DataFrame:
+    df = pd.DataFrame(table["cells"])
+    df["value"] = df["value"].replace(regex=AR_TO_FA_LETTER)
     df["row"] = df["address"].str.slice(start=1)
+    df["col"] = df["address"].str.slice(stop=1)
+    return df[(df['value'].notna()) & (df["isVisible"]) & (df["cellGroupName"] == "Body")]
 
-    item = df[df["col"] == "A"]
-    head = df[df["row"] == "1"]
+def get_items(df: pd.DataFrame) -> pd.DataFrame:
+    item = df[
+        df.valueTypeName.isin(["Fix", "Component"])
+    ].rename(columns={"value": "item"})
+    return item[["row", "category", "item"]]
 
-    item = dict(zip(item["row"], item["value"]))
-    head = dict(zip(head["col"], head["value"]))
-
-    df["item_fa"] = df["row"].replace(item)
-    df["head"] = df["col"].replace(head)
-
-    df = df[
-        (df["col"] != "A") &
-        (df["cellGroupName"] != "Header") &
-        (df["item_fa"] != "1000") &
-        (df["periodEndToDate"].dropna()) &
-        (df["value"].dropna())
-    ]
-
-    df["value"] = pd.to_numeric(df["value"])
-    df["item_en"] = df["item_fa"].replace(TRANSLATE_FA_TO_EN)
-    df["periodEndToDate"] = df["periodEndToDate"].replace(regex={r"\/": ""}).apply(pd.to_numeric)
-    df["yearEndToDate"] = df["yearEndToDate"].replace(regex={r"\/": ""}).apply(pd.to_numeric)
-    df = df[["periodEndToDate", "yearEndToDate", "item_fa", "item_en", "value"]]
-
+def filter_amount_of_money(df: pd.DataFrame) -> pd.DataFrame:
+    cols = df[df.value == "مبلغ فروش (میلیون ریال)"].col.unique()
+    df = df[df.col.isin(cols)]
+    df = df[df.cellGroupName == "Body"]
     return df
 
+def get_values(df: pd.DataFrame) -> pd.DataFrame:
+    df = df[
+        ((df.valueTypeName == "FormControl") | (df.valueTypeName == "-1"))
+    ][["row", "category", "periodEndToDate", "yearEndToDate", "value"]]
+    df["value"] = pd.to_numeric(df["value"])
+    return  df
 
-def get_balance_sheet(letter_serial: str):
+def get_financial_statement_product(letter_serial: str, sheet: str = "", table: str = "") -> pd.DataFrame:
+    letter_str = get_letter(letter_serial, sheet)
+    datasource_dict = get_datasource(letter_str)
+    datasource_detail_dict = get_datasource_detail(datasource_dict)
+    sheet_dict = get_sheet(datasource_dict, sheet)
+    sheet_datail_dict = get_sheet_datail(sheet_dict)
+    components_df = get_sheet_components(sheet_dict)
+    table_dict = get_table(sheet_dict, table)
+    table_datail_dict = get_table_datail(table_dict)
+    cells_df = get_cells(table_dict)
+    items_df = get_items(cells_df)
+    values_df = get_values(cells_df)
 
-    report = get_datasource(letter_serial, "Balance Sheet")
+    df = pd.merge(items_df, values_df, on=["row", "category"])
 
-    for sheet in report["sheets"]:
-        if sheet["title_En"] == "Balance Sheet":
-            for table in sheet["tables"]:
-                if table["title_En"] == "Balance Sheet":
-                    cells = table["cells"]
-                break
+    for col in ["periodEndToDate", "yearEndToDate", "item"]:
+        df[col] = df[col].replace(regex=AR_TO_FA_LETTER)
+        df = df[df[col] != "1000"]
+        if col != "item":
+            df[col] = df[col].replace(regex={r"\/": ""}).apply(pd.to_numeric) * 1000000
+    
+    df = df[["periodEndToDate", "yearEndToDate", "item", "value"]].reset_index(drop="index")
 
-    if table["versionNo"] == "4":
-        df = get_table_detail_v4(cells)
-        df["version_no"] = table["versionNo"]
-        df["alias_name"] = table["aliasName"]
-        df["title_Fa"] = sheet["title_Fa"]
-        df["title_En"] = sheet["title_En"]
-        return df
-    else:
-        print("This version is not exist.")
-
-
-def get_income_statement(letter_serial: str):
-
-    report = get_datasource(letter_serial, "Income Statement")
-
-    for sheet in report["sheets"]:
-        if sheet["title_En"] == "Income Statement":
-            for table in sheet["tables"]:
-                if table["title_En"] == "Income Statement":
-                    cells = table["cells"]
-                break
-
-    if table["versionNo"] == "6":
-        df = get_table_detail_v4(cells)
-        df["version_no"] = table["versionNo"]
-        df["alias_name"] = table["aliasName"]
-        df["title_Fa"] = sheet["title_Fa"]
-        df["title_En"] = sheet["title_En"]
-        return df
-    else:
-        print("This version is not exist.")
-
-
-def get_cash_flow(letter_serial: str):
-
-    report = get_datasource(letter_serial, "Cash Flow")
-
-    for sheet in report["sheets"]:
-        if sheet["title_En"] == "Cash Flow":
-            for table in sheet["tables"]:
-                if table["title_En"] == "Cash Flow":
-                    cells = table["cells"]
-                break
-
-    if table["versionNo"] == "3":
-        df = get_table_detail_v4(cells)
-        df["version_no"] = table["versionNo"]
-        df["alias_name"] = table["aliasName"]
-        df["title_Fa"] = sheet["title_Fa"]
-        df["title_En"] = sheet["title_En"]
-        return df
-    else:
-        print("This version is not exist.")
-
-
-def get_financial_statement_product_v4(letter_serial: str):
-
-    report = get_datasource(letter_serial, "Balance Sheet")
-    b_s = get_balance_sheet(letter_serial)
-    i_s = get_income_statement(letter_serial)
-    c_f = get_cash_flow(letter_serial)
-
-    df = pd.concat([b_s, i_s, c_f])
-
-    df["registerDateTime"] = datetime_to_num(report["registerDateTime"])
-    df["period"] = int(report["period"])
-    df["tracingNo"] = int(report["tracingNo"])
-    df["isConsolidated"] = bool(report["isConsolidated"])
-    df["isAudited"] = bool(report["isAudited"])
+    df["datasource_title_en"] = datasource_detail_dict["datasource_title_en"]
+    df["registerDateTime"] = datasource_detail_dict["registerDateTime"]
+    df["sentDateTime"] = datasource_detail_dict["sentDateTime"]
+    df["publishDateTime"] = datasource_detail_dict["publishDateTime"]
+    df["tracingNo"] = datasource_detail_dict["tracingNo"]
+    df["period"] = datasource_detail_dict["period"]
+    df["isAudited"] = datasource_detail_dict["isAudited"]
+    df["sheet_title_En"] = table_datail_dict["aliasName"]
+    df["sheet_title_Fa"] = table_datail_dict["title_Fa"]
 
     return df_col_to_snake_case(df)

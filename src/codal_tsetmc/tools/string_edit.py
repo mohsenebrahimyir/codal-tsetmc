@@ -5,6 +5,15 @@ FA_TO_EN_DIGITS = {
     "۶": "6", "۷": "7", "۸": "8", "۹": "9", "۰": "0",
 }
 
+
+AR_TO_FA_LETTER = {
+    "ي": "ی",
+    "ك": "ک",
+    "^$": None,
+    "^--$": None
+}
+
+
 REMOVE_COMMA_AND_ADD_MINUS_SIGN = {
     "\,|\)": "",
     "\(": "-"
@@ -36,7 +45,22 @@ TRANSLATE_FA_TO_EN = {
 }
 
 
+def replace_all(text, dic):
+    for i, j in dic.items():
+        text = text.replace(i, j)
+    return text
 
+def datetime_to_num(dt):
+    try:
+        dt = replace_all(dt, {":": "", "/": "", " ": ""})
+        return int(dt) * 10 ** (14 - len(dt))
+    except:
+        return dt
+
+def removekey(d, key):
+    r = dict(d)
+    del r[key]
+    return r
 
 def to_snake_case(name):
     #TODO: ...
