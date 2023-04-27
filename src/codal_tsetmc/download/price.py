@@ -20,28 +20,6 @@ def convert_to_shamsi(date):
 
 
 def get_stock_price_history(stock_id: str) -> pd.DataFrame:
-    """Get stock price history from the web.
-
-    params:
-    ----------------
-    stock_id: int
-        http://www.tsetmc.com/Loader.aspx?ParTree=151311&i=**35700344742885862#**
-        number after i=
-
-    return:
-    ----------------
-    pd.DataFrame
-        date: str
-        open: float
-        high: float
-        low: float
-        close: float
-        volume: int
-
-    example
-    ----------------
-    df = get_stock_price_history("35700344742885862")
-    """
     now = datetime.now().strftime("%Y%m%d")
     url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={stock_id}&DateFrom=20000101&DateTo={now}&b=0"
     s = requests.get(url).content

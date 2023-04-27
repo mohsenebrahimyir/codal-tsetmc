@@ -27,31 +27,11 @@ def value_to_float(x):
 
 
 def get_stock_capital_history(stock_id: str) -> pd.DataFrame:
-    """Get stock capital from the web.
-
-    params:
-    ----------------
-    code: int
-        http://tsetmc.com/Loader.aspx?ParTree=15131H&i=46348559193224090#
-        interger after i=
-
-    return:
-    ----------------
-    pd.DataFrame
-        dtyyyymmdd: str
-        old_capital = int
-        new_capital = int
-
-    example
-    ----------------
-    df = get_stock_capital_history("46348559193224090")
-    """
     url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={stock_id}"
     r = requests.get(url)
     df = pd.read_html(r.text)[0]
-    df.columns = ["date", "new_capital", "old_capital"]
-    df["new_capital"] = df["new_capital"].apply(value_to_float)
-    df["old_capital"] = df["old_capital"].apply(value_to_float)
+    df.columns = ["date", "capital"]
+    df["capital"] = df["capital"].apply(value_to_float)
     df["date"] = df.date.jalali.parse_jalali("%Y/%m/%d")
     df["dtyyyymmdd"] = (
         df.date.jalali
@@ -64,18 +44,6 @@ def get_stock_capital_history(stock_id: str) -> pd.DataFrame:
 
 
 async def update_stock_capital(code: str):
-    """
-    Update (or download for the first time) Stock capital
-
-
-    params:
-    ----------------
-    code: str or intege
-
-    example
-    ----------------
-    `update_stock_capital('44891482026867833') #Done`
-    """
     try:
         now = datetime.now().strftime("%Y%m%d")
         try:
@@ -101,9 +69,8 @@ async def update_stock_capital(code: str):
 
         df = pd.read_html(data)[0]
 
-        df.columns = ["dtyyyymmdd", "new_capital", "old_capital"]
-        df["new_capital"] = df["new_capital"].apply(value_to_float)
-        df["old_capital"] = df["old_capital"].apply(value_to_float)
+        df.columns = ["dtyyyymmdd", "capital"]
+        df["capital"].apply(value_to_float)
         df["dtyyyymmdd"] = (
             df.dtyyyymmdd
             .jalali.parse_jalali("%Y/%m/%d")
@@ -133,11 +100,6 @@ async def update_stock_capital(code: str):
 
 
 def update_group_capital(code):
-    """
-    Update and download data of all stocks in a group.
-
-    `Warning: Stock table should be updated`
-    """
     stocks = db.session.query(Stocks.code).filter_by(group_code=code).all()
     print("updating group", code, end="\r")
     loop = asyncio.get_event_loop()

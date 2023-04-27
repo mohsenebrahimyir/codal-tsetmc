@@ -3,7 +3,7 @@ import os
 from codal_tsetmc import db, models
 from codal_tsetmc.download import (
     Categories,
-    fill_stock_table,
+    fill_stocks_table,
     fill_companies_table,
     fill_categories_table
 )
@@ -28,6 +28,6 @@ def fill_db():
     print("may take few minutes")
     fill_categories_table()
     fill_companies_table()
-    fill_stock_table()
+    fill_stocks_table()
     print("For more info go to:")
     print("https://github.com/mohsenebrahimyir/codal-tsetmc")

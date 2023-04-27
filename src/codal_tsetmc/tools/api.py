@@ -16,4 +16,3 @@ def get_dict_from_xml_api(url: str) -> dict:
         pass
 
     return json.loads(string_json)
-
