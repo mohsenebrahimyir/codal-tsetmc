@@ -2,48 +2,11 @@ import re
 import json
 import requests
 import pandas as pd
+from bs4 import BeautifulSoup
 import jalali_pandas
 from codal_tsetmc.tools.string_edit import *
 
 def get_sheet_id(sheet: str) -> str:
-    SHEET_NAME_TO_ID = {
-        "صورت وضعیت مالی": "0",
-        "Balance Sheet": "0",
-        "صورت سود و زیان": "1",
-        "Income Statement": "1",
-        "آمار تولید و فروش": "2",
-        "Product Amount": "2",
-        "صورت جریان های نقدی": "9",
-        "Cash Flow": "9",
-        "صورت سود و زیان تلفیقی": "13",
-        "Consolidated Income Statement": "13",
-        "صورت وضعیت مالی تلفیقی": "14",
-        "Consolidated Balance Sheet": "14",
-        "صورت جریان های نقدی تلفیقی": "15",
-        "Consolidated Cash Flow": "15",
-        "نظر حسابرس": "19",
-        "Letter Auditing": "19",
-        "خلاصه اطلاعات گزارش تفسیری - صفحه 1": "20",
-        "Interpretative Report Summary - Page 1": "20",
-        "خلاصه اطلاعات گزارش تفسیری - صفحه 2": "21",
-        "Interpretative Report Summary - Page 2": "21",
-        "خلاصه اطلاعات گزارش تفسیری - صفحه 3": "22",
-        "Interpretative Report Summary - Page 3": "22",
-        "خلاصه اطلاعات گزارش تفسیری - صفحه 4": "23",
-        "Interpretative Report Summary - Page 4": "23",
-        "خلاصه اطلاعات گزارش تفسیری - صفحه 5": "24",
-        "Interpretative Report Summary - Page 5": "24",
-        "صورت سود و زیان جامع": "1058",
-        "Comprehensive Income Statement": "1058",
-        "صورت تغییرات در حقوق مالکانه": "1060",
-        "Changes In Property Rights": "1060",
-        "صورت سود و زیان جامع تلفیقی": "1097",
-        "Consolidated Comprehensive Income Statement": "1097",
-        "صورت تغییرات در حقوق مالکانه تلفیقی": "1099",
-        "Consolidated Changes In Property Rights": "1099",
-        "توليد و فروش": "1197",
-        "Production and sales": "1197",
-    }
 
     if sheet in SHEET_NAME_TO_ID.keys():
         return f"&sheetId={SHEET_NAME_TO_ID[sheet]}"
@@ -60,6 +23,22 @@ def get_letter(letter_serial: str, sheet: str = "") -> str:
             "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
         }
     )
+
+def get_symbol_and_name(letter: str) -> str:
+    soup = BeautifulSoup(letter.text, 'html.parser')
+    return {
+        "CompanyName": replace_all(soup.find(id="ctl00_txbCompanyName").string, AR_TO_FA_LETTER),
+        "ListedCapital": int(soup.find(id="ctl00_lblListedCapital").string.replace(",", "")),
+        "Symbol": replace_all(soup.find(id="ctl00_txbSymbol").string, AR_TO_FA_LETTER),
+        "UnauthorizedCapital": soup.find(id="ctl00_divUnauthorizedCapital").string,
+        "ISIC": int(soup.find(id="ctl00_lblISIC").string),
+        "Period": int(soup.find(id="ctl00_lblPeriod").string.replace(" ماهه", "")),
+        "PeriodEndToDate": datetime_to_num(soup.find(id="ctl00_lblPeriodEndToDate").string),
+        "IsAudited": replace_all(soup.find(id="ctl00_lblIsAudited").string, AR_TO_FA_LETTER),
+        "YearEndToDate": datetime_to_num(soup.find(id="ctl00_lblYearEndToDate").string),
+        "CompanyState": replace_all(soup.find(id="ctl00_lblCompanyState").string, AR_TO_FA_LETTER),
+    } 
+
 
 def get_datasource(letter: str) -> dict:
     regex = r"var datasource = (.*);\r\n\r\n\r\n</script>"
@@ -113,7 +92,7 @@ def get_table_datail(table: dict) -> dict:
 
 def get_cells(table: dict) -> pd.DataFrame:
     df = pd.DataFrame(table["cells"])
-    df["value"] = df["value"].replace(regex=AR_TO_FA_LETTER)
+    df["value"] = df["value"].replace(regex=AR_TO_FA_LETTER).replace(regex=EMPTY_TO_NONE)
     df["row"] = df["address"].str.slice(start=1)
     df["col"] = df["address"].str.slice(stop=1)
     return df[(df['value'].notna()) & (df["isVisible"]) & (df["cellGroupName"] == "Body")]
@@ -142,8 +121,6 @@ def get_financial_statement_product(letter_serial: str, sheet: str = "", table: 
     datasource_dict = get_datasource(letter_str)
     datasource_detail_dict = get_datasource_detail(datasource_dict)
     sheet_dict = get_sheet(datasource_dict, sheet)
-    sheet_datail_dict = get_sheet_datail(sheet_dict)
-    components_df = get_sheet_components(sheet_dict)
     table_dict = get_table(sheet_dict, table)
     table_datail_dict = get_table_datail(table_dict)
     cells_df = get_cells(table_dict)
@@ -153,7 +130,7 @@ def get_financial_statement_product(letter_serial: str, sheet: str = "", table: 
     df = pd.merge(items_df, values_df, on=["row", "category"])
 
     for col in ["periodEndToDate", "yearEndToDate", "item"]:
-        df[col] = df[col].replace(regex=AR_TO_FA_LETTER)
+        df[col] = df[col].replace(regex=AR_TO_FA_LETTER).replace(regex=EMPTY_TO_NONE)
         df = df[df[col] != "1000"]
         if col != "item":
             df[col] = df[col].replace(regex={r"\/": ""}).apply(pd.to_numeric) * 1000000

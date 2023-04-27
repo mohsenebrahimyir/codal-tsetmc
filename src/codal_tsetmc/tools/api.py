@@ -1,9 +1,10 @@
 import json
 from urllib.request import urlopen
+import requests
 
 
 def get_dict_from_xml_api(url: str) -> dict:
-    print(f"Get data from {url}")
+    # print(f"Get data from {url}")
     try:
         with urlopen(url) as file:
             string_json = file.read().decode('utf-8')
@@ -13,4 +14,6 @@ def get_dict_from_xml_api(url: str) -> dict:
     except Exception as e:
         print(e)
         pass
+
     return json.loads(string_json)
+

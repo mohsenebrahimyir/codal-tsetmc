@@ -15,6 +15,7 @@ from .companies import (
     ReportTypes,
     LetterTypes,
     Auditors,
+    Letters
 )
 
 from .commodities import (

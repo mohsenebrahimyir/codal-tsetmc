@@ -21,6 +21,7 @@ from .download import (
     update_stock_adjusted,
     get_companies,
     fill_companies_table,
+    fill_categories_table,
     get_commodity_price_history,
     fill_commodity_price_table
 )
@@ -38,6 +39,7 @@ from codal_tsetmc.models import (
     ReportTypes,
     LetterTypes,
     Auditors,
+    Letters
 )
 
 from codal_tsetmc.tools import (

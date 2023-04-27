@@ -6,23 +6,23 @@ class CompanyTypes(Base):
     __tablename__ = "company_types"
     
     id = Column(Integer, primary_key=True)
-    code = Column(String, unique=True)
-    name = Column(String)
+    code = Column(Integer, unique=True)
+    title = Column(String)
     companies = relationship('Companies', backref='type')
 
     def __repr__(self):
-        return f"({self.code}, {self.name})"
+        return f"({self.code}, {self.title})"
 
 class CompanyStatuses(Base):
     __tablename__ = "company_statuses"
     
     id = Column(Integer, primary_key=True)
-    code = Column(String, unique=True)
-    name = Column(String)
+    code = Column(Integer, unique=True)
+    title = Column(String)
     companies = relationship('Companies', backref='status')
 
     def __repr__(self):
-        return f"({self.code}, {self.name})"
+        return f"({self.code}, {self.title})"
 
 class Companies(Base):
     __tablename__ = "companies"
@@ -38,40 +38,57 @@ class Companies(Base):
         super().__init__(**kwargs)
 
     def __repr__(self):
-        return f"({self.symbol}, {self.name}, {self.type.name}, {self.status.name})"
+        return f"({self.symbol}, {self.name}, {self.type.title}, {self.status.title})"
 
 
 class ReportTypes(Base):
     __tablename__ = "report_types"
     
     id = Column(Integer, primary_key=True)
-    code = Column(String, unique=True)
-    name = Column(String)
+    code = Column(Integer, unique=True)
+    title = Column(String)
 
     def __repr__(self):
-        return f"({self.code}, {self.name})"
+        return f"({self.code}, {self.title})"
 
 class LetterTypes(Base):
     __tablename__ = "letter_types"
     
     id = Column(Integer, primary_key=True)
-    code = Column(String, unique=True)
-    name = Column(String)
+    code = Column(Integer, unique=True)
+    title = Column(String)
 
     def __repr__(self):
-        return f"({self.code}, {self.name})"
+        return f"({self.code}, {self.title})"
 
 
 class Auditors(Base):
     __tablename__ = "auditors"
     
     id = Column(Integer, primary_key=True)
-    code = Column(String, unique=True)
+    code = Column(Integer, unique=True)
     name = Column(String)
 
     def __repr__(self):
         return f"({self.code}, {self.name})"
+
+class Letters(Base):
+    __tablename__ = "letters"
     
+    id = Column(Integer, primary_key=True)
+    publish_date_time = Column(Integer)
+    sent_date_time = Column(Integer)
+    tracing_no = Column(Integer, unique=True)
+    letter_serial = Column(String, unique=True)
+    letter_title = Column(String)
+    letter_code = Column(String)
+    letter_types = Column(String, ForeignKey("letter_types.title"), index=True)
+    company_symbol = Column(String, ForeignKey("companies.symbol"), index=True)
+    company_name = Column(String)
+
+    def __repr__(self):
+        return f"(گزارشات کدال)"
+
 
 # class FinancialStatement(Base):
 #     __tablename__ = "financial_statement"
@@ -86,7 +103,7 @@ class Auditors(Base):
 #     year_end_to_date = Column(Integer)
 #     table_fa = Column(String)
 #     table_en = Column(String)
-#     alias_name = Column(String)
+#     alias_name = Column(String) 
 #     version_no = Column(Integer)
 #     item_fa = Column(String)
 #     item_en = Column(String)
@@ -96,14 +113,4 @@ class Auditors(Base):
 
 #     def __repr__(self):
 #         return f"(صورت مالی, {self.name})"
-    
-# class BalanceSheet(Base):
-#     __tablename__ = "balance_sheet"
-    
-#     id = Column(Integer, primary_key=True)
-#     tracing_no = Column(Integer)
-
-#     def __repr__(self):
-#         return f"(ترازنامه یا صورت وضعیت مالی, {self.name})"
-
 

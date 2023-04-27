@@ -14,6 +14,7 @@ from .companies import (
     ReportTypes,
     LetterTypes,
     Auditors,
+    Letters
 )
 
 def create_table(Model):
@@ -26,7 +27,8 @@ def create():
     models = [
         Stocks, StockPrice, StockClient, StockCapital,
         StockDividend, StockAdjusted, Companies, CompanyTypes,
-        CompanyStatuses, ReportTypes, LetterTypes, Auditors
+        CompanyStatuses, ReportTypes, LetterTypes, Auditors,
+        Letters
     ]
     for model in models:
         create_table(model)

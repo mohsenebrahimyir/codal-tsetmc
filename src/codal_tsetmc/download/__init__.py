@@ -2,7 +2,8 @@ from .query import Categories, CodalQuery
 from .company import (
     get_dict_from_xml_api,
     get_companies,
-    fill_companies_table
+    fill_companies_table,
+    fill_categories_table
 )
 from .commodity import (
     get_commodity_price_history,

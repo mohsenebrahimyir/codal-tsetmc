@@ -21,4 +21,4 @@ def fill_table_of_db_with_df(
         if_exists="append",
         index=False
     )
-    print(f"{table} update.")
+    print(f"{table} update.", end="\r", flush=True)

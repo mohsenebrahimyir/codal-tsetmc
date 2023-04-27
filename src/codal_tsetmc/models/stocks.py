@@ -39,12 +39,12 @@ class Stocks(Base):
     shareCount = Column(Float)
     estimatedEps = Column(Float)
     baseVol = Column(Float)
+    companies = relationship('Companies', backref='stock')
     prices = relationship("StockPrice", backref="stock")
     clients = relationship("StockClient", backref="stock")
     dividends = relationship("StockDividend", backref="stock")
     capitals = relationship("StockCapital", backref="stock")
     adjusteds = relationship("StockAdjusted", backref="stock")
-    companies = relationship('Companies', backref='stock')
     _df_cached = False
     _price_cached = False
     _dollar_cached = False
