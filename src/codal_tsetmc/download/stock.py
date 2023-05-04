@@ -7,36 +7,37 @@ def is_stock_in_bourse_or_fara_or_paye(code):
     group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
     return Stocks.query.filter_by(code=code).first().group_type in group_type
 
-def get_stock_detail(stock_id: str, timeout = 3):
+def get_stock_detail(code: str, timeout = 3):
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
     }
-    url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{stock_id}"
+    url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{code}"
     r = requests.get(url, headers=headers, verify=False, timeout=timeout)
     return r.json()
 
-def create_or_update_stock_from_dict(stock_id, stock):
-    print(f"creating stock with code {stock_id}")
+def create_or_update_stock_from_dict(stock):
+    print(f"creating stock with code {stock['code']}")
     db.session.add(Stocks(**stock))
     
     try:
         db.session.commit()
     except:
-        print(f"stock {stock_id} exist", end="\r", flush=True)
+        print(f"stock {stock['code']} exist", end="\r", flush=True)
         db.session.rollback()
 
-def update_stock_table(stock_id: str) -> Stocks:
-    if exist := Stocks.query.filter_by(code=stock_id).first():
-        print(f"stock with code {stock_id} exist")
+def update_stock_table(code: str) -> Stocks:
+    if exist := Stocks.query.filter_by(code=code).first():
+        print(f"stock with code {code} exist")
 
     else:
-        data = get_stock_detail(stock_id)
+        data = get_stock_detail(code)
 
         stock = {
             "symbol": data["instrumentInfo"]["lVal18AFC"],
             "name": data["instrumentInfo"]["lVal30"],
             "isin": data["instrumentInfo"]["cIsin"],
-            "code": stock_id,
+            "code": code,
+            "last_capital": data["instrumentInfo"]["zTitad"],
             "instrument_code": data["instrumentInfo"]["insCode"],
             "instrument_id": data["instrumentInfo"]["instrumentID"],
             "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
@@ -44,10 +45,10 @@ def update_stock_table(stock_id: str) -> Stocks:
             "group_type": data["instrumentInfo"]["cgrValCot"],
             "market_name": data["instrumentInfo"]["flowTitle"],
             "market_code": data["instrumentInfo"]["flow"],
-            "market_type": data["instrumentInfo"]["cgrValCotTitle"]
+            "market_type": data["instrumentInfo"]["cgrValCotTitle"],
         }
 
-        create_or_update_stock_from_dict(stock_id, stock)
+        create_or_update_stock_from_dict(stock)
     return
 
 
