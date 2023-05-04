@@ -1,5 +1,6 @@
 import re
-from jdatetime import date as jdate
+from jdatetime import date as jd
+from jdatetime import datetime as jdt
 
 FA_TO_EN_DIGITS = {
     "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5",
@@ -108,12 +109,14 @@ def num_to_datetime(num, datetime = True, d = "/", t = ":", sep = " "):
     else:
         return date
 
-
 def yyyymmdd_to_shamsi(date):
     date = str(date)
-    return jdate.fromgregorian(
+    return jd.fromgregorian(
         day=int(date[-2:]), month=int(date[4:6]), year=int(date[:4])
     ).strftime("%Y/%m/%d")
+
+def shamsi_to_yyyymmdd(date: str):
+    jdt.strptime(date, "%Y%m%d%H%M%S").togregorian().strftime("%Y%m%d")
 
 def removekey(d, key):
     r = dict(d)
