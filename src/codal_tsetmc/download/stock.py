@@ -3,6 +3,9 @@ import re
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 
+def is_stock_in_bourse_or_fara_or_paye(code):
+    group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
+    return Stocks.query.filter_by(code=code).first().group_type in group_type
 
 def get_stock_detail(stock_id: str, timeout = 3):
     headers = {
@@ -15,16 +18,16 @@ def get_stock_detail(stock_id: str, timeout = 3):
 def create_or_update_stock_from_dict(stock_id, stock):
     print(f"creating stock with code {stock_id}")
     db.session.add(Stocks(**stock))
-
-def update_stock_table(stock_id: str) -> Stocks:
-    if exist := Stocks.query.filter_by(code=stock_id).first():
-        print(f"stock with code {stock_id} exist")
     
     try:
         db.session.commit()
     except:
         print(f"stock {stock_id} exist", end="\r", flush=True)
         db.session.rollback()
+
+def update_stock_table(stock_id: str) -> Stocks:
+    if exist := Stocks.query.filter_by(code=stock_id).first():
+        print(f"stock with code {stock_id} exist")
 
     else:
         data = get_stock_detail(stock_id)
@@ -37,7 +40,7 @@ def update_stock_table(stock_id: str) -> Stocks:
             "instrument_code": data["instrumentInfo"]["insCode"],
             "instrument_id": data["instrumentInfo"]["instrumentID"],
             "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
-            "group_code": int(data["instrumentInfo"]["sector"]["cSecVal"].replace(" ", "")),
+            "group_code": data["instrumentInfo"]["sector"]["cSecVal"].replace(" ", ""),
             "group_type": data["instrumentInfo"]["cgrValCot"],
             "market_name": data["instrumentInfo"]["flowTitle"],
             "market_code": data["instrumentInfo"]["flow"],
@@ -45,7 +48,8 @@ def update_stock_table(stock_id: str) -> Stocks:
         }
 
         create_or_update_stock_from_dict(stock_id, stock)
-    return stock
+    return
+
 
 def get_stock_ids(timeout = 3):
     url = "http://tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"
@@ -61,6 +65,7 @@ def get_stock_groups(timeout = 3):
 def fill_stocks_table(timeout = 3):
     print("Downloading group ids...")
     stocks = get_stock_ids(timeout = timeout)
+    stocks += "32097828799138957" # شاخص کل
     for i, stock in enumerate(stocks):
         print(
             f"{' '*50} {i+1}/{len(stocks)} ({(i+1)/len(stocks)*100:.1f}% completed)",
