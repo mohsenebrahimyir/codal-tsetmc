@@ -6,8 +6,9 @@ import codal_tsetmc.config as db
 def fill_table_of_db_with_df(
     data: pd.DataFrame,
     table: str,
-    columns: str = "dtyyyymmdd",
-    conditions: str = ""
+    columns: str = "date",
+    conditions: str = "",
+    text: str = ""
 ):
     try:
         q = f"select {columns} from {table} {conditions}"
@@ -21,4 +22,4 @@ def fill_table_of_db_with_df(
         if_exists="append",
         index=False
     )
-    print(f"{table} update.", end="\r", flush=True)
+    print(text, end="\r", flush=True)
