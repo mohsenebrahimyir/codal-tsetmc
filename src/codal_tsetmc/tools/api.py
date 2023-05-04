@@ -16,3 +16,20 @@ def get_dict_from_xml_api(url: str) -> dict:
         pass
 
     return json.loads(string_json)
+
+
+def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):
+    url = f'http://cdn.tsetmc.com/api/{data}/{code}/{date}'
+    cookies = {}
+
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36',
+    }
+    response = requests.get(
+        url=url,
+        cookies=cookies,
+        headers=headers,
+        verify=False
+    )
+    
+    return response.json()
