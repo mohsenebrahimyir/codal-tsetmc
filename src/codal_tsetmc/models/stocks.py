@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 import pandas as pd
 import requests
 import jalali_pandas
+from codal_tsetmc.tools.string_edit import shamsi_to_yyyymmdd
+from codal_tsetmc.download.price import update_list_of_stocks_price
 
 
 def add_event(df, event, ratio):
@@ -24,6 +26,7 @@ class Stocks(Base):
     name = Column(String)
     isin = Column(String)
     code = Column(String, unique=True)
+    last_capital = Column(BIGINT)
     instrument_code = Column(String)
     instrument_id = Column(String)
     group_name = Column(String)
@@ -34,7 +37,7 @@ class Stocks(Base):
     market_type = Column(String)
     companies = relationship('Companies', backref='stock')
     prices = relationship("StockPrice", backref="stock")
-    capital = relationship("StockCapital", backref="stock")
+    capitals = relationship("StockCapital", backref="stock")
     _df_cached = False
     _price_cached = False
     _dollar_cached = False
@@ -53,20 +56,20 @@ class Stocks(Base):
         self._df_counter += 1
         if self._df_cached:
             return self._df
+        
         query = f"select * from stock_price where code = '{self.code}'"
         df = pd.read_sql(query, engine)
+
         if df.empty:
             self._df_cached = True
             self._df = df
             return self._df
         
-        df["jdate"] = pd.to_datetime(df["date"], format="%Y%m%d%H%M%S")
-        df["gdate"] = df.jdate.jalali.to_gregorian()
+        df["symbol"] = self.symbol
         df = df.sort_values("date")
         df.reset_index(drop=True, inplace=True)
-        df.set_index("date", inplace=True)
         self._df_cached = True
-        self._df = df
+        self._df = df[["date", "code", "symbol", "price"]]
 
         return self._df
 
@@ -77,19 +80,21 @@ class Stocks(Base):
             return self._price
 
         df = self.df
+
         if df.empty:
             self._price_cached = True
             self._price = df
             return self._price
 
-        df = df.rename(columns={"vol": "volume"})
+        capital_query = f"select * from stock_capital where code = '{self.code}'"
+        capital = pd.read_sql(capital_query, engine)
+        if capital is not None:
 
-        df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
-        df.set_index("date", inplace=True)
-        df = df[["jdate", "volume", "value", "capital"]]
-
-        self._price_cached = True
-        self._price = df
+            df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
+            df.set_index("date", inplace=True)
+            df = df[["jdate", "volume", "value", "capital"]]
+            self._price_cached = True
+            self._price = df
 
         return self._price
 
@@ -122,10 +127,9 @@ class Stocks(Base):
         return self._dollar
 
     def update_price(self):
-        from codal_tsetmc.download import update_stock_price
 
         try:
-            return update_stock_price(self.code)
+            return update_list_of_stocks_price([self.code])
         except:
             return False
 
@@ -150,9 +154,9 @@ class StockPrice(Base):
     id = Column(Integer, primary_key=True)
     code = Column(String, ForeignKey("stocks.code"), index=True)
     ticker = Column(String)
-    date = Column(Integer)
+    date = Column(String)
     price = Column(Float)
-    update = Column(Integer)
+    up_date = Column(String)
 
     def __repr__(self):
         return f"({self.stock.name}, {self.date}, {self.close:.0f})"
@@ -163,10 +167,10 @@ class StockCapital(Base):
 
     id = Column(Integer, primary_key=True)
     code = Column(String, ForeignKey("stocks.code"), index=True)
-    date = Column(Integer)
+    date = Column(String)
     old = Column(BIGINT)
     new = Column(BIGINT)
-    update = Column(Integer)
+    up_date = Column(String)
 
 
     def __repr__(self):
