@@ -1,4 +1,4 @@
-from datetime import datetime
+from jdatetime import datetime as jdt
 import asyncio
 import aiohttp
 import pandas as pd
@@ -7,56 +7,59 @@ import io
 
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
+from codal_tsetmc.tools.string_edit import *
+from codal_tsetmc.tools.database import *
+from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
 
 
-def value_to_float(x):
-    x = x.replace(",", "")
-    if type(x) == float or type(x) == int:
-        return x
-    if 'K' in x:
-        if len(x) > 1:
-            return float(x.replace(' K', '')) * 1000
-        return 1000.0
-    if 'M' in x:
-        if len(x) > 1:
-            return float(x.replace(' M', '')) * 1000000
-        return 1000000.0
-    if 'B' in x:
-        return float(x.replace(' B', '')) * 1000000000
-    return 0.0
+def cleanup_capital_records(response):
+    df = pd.read_html(io.StringIO(response))[0]
+    df.columns = ["date", "new", "old"]
+    df["date"] = df["date"].apply(datetime_to_num)
+    df = df.sort_index(ascending=False)
+    df["old"] = df["old"].apply(value_to_float)
+    df["new"] = df["new"].apply(value_to_float)
+    df = df[
+        (df.new > df.new.shift(fill_value=0)) &
+        (df.old > df.old.shift(fill_value=0))
+    ]
+    df = df[
+        (df.old == df.new.shift(fill_value=0)) |
+        (df.old == min(df.old)) |
+        (df.new == max(df.new))
+    ]
 
+    return df
 
-def get_stock_capital_history(stock_id: str) -> pd.DataFrame:
-    url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={stock_id}"
-    r = requests.get(url)
-    df = pd.read_html(r.text)[0]
-    df.columns = ["date", "capital"]
-    df["capital"] = df["capital"].apply(value_to_float)
-    df["date"] = df.date.jalali.parse_jalali("%Y/%m/%d")
-    df["dtyyyymmdd"] = (
-        df.date.jalali
-        .to_gregorian()
-        .apply(lambda x: x.strftime("%Y%m%d"))
-        .astype(int)
-    )
+def get_stock_capital_history(code: str) -> pd.DataFrame:
+    url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
+    response = requests.get(url).text
+    df = cleanup_capital_records(response)
+    df["code"] = code
 
     return df
 
 
 async def update_stock_capital(code: str):
+    
     try:
-        now = datetime.now().strftime("%Y%m%d")
+        if not is_stock_in_bourse_or_fara_or_paye(code):
+            return
+        
+        jnow = int(jdt.now().strftime("%Y%m%d"))*1e6
         try:
             max_date_query = (
-                f"select max(dtyyyymmdd) as date from stock_capital where code = '{code}'"
+                f"select max(date) as date from stock_capital where code = '{code}'"
             )
             max_date = pd.read_sql(max_date_query, db.engine)
             last_date = max_date.date.iat[0]
+            last_update = max_date.update.iat[0]
+
         except Exception as e:
             last_date = None
         try:
             # need to updata new capital data
-            if last_date is None or str(last_date) < now:
+            if last_date is None or last_date < jnow or last_update < jnow:
                 url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
             else:  # The capital data for this code is updateed
                 return
@@ -65,34 +68,14 @@ async def update_stock_capital(code: str):
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
-                data = await resp.text()
-
-        df = pd.read_html(data)[0]
-
-        df.columns = ["dtyyyymmdd", "capital"]
-        df["capital"].apply(value_to_float)
-        df["dtyyyymmdd"] = (
-            df.dtyyyymmdd
-            .jalali.parse_jalali("%Y/%m/%d")
-            .jalali.to_gregorian()
-            .apply(lambda x: x.strftime("%Y%m%d"))
-            .astype(int)
-        )
+                response = await resp.text()
+        
+        df = cleanup_capital_records(response)
         df["code"] = code
+        df["update"]= jnow
+        
+        fill_table_of_db_with_df(df, "stock_capital", text=f"stock {code}")
 
-        try:
-            q = f"select dtyyyymmdd from stock_capital where code = '{code}'"
-            temp = pd.read_sql(q, db.engine)
-            df = df[~df.dtyyyymmdd.isin(temp.dtyyyymmdd)]
-        except:
-            pass
-
-        df.to_sql(
-            "stock_capital",
-            db.engine,
-            if_exists="append",
-            index=False
-        )
         return True, code
 
     except Exception as e:
@@ -101,7 +84,7 @@ async def update_stock_capital(code: str):
 
 def update_group_capital(code):
     stocks = db.session.query(Stocks.code).filter_by(group_code=code).all()
-    print("updating group", code, end="\r")
+    print(f"{' '*25} group {code}", end="\r")
     loop = asyncio.get_event_loop()
     tasks = [update_stock_capital(stock[0]) for stock in stocks]
     try:
@@ -129,7 +112,7 @@ def get_all_capital():
     codes = db.session.query(db.distinct(Stocks.group_code)).all()
     for i, code in enumerate(codes):
         print(
-            f"{' '*18} total progress: {100*(i+1)/len(codes):.2f}%",
+            f"{' '*35} total progress: {100*(i+1)/len(codes):.2f}%",
             end="\r",
         )
         update_group_capital(code[0])
