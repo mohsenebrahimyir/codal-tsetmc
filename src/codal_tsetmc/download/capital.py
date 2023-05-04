@@ -1,4 +1,5 @@
 from jdatetime import datetime as jdt
+from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
@@ -9,13 +10,21 @@ import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 from codal_tsetmc.tools.string_edit import *
 from codal_tsetmc.tools.database import *
+from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
 from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
+
+
+
+def get_capital_daily(code: str, date: str):
+    data = "Instrument/GetInstrumentHistory"
+    dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
+    return dict_data["instrumentHistory"]["zTitad"]
 
 
 def cleanup_capital_records(response):
     df = pd.read_html(io.StringIO(response))[0]
     df.columns = ["date", "new", "old"]
-    df["date"] = df["date"].apply(datetime_to_num)
+    df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
     df = df.sort_index(ascending=False)
     df["old"] = df["old"].apply(value_to_float)
     df["new"] = df["new"].apply(value_to_float)
@@ -39,27 +48,25 @@ def get_stock_capital_history(code: str) -> pd.DataFrame:
 
     return df
 
-
 async def update_stock_capital(code: str):
     
     try:
         if not is_stock_in_bourse_or_fara_or_paye(code):
             return
         
-        jnow = int(jdt.now().strftime("%Y%m%d"))*1e6
+        jnow = jdt.now().strftime("%Y%m%d000000")
         try:
             max_date_query = (
-                f"select max(date) as date from stock_capital where code = '{code}'"
+                f"select max(up_date) as up_date from stock_capital where code = '{code}'"
             )
             max_date = pd.read_sql(max_date_query, db.engine)
-            last_date = max_date.date.iat[0]
-            last_update = max_date.update.iat[0]
+            last_up_date = max_date.up_date.iat[0]
 
         except Exception as e:
-            last_date = None
+            last_up_date = None
         try:
             # need to updata new capital data
-            if last_date is None or last_date < jnow or last_update < jnow:
+            if last_up_date is None or last_up_date < jnow:
                 url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
             else:  # The capital data for this code is updateed
                 return
@@ -71,10 +78,27 @@ async def update_stock_capital(code: str):
                 response = await resp.text()
         
         df = cleanup_capital_records(response)
+
+        if df is None:
+            now = datetime.now().strftime("%Y%m%d")
+            capital = get_capital_daily(code, now)
+            df = pd.DataFrame({
+                "date": [jnow],
+                "old": [capital],
+                "new": [capital]
+            })
+
+
         df["code"] = code
-        df["update"]= jnow
-        
-        fill_table_of_db_with_df(df, "stock_capital", text=f"stock {code}")
+        df["up_date"]= jnow
+
+        fill_table_of_db_with_df(
+            df,
+            columns="date",
+            table="stock_capital",
+            conditions=f"where code = '{code}'",
+            text=f"stock: {code}"
+        )
 
         return True, code
 
@@ -82,11 +106,9 @@ async def update_stock_capital(code: str):
         return e, code
 
 
-def update_group_capital(code):
-    stocks = db.session.query(Stocks.code).filter_by(group_code=code).all()
-    print(f"{' '*25} group {code}", end="\r")
+def update_list_of_stocks_capital(codes, msg=""):
     loop = asyncio.get_event_loop()
-    tasks = [update_stock_capital(stock[0]) for stock in stocks]
+    tasks = [update_stock_capital(code) for code in codes]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
     except RuntimeError:
@@ -99,12 +121,18 @@ def update_group_capital(code):
         print("```")
         print("%pip install nest_asyncio")
         print("import nest_asyncio; nest_asyncio.apply()")
-        print("from codal_tsetmc.download import get_all_capital")
-        print("get_all_capital()")
         print("```")
         raise RuntimeError
+    print(msg, end="\r")
+    return results
 
-    print("group", code, "updated", end="\r")
+
+def update_group_capital(group_code):
+    stocks = db.session.query(Stocks.code).filter_by(group_code=group_code).all()
+    print(f"{' '*25} group: {group_code}", end="\r")
+    codes = [stock[0] for stock in stocks]
+    msg = "group "+group_code+" updated"
+    results = update_list_of_stocks_capital(codes, msg)
     return results
 
 
@@ -117,4 +145,4 @@ def get_all_capital():
         )
         update_group_capital(code[0])
 
-    print("Capital Download Finished.", " "*20)
+    print("Capital Download Finished.", " "*50)
