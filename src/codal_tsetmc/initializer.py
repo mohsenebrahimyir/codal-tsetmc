@@ -1,12 +1,7 @@
 import os
 
 from codal_tsetmc import db, models
-from codal_tsetmc.download import (
-    Categories,
-    fill_stocks_table,
-    fill_companies_table,
-    fill_categories_table
-)
+from codal_tsetmc.download import *
 
 
 def init_db():
@@ -29,5 +24,8 @@ def fill_db():
     fill_categories_table()
     fill_companies_table()
     fill_stocks_table()
+    fill_stocks_prices_table()
+    fill_stocks_capitals_table()
+    fill_commodities_prices_table()
     print("For more info go to:")
     print("https://github.com/mohsenebrahimyir/codal-tsetmc")

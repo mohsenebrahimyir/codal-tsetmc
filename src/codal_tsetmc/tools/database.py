@@ -19,3 +19,4 @@ def fill_table_of_db_with_df(
 
     df.to_sql(table, db.engine, if_exists="append", index=False)
     print(text, end="\r", flush=True)
+

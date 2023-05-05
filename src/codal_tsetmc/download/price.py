@@ -6,17 +6,16 @@ import aiohttp
 import pandas as pd
 import requests
 import io
-import json
 import requests
 
 import codal_tsetmc.config as db
-from codal_tsetmc.models import StockPrice, Stocks
-from codal_tsetmc.tools.database import *
-from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
-from codal_tsetmc.tools.string_edit import *
+from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.tools import *
 from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
 
-def get_index_price_history():
+
+
+def get_index_prices_history():
     index = "32097828799138957"
     url = f'http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={index}&t=value'
     s = requests.get(url, verify=False).content
@@ -25,12 +24,14 @@ def get_index_price_history():
     df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
     df["code"] = index
     df["ticker"] = "INDEX"
+    df = df.sort_values("date")
+    
 
     return df
 
-def update_index_price():
+def update_index_prices():
     index = "32097828799138957"
-    df = get_index_price_history()
+    df = get_index_prices_history()
     df["up_date"] = jdt.now().strftime("%Y%m%d000000")
     fill_table_of_db_with_df(
         df, 
@@ -41,24 +42,31 @@ def update_index_price():
     )
 
 
-def cleanup_price_records(response):
+def get_stock_price_daily(code: str, date: str):
+    data = "ClosingPrice/GetClosingPriceDaily"
+    dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
+    
+    return dict_data["closingPriceDaily"]["pClosing"]
+
+def cleanup_stock_prices_records(response):
     df = pd.read_csv(io.StringIO(response))
     df.columns = [i[1:-1].lower() for i in df.columns]
     df["date"] = df["dtyyyymmdd"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
     df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
     df["price"] = df["close"]
+    df = df.sort_values("date")
 
     return df[["date", "ticker", "price"]]
 
-def get_stock_price_history(code: str, from_date="20000101", to_date=datetime.now().strftime("%Y%m%d")) -> pd.DataFrame:
+def get_stock_prices_history(code: str, from_date="20000101", to_date=datetime.now().strftime("%Y%m%d")) -> pd.DataFrame:
     url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom={from_date}&DateTo={to_date}&b=0"
     response = requests.get(url).text
-    df = cleanup_price_records(response)
+    df = cleanup_stock_prices_records(response)
     df["code"] = code
 
     return df
 
-async def update_stock_price(code: str):
+async def update_stock_prices(code: str):
     try:
         if not is_stock_in_bourse_or_fara_or_paye(code):
             return
@@ -70,7 +78,7 @@ async def update_stock_price(code: str):
             last_date_index = max_date_index.date.iat[0]
 
             if last_date_index is None:
-                update_index_price()
+                update_index_prices()
                 max_date_index = pd.read_sql(query_index, db.engine)
                 last_date_index = max_date_index.date.iat[0]
 
@@ -79,7 +87,7 @@ async def update_stock_price(code: str):
             last_date_stock = max_date_stock.date.iat[0]
 
             if last_date_index < last_date_stock:
-                update_index_price()
+                update_index_prices()
                 max_date_index = pd.read_sql(query_index, db.engine)
                 last_date_index = max_date_index.date.iat[0]
 
@@ -100,7 +108,7 @@ async def update_stock_price(code: str):
             async with session.get(url) as resp:
                 response = await resp.text()
 
-        df = cleanup_price_records(response)
+        df = cleanup_stock_prices_records(response)
         df["code"] = code
         df["up_date"] = jdt.now().strftime("%Y%m%d000000")
 
@@ -117,9 +125,9 @@ async def update_stock_price(code: str):
     except Exception as e:
         return e, code
 
-def update_list_of_stocks_price(codes, msg=""):
+def update_stocks_prices(codes, msg=""):
     loop = asyncio.get_event_loop()
-    tasks = [update_stock_price(code) for code in codes]
+    tasks = [update_stock_prices(code) for code in codes]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
     except RuntimeError:
@@ -138,29 +146,23 @@ def update_list_of_stocks_price(codes, msg=""):
     return results
 
 
-def update_group_price(group_code):
+def update_stocks_group_prices(group_code):
     stocks = db.session.query(Stocks.code).filter_by(group_code=group_code).all()
     print(f"{' '*25} group: {group_code}", end="\r")
     codes = [stock[0] for stock in stocks]
     msg = "group " + group_code + " updated"
-    results = update_list_of_stocks_price(codes, msg)
+    results = update_stocks_prices(codes, msg)
     return results
 
 
-def get_all_price():
-    update_index_price()
+def fill_stocks_prices_table():
+    update_index_prices()
     codes = db.session.query(db.distinct(Stocks.group_code)).all()
     for i, code in enumerate(codes):
         print(
             f"{' '*35} total progress: {100*(i+1)/len(codes):.2f}%",
             end="\r",
         )
-        update_group_price(code[0])
+        update_stocks_group_prices(code[0])
     print("Price Download Finished.", " "*50)
 
-
-def get__price_daily(code: str, date: str):
-    data = "ClosingPrice/GetClosingPriceDaily"
-    dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
-    
-    return dict_data["closingPriceDaily"]["pClosing"]

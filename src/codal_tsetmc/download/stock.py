@@ -37,7 +37,7 @@ def update_stock_table(code: str) -> Stocks:
             "name": data["instrumentInfo"]["lVal30"],
             "isin": data["instrumentInfo"]["cIsin"],
             "code": code,
-            "last_capital": data["instrumentInfo"]["zTitad"],
+            "capital": data["instrumentInfo"]["zTitad"],
             "instrument_code": data["instrumentInfo"]["insCode"],
             "instrument_id": data["instrumentInfo"]["instrumentID"],
             "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
@@ -58,7 +58,7 @@ def get_stock_ids(timeout = 3):
     ids = set(re.findall(r"\d{15,20}", r.text))
     return list(ids)
 
-def get_stock_groups(timeout = 3):
+def get_stocks_groups(timeout = 3):
     url = "http://www.tsetmc.com/Loader.aspx?ParTree=111C1213"
     r = requests.get(url, timeout=timeout)
     return re.findall(r"\d{2}", r.text)

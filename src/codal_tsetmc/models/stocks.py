@@ -3,8 +3,6 @@ from sqlalchemy.orm import relationship
 import pandas as pd
 import requests
 import jalali_pandas
-from codal_tsetmc.tools.string_edit import shamsi_to_yyyymmdd
-from codal_tsetmc.download.price import update_list_of_stocks_price
 
 
 def add_event(df, event, ratio):
@@ -26,7 +24,7 @@ class Stocks(Base):
     name = Column(String)
     isin = Column(String)
     code = Column(String, unique=True)
-    last_capital = Column(BIGINT)
+    capital = Column(BIGINT)
     instrument_code = Column(String)
     instrument_id = Column(String)
     group_name = Column(String)
@@ -39,13 +37,7 @@ class Stocks(Base):
     prices = relationship("StockPrice", backref="stock")
     capitals = relationship("StockCapital", backref="stock")
     _df_cached = False
-    _price_cached = False
-    _dollar_cached = False
-    _capital_cached = False
     _df_counter = 0
-    _price_counter = 0
-    _dollar_counter = 0
-    _capital_counter = 0
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -58,78 +50,46 @@ class Stocks(Base):
             return self._df
         
         query = f"select * from stock_price where code = '{self.code}'"
-        df = pd.read_sql(query, engine)
+        price = pd.read_sql(query, engine).set_index("date")
 
-        if df.empty:
+        query = f"select * from stock_capital where code = '{self.code}'"
+        capital = pd.read_sql(query, engine).set_index("date").rename(columns={"new": "capital"})
+
+        query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
+        dollar = pd.read_sql(query, engine).set_index("date").rename(columns={"price": "dollar"})
+
+        if price.empty:
             self._df_cached = True
-            self._df = df
+            self._df = price
             return self._df
+
         
+        df = price[["code", "ticker", "price"]].join(
+                capital[["capital"]], how="outer"
+            ).join(
+                dollar[["dollar"]], how="outer"
+            ).sort_index()
+        
+        
+        if capital.empty:
+            df["capital"].iat[0] = self.capital
+        else:
+            df["capital"].iat[0] = capital["old"].iloc[0]
+        
+        df["capital"] = df["capital"].ffill()
+        df["market_value"] = df.capital * df.price
+        df["dollar_value"] = df.market_value / df.dollar
         df["symbol"] = self.symbol
-        df = df.sort_values("date")
-        df.reset_index(drop=True, inplace=True)
         self._df_cached = True
-        self._df = df[["date", "code", "symbol", "price"]]
+        self._df = df
 
         return self._df
 
-    @property
-    def price(self) -> pd.DataFrame:
-        self._price_counter += 1
-        if self._price_cached:
-            return self._price
-
-        df = self.df
-
-        if df.empty:
-            self._price_cached = True
-            self._price = df
-            return self._price
-
-        capital_query = f"select * from stock_capital where code = '{self.code}'"
-        capital = pd.read_sql(capital_query, engine)
-        if capital is not None:
-
-            df["date"] = pd.to_datetime(df["dtyyyymmdd"], format="%Y%m%d")
-            df.set_index("date", inplace=True)
-            df = df[["jdate", "volume", "value", "capital"]]
-            self._price_cached = True
-            self._price = df
-
-        return self._price
-
-    @property
-    def dollar(self) -> pd.DataFrame:
-        """dataframe of stock dollar with date and close"""
-        self._dollar_counter += 1
-        if self._dollar_cached:
-            return self._dollar
-
-        df = self.price
-
-        if df.empty:
-            self._dollar_cached = True
-            self._dollar = df
-            return self._dollar
-
-        query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
-        dollar = pd.read_sql(query, engine)
-        dollar["date"] = pd.to_datetime(dollar["date"], format="%Y%m%d")
-        dollar = dollar.set_index("date").rename(columns={"close": "dollar"})
-        df = df.merge(dollar[["dollar"]], how="outer", on="date")
-        df["dollar"] = df["dollar"].fillna(method="ffill")
-        df["value"] = df["value"] / df["dollar"]
-        df = df[["jdate", "volume", "value", "capital"]].dropna(subset=['close'])
-
-        self._dollar_cached = True
-        self._dollar = df
-
-        return self._dollar
-
     def update_price(self):
+        from codal_tsetmc.download.price import update_stocks_prices
 
         try:
-            return update_list_of_stocks_price([self.code])
+            return update_stocks_prices([self.code])
         except:
             return False
 
@@ -172,9 +132,23 @@ class StockCapital(Base):
     new = Column(BIGINT)
     up_date = Column(String)
 
-
     def __repr__(self):
         return f"{self.stock.name}, {max(self.date)}, {max(self.new)}"
+
+
+class CommodityPrice(Base):
+    __tablename__ = "commodity_price"
+
+    id = Column(Integer, primary_key=True)
+    symbol = Column(String)
+    date = Column(String, index=True)
+    price = Column(Float)
+    up_date = Column(String)
+
+    def __repr__(self):
+        #TODO: add symbol to reper
+        return f"قیمت کامودیتی {self.symbol}"
+
 
 def get_asset(name):
     name = name.replace("ی", "ي").replace("ک", "ك")

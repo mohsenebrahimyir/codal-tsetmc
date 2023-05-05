@@ -1,5 +1,4 @@
 from jdatetime import datetime as jdt
-from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
@@ -8,20 +7,16 @@ import io
 
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
-from codal_tsetmc.tools.string_edit import *
-from codal_tsetmc.tools.database import *
-from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
+from codal_tsetmc.tools import *
 from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
 
-
-
-def get_capital_daily(code: str, date: str):
+def get_stock_capital_daily(code: str, date: str):
     data = "Instrument/GetInstrumentHistory"
     dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
     return dict_data["instrumentHistory"]["zTitad"]
 
 
-def cleanup_capital_records(response):
+def cleanup_stock_capitals_records(response):
     df = pd.read_html(io.StringIO(response))[0]
     df.columns = ["date", "new", "old"]
     df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
@@ -38,17 +33,19 @@ def cleanup_capital_records(response):
         (df.new == max(df.new))
     ]
 
+    df = df.sort_values("date")
+
     return df
 
-def get_stock_capital_history(code: str) -> pd.DataFrame:
+def get_stock_capitals_history(code: str) -> pd.DataFrame:
     url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
     response = requests.get(url).text
-    df = cleanup_capital_records(response)
+    df = cleanup_stock_capitals_records(response)
     df["code"] = code
 
     return df
 
-async def update_stock_capital(code: str):
+async def update_stock_capitals(code: str):
     
     try:
         if not is_stock_in_bourse_or_fara_or_paye(code):
@@ -77,17 +74,7 @@ async def update_stock_capital(code: str):
             async with session.get(url) as resp:
                 response = await resp.text()
         
-        df = cleanup_capital_records(response)
-
-        if df is None:
-            now = datetime.now().strftime("%Y%m%d")
-            capital = get_capital_daily(code, now)
-            df = pd.DataFrame({
-                "date": [jnow],
-                "old": [capital],
-                "new": [capital]
-            })
-
+        df = cleanup_stock_capitals_records(response)
 
         df["code"] = code
         df["up_date"]= jnow
@@ -106,9 +93,9 @@ async def update_stock_capital(code: str):
         return e, code
 
 
-def update_list_of_stocks_capital(codes, msg=""):
+def update_stocks_capitals(codes, msg=""):
     loop = asyncio.get_event_loop()
-    tasks = [update_stock_capital(code) for code in codes]
+    tasks = [update_stock_capitals(code) for code in codes]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
     except RuntimeError:
@@ -127,22 +114,22 @@ def update_list_of_stocks_capital(codes, msg=""):
     return results
 
 
-def update_group_capital(group_code):
+def update_stocks_group_capitals(group_code):
     stocks = db.session.query(Stocks.code).filter_by(group_code=group_code).all()
     print(f"{' '*25} group: {group_code}", end="\r")
     codes = [stock[0] for stock in stocks]
     msg = "group "+group_code+" updated"
-    results = update_list_of_stocks_capital(codes, msg)
+    results = update_stocks_capitals(codes, msg)
     return results
 
 
-def get_all_capital():
+def fill_stocks_capitals_table():
     codes = db.session.query(db.distinct(Stocks.group_code)).all()
     for i, code in enumerate(codes):
         print(
             f"{' '*35} total progress: {100*(i+1)/len(codes):.2f}%",
             end="\r",
         )
-        update_group_capital(code[0])
+        update_stocks_group_capitals(code[0])
 
     print("Capital Download Finished.", " "*50)

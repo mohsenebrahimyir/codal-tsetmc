@@ -3,6 +3,7 @@ from .stocks import (
     Stocks,
     StockPrice,
     StockCapital,
+    CommodityPrice
 )
 from .companies import (
     Companies,
@@ -25,7 +26,8 @@ def create():
         Stocks, StockPrice, StockCapital,
         Companies, CompanyTypes, CompanyStatuses,
         ReportTypes, LetterTypes, Auditors, 
-        Letters
+        Letters,
+        CommodityPrice
     ]
     for model in models:
         create_table(model)
