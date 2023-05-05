@@ -1,6 +1,7 @@
 import json
 from urllib.request import urlopen
 import requests
+import pandas as pd
 
 
 def get_dict_from_xml_api(url: str) -> dict:
@@ -33,3 +34,9 @@ def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):
     )
     
     return response.json()
+
+
+def get_rawdata_from_github(symbol):
+    url = f"https://raw.githubusercontent.com/mohsenebrahimyir/codal-tsetmc/master/data/{symbol}.csv"
+    df = pd.read_csv(url)
+    return df

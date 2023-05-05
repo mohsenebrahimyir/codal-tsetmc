@@ -8,7 +8,7 @@ import requests
 import io
 
 import codal_tsetmc.config as db
-from codal_tsetmc.tools import fill_table_of_db_with_df
+from codal_tsetmc.tools import *
 
 
 def cleanup_commodity_price_records(response):
@@ -105,5 +105,24 @@ def fill_commodities_prices_table():
     symbols = ["price_dollar_rl"]
     for i, symbol in enumerate(symbols):
         print(f"{' '*35} total progress: {100*(i+1)/len(symbols):.2f}%", end="\r")
+        if symbol == "price_dollar_rl":
+
+            query = f"select min(date) as date from commodity_price where symbol = '{symbol}'"
+            min_date = pd.read_sql(query, db.engine)
+            first_date = min_date.date.iat[0]
+            if first_date != "13600707000000":
+                df = get_rawdata_from_github(symbol)
+                df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
+                df["symbol"] = symbol
+                df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+                
+                fill_table_of_db_with_df(
+                    df, 
+                    columns="date",
+                    table="commodity_price",
+                    conditions=f"where symbol = '{symbol}'",
+                    text=f"symbol: {symbol}"
+                )
+
         update_commodities_prices([symbol])
     print("Price Download Finished.", " "*50)
