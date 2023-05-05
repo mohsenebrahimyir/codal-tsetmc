@@ -46,7 +46,7 @@ async def update_stock_table(code: str) -> Stocks:
             "name": data["instrumentInfo"]["lVal30"],
             "isin": data["instrumentInfo"]["cIsin"],
             "code": code,
-            "capital": data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000,
+            "capital": data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000_000,
             "instrument_code": data["instrumentInfo"]["insCode"],
             "instrument_id": data["instrumentInfo"]["instrumentID"],
             "group_name": data["instrumentInfo"]["sector"]["lSecVal"],

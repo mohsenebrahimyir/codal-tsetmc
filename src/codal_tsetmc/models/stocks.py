@@ -81,7 +81,7 @@ class Stocks(Base):
             ).sort_index()
         
         if capital.empty:
-            df["capital"].iat[0] = self.capital if self.name == "شاخص كل" else 1_000_000
+            df["capital"].iat[0] = self.capital
         else:
             df["capital"].iat[0] = capital["old"].iloc[0]
         
