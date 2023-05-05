@@ -50,38 +50,56 @@ class Stocks(Base):
             return self._df
         
         query = f"select * from stock_price where code = '{self.code}'"
-        price = pd.read_sql(query, engine).set_index("date")
+        price = pd.read_sql(query, engine)
+        price["jdate"] = price["date"].jalali.parse_jalali("%Y%m%d%H%M%S")
+        price["gdate"] = price["jdate"].jalali.to_gregorian()
+        price.set_index("date", inplace=True)
 
         query = f"select * from stock_capital where code = '{self.code}'"
         capital = pd.read_sql(query, engine).set_index("date").rename(columns={"new": "capital"})
 
+        query = f"select * from stock_price where code = '32097828799138957'"
+        index = pd.read_sql(query, engine).set_index("date").rename(columns={"price": "index"})
+
         query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
         dollar = pd.read_sql(query, engine).set_index("date").rename(columns={"price": "dollar"})
+
+
 
         if price.empty:
             self._df_cached = True
             self._df = price
             return self._df
 
-        
-        df = price[["code", "ticker", "price"]].join(
+        price["symbol"] = self.symbol
+        df = price[["jdate", "gdate", "ticker", "symbol", "code", "price"]].join(
                 capital[["capital"]], how="outer"
+            ).join(
+                index[["index"]], how="outer"
             ).join(
                 dollar[["dollar"]], how="outer"
             ).sort_index()
         
-        
         if capital.empty:
-            df["capital"].iat[0] = self.capital
+            df["capital"].iat[0] = self.capital if self.name == "شاخص كل" else 1_000_000
         else:
             df["capital"].iat[0] = capital["old"].iloc[0]
         
+
         df["capital"] = df["capital"].ffill()
+        df["ticker"] = df["ticker"].ffill()
+        df["symbol"] = df["symbol"].ffill()
+        df["price"] = df["price"].ffill()
+        df["code"] = df["code"].ffill()
+        df["index"] = df["index"].ffill()
+        df["dollar"] = df["dollar"].ffill()
+
+
         df["market_value"] = df.capital * df.price
         df["dollar_value"] = df.market_value / df.dollar
-        df["symbol"] = self.symbol
+
         self._df_cached = True
-        self._df = df
+        self._df = df.dropna()
 
         return self._df
 

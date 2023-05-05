@@ -4,7 +4,6 @@ from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
-import requests
 import io
 import requests
 

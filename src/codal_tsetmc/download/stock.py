@@ -1,5 +1,7 @@
 import requests
 import re
+import asyncio
+import aiohttp
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 
@@ -25,19 +27,26 @@ def create_or_update_stock_from_dict(stock):
         print(f"stock {stock['code']} exist", end="\r", flush=True)
         db.session.rollback()
 
-def update_stock_table(code: str) -> Stocks:
-    if exist := Stocks.query.filter_by(code=code).first():
-        print(f"stock with code {code} exist")
-
-    else:
-        data = get_stock_detail(code)
+async def update_stock_table(code: str) -> Stocks:
+    try:
+        if exist := Stocks.query.filter_by(code=code).first():
+            print(f"stock with code {code} exist")
+            return
+        
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
+        }
+        url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{code}"
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url) as resp:
+                data = await resp.json()
 
         stock = {
             "symbol": data["instrumentInfo"]["lVal18AFC"],
             "name": data["instrumentInfo"]["lVal30"],
             "isin": data["instrumentInfo"]["cIsin"],
             "code": code,
-            "capital": data["instrumentInfo"]["zTitad"],
+            "capital": data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000,
             "instrument_code": data["instrumentInfo"]["insCode"],
             "instrument_id": data["instrumentInfo"]["instrumentID"],
             "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
@@ -49,31 +58,48 @@ def update_stock_table(code: str) -> Stocks:
         }
 
         create_or_update_stock_from_dict(stock)
-    return
 
+        return True, code
 
-def get_stock_ids(timeout = 3):
+    except Exception as e:
+        return e, code
+
+def update_stocks_table(codes, msg=""):
+    loop = asyncio.get_event_loop()
+    tasks = [update_stock_table(code) for code in codes]
+    try:
+        results = loop.run_until_complete(asyncio.gather(*tasks))
+    except RuntimeError:
+        WARNING_COLOR = "\033[93m"
+        ENDING_COLOR = "\033[0m"
+        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
+        print(
+            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
+        )
+        print("```")
+        print("%pip install nest_asyncio")
+        print("import nest_asyncio; nest_asyncio.apply()")
+        print("```")
+        raise RuntimeError
+    print(msg, end="\r")
+    return results
+
+def get_stock_ids(timeout = 10):
     url = "http://tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"
     r = requests.get(url, timeout=timeout)
     ids = set(re.findall(r"\d{15,20}", r.text))
     return list(ids)
 
-def get_stocks_groups(timeout = 3):
+def get_stocks_groups(timeout = 10):
     url = "http://www.tsetmc.com/Loader.aspx?ParTree=111C1213"
     r = requests.get(url, timeout=timeout)
     return re.findall(r"\d{2}", r.text)
 
-def fill_stocks_table(timeout = 3):
-    print("Downloading group ids...")
-    stocks = get_stock_ids(timeout = timeout)
-    stocks += "32097828799138957" # شاخص کل
-    for i, stock in enumerate(stocks):
-        print(
-            f"{' '*50} {i+1}/{len(stocks)} ({(i+1)/len(stocks)*100:.1f}% completed)",
-            end="\r", flush=True
-        )
-        try:
-            update_stock_table(stock)
-        except:
-            print(f"{'='*17} {stock} failed")
-            pass
+def fill_stocks_table(timeout = 10):
+    i = 30
+    while i > 1:
+        print(f"Downloading group ids... seris: {31 - i}")
+        stocks = get_stock_ids(timeout=timeout)
+        stocks = ["32097828799138957"] + stocks
+        update_stocks_table(stocks)
+        i -= 1
