@@ -8,7 +8,7 @@ import io
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
 from codal_tsetmc.tools import *
-from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
+from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 def get_stock_capital_daily(code: str, date: str):
     data = "Instrument/GetInstrumentHistory"

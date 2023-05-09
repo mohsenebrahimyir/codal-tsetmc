@@ -10,7 +10,7 @@ import requests
 import codal_tsetmc.config as db
 from codal_tsetmc.models.stocks import Stocks
 from codal_tsetmc.tools import *
-from codal_tsetmc.download.stock import is_stock_in_bourse_or_fara_or_paye
+from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 
 

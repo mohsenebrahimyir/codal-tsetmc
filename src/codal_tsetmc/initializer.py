@@ -23,9 +23,13 @@ def fill_db():
     print("may take few minutes")
     fill_stocks_table()
     fill_companies_table()
-    fill_companies_table()
+    fill_categories_table()
     fill_stocks_prices_table()
     fill_stocks_capitals_table()
     fill_commodities_prices_table()
     print("For more info go to:")
     print("https://github.com/mohsenebrahimyir/codal-tsetmc")
+
+
+if __name__ == '__main__':
+    pass

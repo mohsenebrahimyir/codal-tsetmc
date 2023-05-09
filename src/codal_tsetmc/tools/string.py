@@ -140,15 +140,6 @@ def value_to_float(x):
     return 0.0
 
 def to_snake_case(name):
-    #TODO: ...
-    """_summary_
-
-    Args:
-        name (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
     name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
     name = re.sub('__([A-Z])', r'_\1', name)
     name = re.sub('([a-z0-9])([A-Z])', r'\1_\2', name)
@@ -156,15 +147,6 @@ def to_snake_case(name):
 
 
 def df_col_to_snake_case(df):
-    #TODO: ...
-    """_summary_
-
-    Args:
-        d (_type_): _description_
-
-    Returns:
-        _type_: _description_
-    """
     df.columns = map(to_snake_case, df.columns)
     return df
 

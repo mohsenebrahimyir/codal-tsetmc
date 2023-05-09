@@ -5,7 +5,6 @@ import pandas as pd
 
 
 def get_dict_from_xml_api(url: str) -> dict:
-    # print(f"Get data from {url}")
     try:
         with urlopen(url) as file:
             string_json = file.read().decode('utf-8')

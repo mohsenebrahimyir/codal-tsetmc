@@ -104,7 +104,7 @@ class Stocks(Base):
         return self._df
 
     def update_price(self):
-        from codal_tsetmc.download.price import update_stocks_prices
+        from codal_tsetmc.download.tsetmc.price import update_stocks_prices
 
         try:
             return update_stocks_prices([self.code])
@@ -164,7 +164,6 @@ class CommodityPrice(Base):
     up_date = Column(String)
 
     def __repr__(self):
-        #TODO: add symbol to reper
         return f"قیمت کامودیتی {self.symbol}"
 
 
