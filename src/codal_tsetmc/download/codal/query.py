@@ -11,7 +11,6 @@ from codal_tsetmc.models import (
 )
 
 
-
 class CodalQuery:
 
     def __init__(self):
@@ -46,22 +45,6 @@ class CodalQuery:
     """###################
     تنظیمات لازم برای کوئری
     ###################"""
-
-    # تنظیم لیست گزارش
-    def get_report_list_url(self) -> str:
-        return self.get_query_url(False)
-
-    # تنظیم کوئری جستوجو
-    def get_api_search_url(self) -> str:
-        return self.get_query_url(True)
-
-    # تنظیم شماره صفحه
-    def set_page_number(self, number: int = None) -> None:
-        if bool(number):
-            BadValueInput(number).integer_type()
-            self.params['PageNumber'] = number
-        else:
-            self.params['PageNumber'] += 1
 
     # تنظیم نام نماد
     def set_symbol(self, symbol: str = None) -> None:
@@ -191,9 +174,17 @@ class CodalQuery:
         dictionary.update(filtered)
 
         return dictionary
+
+    # تنظیم شماره صفحه
+    def set_page_number(self, number: int = None) -> None:
+        if bool(number):
+            BadValueInput(number).integer_type()
+            self.params['PageNumber'] = number
+        else:
+            self.params['PageNumber'] += 1
     
     """################
-    گرفتن اطلاعات از کدال 
+    گرفتن لینک کوئری کدال 
     ################"""
 
     # گرفتن لینک
@@ -207,6 +198,18 @@ class CodalQuery:
         url_parts[4] = f"&{urlencode(query)}&search=true" if api else f"search&{urlencode(query)}"
 
         return urlparse.urlunparse(url_parts)
+
+    # گرفتن لیست گزارش
+    def get_report_list_url(self) -> str:
+        return self.get_query_url(False)
+
+    # گرفتن کوئری جستوجو
+    def get_api_search_url(self) -> str:
+        return self.get_query_url(True)
+    
+    """################
+    گرفتن اطلاعات از کدال 
+    ################"""
 
     # گرفتن اطلاعات کلی در یک صفحه
     def get_api_sigle_page(self) -> dict:
@@ -257,63 +260,7 @@ class CodalQuery:
         else:
             self.letters = df
     
-    """##########################
-    آپدیت کردن گزارشات در دیتابیس
-    ##########################"""
+    
+    
 
-    # آپدیت کردن دیتابیس
-    def update_letters(self):
-        try:
-            df = self.get_letters(show=True)
-            fill_table_of_db_with_df(df, "letters", "tracing_no")
-            return True
-        except Exception as e:
-            return e
 
-    def update_company_letters(self):
-        try:
-            now = jdatetime.now().strftime("%Y%m%d%H%M%S")
-            try:
-                symbol = self.params["Symbol"]
-                max_date_query = (
-                    f"select max(publish_date_time) as date from letters where company_symbol = '{symbol}'"
-                )
-                max_date = pd.read_sql(max_date_query, db.engine)
-                last_date = max_date.date.iat[0]
-            except Exception as e:
-                last_date = None
-            
-            try:
-                if last_date is None:  # no any record added in database
-                    self.set_from_date("1301/01/01")
-                elif str(last_date) < now:  # need to updata new data
-                    self.set_from_date(num_to_datetime(last_date, datetime=False))
-                else:  # The data for this symbol is updateed
-                    return
-            
-            except Exception as e:
-                print(f"Error on formating:{str(e)}")
-                
-            self.update_letters()
-        
-        except Exception as e:
-            return e, symbol
-
-    def update_companies_letters(self):
-        len_symbols = len(self.symbols)
-        for i, symbol in enumerate(self.symbols):
-            print(f"{' '*18} total progress: {100*(i+1)/len_symbols:.2f}% {symbol}", end="\r", flush=True)
-            self.set_symbol(symbol)
-            self.update_company_letters()
-
-    def update_companies_status_letters(self, status):
-        code = CompanyStatuses.query.filter_by(title=status).first().code
-        companies = db.session.query(Companies.symbol).filter_by(status_code=0).all()
-        self.symbols = [company[0] for company in companies]
-        self.update_companies_letters()
-
-    def update_bourse_companies_letters(self):
-        self.update_companies_status_letters("پذیرفته شده در بورس تهران")
-
-    def update_farabourse_companies_letters(self):
-        self.update_companies_status_letters("پذیرفته شده در فرابورس ایران")
