@@ -2,12 +2,14 @@
 
 این پکیچ برای ذخیره داده‌های سایت کدال و بازار سرمایه برای اهداف تحلیل بنیادی تهیه شده است.
 
+آموزش پکیج:
+    - <https//mohsenebrahimyir.github.io/codal-tsetmc/>
+
 ## پایگاه داده
 
 ### TSETMC
 
 - [X] `tehran_stocks`: ویرایش بعضی از کدهای بسته
-    - 
 
 - [X] `stock_capital`: پایگاه داده افزایش سرمایه
 
@@ -17,9 +19,9 @@
 - [X] `company_statuses`: وضعیت شرکت‌ها
 - [X] `company_types`: نوع شرکت‌ها
 - [X] `report_types`: گروه اطلاعیه‌ها
-- [X] `financial_years`:
-- [X] `letter_types`:
-- [X] `auditors`:
+- [X] `financial_years`: سال مالی‌ها
+- [X] `letter_types`: نوع گزارش
+- [X] `auditors`: حسابرس‌ها
 
 #### OTHER
 
