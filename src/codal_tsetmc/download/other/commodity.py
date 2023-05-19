@@ -12,7 +12,7 @@ from codal_tsetmc.tools import *
 
 
 def cleanup_commodity_price_records(response):
-    res_dict = response["data"]
+    res_dict = response.json()["data"]
     df = pd.DataFrame.from_records(res_dict)
     df.columns = [
         "open", "low",
@@ -31,11 +31,18 @@ def cleanup_commodity_price_records(response):
 def get_commodity_price_history(symbol: str) -> pd.DataFrame:
     url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}"
     response = requests.get(url, params=[], headers={}) #('length', '100'),
-    df = cleanup_commodity_price_records(response)
+    new = cleanup_commodity_price_records(response)
+    if symbol == "price_dollar_rl":
+        old = get_rawdata_from_github(symbol)
+        old["date"] = old["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
+        
+        df = pd.concat(new, old[~old.date.isin(new.date)])
+
     df["symbol"] = symbol
     df.sort_values("date")
+    df = df.set_index("date")
 
-    return df[["date", "symbol", "price"]]
+    return df
 
 
 async def update_commodity_prices(symbol: str):
