@@ -1,4 +1,5 @@
 from jdatetime import datetime as jdt
+from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
@@ -10,7 +11,11 @@ from codal_tsetmc.models import Stocks
 from codal_tsetmc.tools import *
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
-def get_stock_capital_daily(code: str, date: str):
+
+def get_stock_capital_daily(code: str, date = None):
+    if date is None:
+        date = datetime.now().strftime("%Y%m%d")
+    
     data = "Instrument/GetInstrumentHistory"
     dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
     return dict_data["instrumentHistory"]["zTitad"]

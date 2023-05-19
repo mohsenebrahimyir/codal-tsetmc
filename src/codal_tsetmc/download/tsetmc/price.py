@@ -15,16 +15,15 @@ from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_pay
 
 
 def get_index_prices_history():
-    index = "32097828799138957"
-    url = f'http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={index}&t=value'
+    code = "32097828799138957"
+    url = f'http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={code}&t=value'
     s = requests.get(url, verify=False).content
     df = pd.read_csv(io.StringIO(s.decode("utf-8").replace(";", "\n")), header=None)
     df.columns = ["date", "price"]
     df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
-    df["code"] = index
+    df["code"] = code
     df["ticker"] = "INDEX"
     df = df.sort_values("date")
-    
 
     return df
 
@@ -64,6 +63,9 @@ def get_stock_prices_history(code: str, from_date="20000101", to_date=datetime.n
     df["code"] = code
 
     return df
+
+
+
 
 async def update_stock_prices(code: str):
     try:
