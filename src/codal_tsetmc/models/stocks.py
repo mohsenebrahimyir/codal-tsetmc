@@ -51,20 +51,25 @@ class Stocks(Base):
         
         query = f"select * from stock_price where code = '{self.code}'"
         price = pd.read_sql(query, engine)
-        price["jdate"] = price["date"].jalali.parse_jalali("%Y%m%d%H%M%S")
-        price["gdate"] = price["jdate"].jalali.to_gregorian()
+        price["jdate"] = price["date"].replace(regex={"000000$": ""})
+        price["date"] = price["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
         price.set_index("date", inplace=True)
 
         query = f"select * from stock_capital where code = '{self.code}'"
-        capital = pd.read_sql(query, engine).set_index("date").rename(columns={"new": "capital"})
+        capital = pd.read_sql(query, engine).rename(columns={"new": "capital"})
+        capital["date"] = capital["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        capital.set_index("date", inplace=True)
 
         query = f"select * from stock_price where code = '32097828799138957'"
-        index = pd.read_sql(query, engine).set_index("date").rename(columns={"price": "index"})
+        index = pd.read_sql(query, engine).rename(columns={"price": "index"})
+        index["date"] = index["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        index["index"] = index["index"] * 1_000_000_000
+        index.set_index("date", inplace=True)
 
         query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
-        dollar = pd.read_sql(query, engine).set_index("date").rename(columns={"price": "dollar"})
-
-
+        dollar = pd.read_sql(query, engine).rename(columns={"price": "dollar"})
+        dollar["date"] = dollar["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        dollar.set_index("date", inplace=True)
 
         if price.empty:
             self._df_cached = True
@@ -72,7 +77,7 @@ class Stocks(Base):
             return self._df
 
         price["symbol"] = self.symbol
-        df = price[["jdate", "gdate", "ticker", "symbol", "code", "price"]].join(
+        df = price[["jdate", "ticker", "symbol", "code", "price"]].join(
                 capital[["capital"]], how="outer"
             ).join(
                 index[["index"]], how="outer"
@@ -87,16 +92,15 @@ class Stocks(Base):
         
 
         df["capital"] = df["capital"].ffill()
-        df["ticker"] = df["ticker"].ffill()
-        df["symbol"] = df["symbol"].ffill()
-        df["price"] = df["price"].ffill()
-        df["code"] = df["code"].ffill()
-        df["index"] = df["index"].ffill()
-        df["dollar"] = df["dollar"].ffill()
+        df["ticker"]  = df["ticker"].ffill()
+        df["symbol"]  = df["symbol"].ffill()
+        df["price"]   = df["price"].ffill()
+        df["code"]    = df["code"].ffill()
+        df["index"]   = df["index"].ffill()
+        df["dollar"]  = df["dollar"].ffill()
 
-
-        df["market_value"] = df.capital * df.price
-        df["dollar_value"] = df.market_value / df.dollar
+        df["market"]  = df["capital"] * df["price"]
+        df["dollar"]  = df["market"] / df["dollar"]
 
         self._df_cached = True
         self._df = df.dropna()
@@ -124,7 +128,6 @@ class Stocks(Base):
             .group_by(Stocks.group_code)
             .all()
         )
-
 
 class StockPrice(Base):
     __tablename__ = "stock_price"
