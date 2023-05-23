@@ -43,7 +43,7 @@ def cleanup_stock_capitals_records(response):
     return df
 
 def get_stock_capitals_history(code: str) -> pd.DataFrame:
-    url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
+    url = f"http://old.tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
     response = requests.get(url).text
     df = cleanup_stock_capitals_records(response)
     df["code"] = code
