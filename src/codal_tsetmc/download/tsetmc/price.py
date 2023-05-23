@@ -61,15 +61,16 @@ def cleanup_stock_prices_records(response):
 
     return df[["date", "ticker", "price"]]
 
-def get_stock_prices_history(code: str, from_date="20000101", to_date=datetime.now().strftime("%Y%m%d")) -> pd.DataFrame:
-    url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom={from_date}&DateTo={to_date}&b=0"
-    response = requests.get(url).text
-    df = cleanup_stock_prices_records(response)
+def get_stock_prices_history(code: str) -> pd.DataFrame:
+    url = f"http://old.tsetmc.com/tsev2/data/InstTradeHistory.aspx?i={code}&Top=999999&A=0"
+    data = requests.get(url).text
+    df = pd.read_csv(io.StringIO(data), delimiter="@", lineterminator=";", engine="c", header=None)
+    df.columns = "date high low price close open yesterday value volume count".split()
+    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
+    df["jdate"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y-%m-%d'))
     df["code"] = code
 
     return df
-
-
 
 
 async def update_stock_prices(code: str):
