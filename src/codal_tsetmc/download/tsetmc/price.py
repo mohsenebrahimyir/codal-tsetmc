@@ -16,11 +16,15 @@ from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_pay
 
 def get_index_prices_history():
     code = "32097828799138957"
-    url = f'http://www.tsetmc.com/tsev2/chart/data/Index.aspx?i={code}&t=value'
-    s = requests.get(url, verify=False).content
-    df = pd.read_csv(io.StringIO(s.decode("utf-8").replace(";", "\n")), header=None)
+    url = f'http://cdn.tsetmc.com/api/Index/GetIndexB2History/{code}'
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
+    }
+    s = requests.get(url, headers=headers, verify=False).json()
+    df = pd.DataFrame(s["indexB2"])[["dEven", "xNivInuClMresIbs"]]
     df.columns = ["date", "price"]
-    df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
+    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
+    df["jdate"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y-%m-%d'))
     df["code"] = code
     df["ticker"] = "INDEX"
     df = df.sort_values("date")
@@ -30,9 +34,10 @@ def get_index_prices_history():
 def update_index_prices():
     index = "32097828799138957"
     df = get_index_prices_history()
+    df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
     df["up_date"] = jdt.now().strftime("%Y%m%d000000")
     fill_table_of_db_with_df(
-        df, 
+        df[["date", "price", "ticker", "code", "up_date"]], 
         columns="date",
         table="stock_price",
         conditions=f"where code = '{index}'",
