@@ -23,6 +23,9 @@ aiohttp = "^3.8.1"
 cchardet = [
     'cchardet; python_version < "3.11"'
 ]
+chardet = [
+    'chardet; python_version > "3.11"'
+]
 aiodns = "^3.0.0"
 PyYAML = "^6.0"
 
