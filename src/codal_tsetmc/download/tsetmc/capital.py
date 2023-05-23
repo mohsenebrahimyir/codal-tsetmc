@@ -69,7 +69,7 @@ async def update_stock_capitals(code: str):
         try:
             # need to updata new capital data
             if last_up_date is None or last_up_date < jnow:
-                url = f"http://tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
+                url = f"http://old.tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
             else:  # The capital data for this code is updateed
                 return
         except Exception as e:

@@ -102,10 +102,10 @@ async def update_stock_prices(code: str):
             last_date_stock = None
         try:
             if last_date_stock is None:  # no any record added in database
-                url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom=20000101&DateTo={now}&b=0"
+                url = f"http://old.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom=20000101&DateTo={now}&b=0"
             elif last_date_stock < last_date_index:  # need to updata new price data
                 last_date = jdt.strptime(str(int(last_date_stock)), "%Y%m%d%H%M%S").togregorian().strftime("%Y%m%d")
-                url = f"http://www.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom={str(last_date)}&DateTo={now}&b=0"
+                url = f"http://old.tsetmc.com/tse/data/Export-txt.aspx?a=InsTrade&InsCode={code}&DateFrom={str(last_date)}&DateTo={now}&b=0"
             else:  # The price data for this code is updateed
                 return
         except Exception as e:

@@ -85,13 +85,13 @@ def update_stocks_table(codes, msg=""):
     return results
 
 def get_stock_ids(timeout = 10):
-    url = "http://tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"
+    url = "http://old.tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"
     r = requests.get(url, timeout=timeout)
     ids = set(re.findall(r"\d{15,20}", r.text))
     return list(ids)
 
 def get_stocks_groups(timeout = 10):
-    url = "http://www.tsetmc.com/Loader.aspx?ParTree=111C1213"
+    url = "http://old.tsetmc.com/Loader.aspx?ParTree=111C1213"
     r = requests.get(url, timeout=timeout)
     return re.findall(r"\d{2}", r.text)
 
