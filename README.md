@@ -57,7 +57,6 @@ pip install git+https://github.com/mohsenebrahimyir/codal-tsetmc.git
 
 ## گرفتن اطلاعات مستقیم
 
-
 گرفتن تاریخچه قیمت شاخص
 
 ```python
@@ -81,7 +80,7 @@ get_index_prices_history()
 ```
 
 
-رفتن تایخچه قیمت سهم
+### گرفتن تایخچه قیمت سهم
 
 ```python
 symbol = "فولاد"
@@ -109,7 +108,7 @@ get_stock_prices_history(code)
 ```
 
 
-گرفتن تاریخچه افزایش سرمایه
+### گرفتن تاریخچه افزایش سرمایه
 
 ```python
 from codal_tsetmc.download.tsetmc.capital import get_stock_capitals_history
@@ -132,7 +131,17 @@ date	new	old	code
 
 ## ساختن دیتابیس
 
-دیتابیسی در مسیر `~/.cdl_tse` ایجاد می‌شود.
+
+مقدار دهی اولیه
+
+```bash
+ct-get init # Set up to sqlite database
+```
+
+
+دیتابیسی در مسیر 
+[`~/.cdl_tse`]{dir=ltr}
+ایجاد می‌شود.
 
 ```python
 from codal_tsetmc import create
@@ -164,7 +173,11 @@ from codal_tsetmc import fill_companies_table
 fill_companies_table()
 ```
 
-تعریف یک جستجو
+### تعریف یک جستجو
+
+
+1. تنظیم فیلترهای دلخواه
+
 
 ```python
 from codal_tsetmc import CodalQuery
@@ -172,37 +185,59 @@ from codal_tsetmc import CodalQuery
 query = CodalQuery()
 ```
 
-تنظیم فیلترهای دلخواه
+2. نام نماد
 
 ```python
-## نام نماد
 query.set_symbol("فولاد")
-## از تاریخ
+```
+
+3.  از تاریخ
+
+```python
 query.set_from_date("1400/01/01")
-## گروه اطلاعیه
+```
+
+4. گروه اطلاعیه
+
+```python
 query.set_category('اطلاعات و صورت مالی سالانه')
-## نوع اطلاعیه
+```
+
+5. نوع اطلاعیه
+
+```python
 query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
-## حذف حسابرسی نشده‌ها
+```
+
+6. حذف حسابرسی نشده‌ها
+
+```python
 query.set_not_audited(False)
-## فقط زیر مجموعه‌ها
+```
+
+7. فقط زیر مجموعه‌ها
+
+```python
 query.set_childs(False)
 ```
 
-گرفتن لینک برای مرورگر
+8. گرفتن لینک برای مرورگر
 
+```python
 query.get_report_list_url()
+```
 
-گرفتن لینک برای api
+9. گرفتن لینک برای api
 
+```python
 query.get_query_url()
+```
 
-گرفتن لیست گزارشات 
+10. گرفتن لیست گزارشات 
 
 ```python
 query.get_api_multi_page()
 ```
-
 
 ## ذخیره داده‌های `tsetmc`
 
