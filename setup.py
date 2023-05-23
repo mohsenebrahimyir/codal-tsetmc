@@ -31,7 +31,6 @@ setup(
         "sqlalchemy",
         "requests",
         "jdatetime",
-        "finplot",
     ],
     zip_safe=False,
     python_requires=">=3.8",
