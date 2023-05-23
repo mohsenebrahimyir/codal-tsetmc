@@ -23,7 +23,6 @@ aiohttp = "^3.8.1"
 cchardet = "^2.1.7"
 aiodns = "^3.0.0"
 PyYAML = "^6.0"
-finplot = "^1.9.0"
 
 [tool.poetry.dev-dependencies]
 pre-commit = "^2.16.0"
