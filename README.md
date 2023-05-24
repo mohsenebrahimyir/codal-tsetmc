@@ -280,6 +280,8 @@ fill_commodities_prices_table()
 ساختن یک شی از سهام
 
 ```python
+from codal_tsetmc import Stocks
+
 stock = Stocks.query.filter_by(symbol="فولاد").first()
 stock
 ```
