@@ -144,18 +144,28 @@ ct-get init # Set up to sqlite database
 ایجاد می‌شود.
 
 ```python
-from codal_tsetmc import create
+from codal_tsetmc import init_db
 
-create()
+init_db()
 ```
 
-## گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال
-
-اگر در محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.
+**اگر در محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.**
 
 ```python
 import nest_asyncio; nest_asyncio.apply()
 ```
+
+پر کردن تمام پایگاه داده (این کار زمان بر است اما برای اولین بار پیشنهاد می‌شود)
+
+
+```python
+from codal_tsetmc import fill_db
+
+fill_db()
+```
+
+## گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال
+
 
 دانلود داده‌های مورد نیاز برای جستجو
 

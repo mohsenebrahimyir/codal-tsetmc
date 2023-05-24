@@ -16,14 +16,14 @@ def init_db():
         print("folder already exists")
     models.create()
     print(f"DataBase created in: {path}")
+    fill_companies_table()
+    fill_categories_table()
 
 
 def fill_db():
     print("downloading company and stock details from CODAL and TSETMC")
     print("may take few minutes")
     fill_stocks_table()
-    fill_companies_table()
-    fill_categories_table()
     fill_stocks_prices_table()
     fill_stocks_capitals_table()
     fill_commodities_prices_table()
