@@ -2,8 +2,7 @@
 
 این پکیچ برای ذخیره داده‌های سایت کدال و بازار سرمایه برای اهداف تحلیل بنیادی تهیه شده است.
 
-آموزش پکیج:
-    - <https//mohsenebrahimyir.github.io/codal-tsetmc/>
+آموزش پکیج: <https//mohsenebrahimyir.github.io/codal-tsetmc/>
 
 ## پایگاه داده
 
@@ -19,14 +18,13 @@
 - [X] `company_statuses`: وضعیت شرکت‌ها
 - [X] `company_types`: نوع شرکت‌ها
 - [X] `report_types`: گروه اطلاعیه‌ها
-- [X] `financial_years`: سال مالی‌ها
 - [X] `letter_types`: نوع گزارش
 - [X] `auditors`: حسابرس‌ها
+- [ ] `financial_years`: سال مالی‌ها
 
 #### OTHER
 
 - [X] `commodities`: افزون قیمت‌های کامودیتی
-    - [X] <api.tgju.org>
 
 ### Update package
 
