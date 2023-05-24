@@ -132,16 +132,7 @@ date	new	old	code
 ## ساختن دیتابیس
 
 
-مقدار دهی اولیه
-
-```bash
-ct-get init # Set up to sqlite database
-```
-
-
-دیتابیسی در مسیر 
-[`~/.cdl_tse`]{dir=ltr}
-ایجاد می‌شود.
+ایجاد دیتابیس
 
 ```python
 from codal_tsetmc import init_db
