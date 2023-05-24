@@ -19,4 +19,3 @@ def db_is_empty():
 if db_is_empty():
     print("No database founded.")
     init_db()
-    fill_db()
