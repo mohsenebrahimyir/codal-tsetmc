@@ -6,7 +6,7 @@ import aiohttp
 import pandas as pd
 import io
 import requests
-
+import sys
 import codal_tsetmc.config as db
 from codal_tsetmc.models.stocks import Stocks
 from codal_tsetmc.tools import *
@@ -133,7 +133,10 @@ async def update_stock_prices(code: str):
         return e, code
 
 def update_stocks_prices(codes, msg=""):
-    loop = asyncio.get_event_loop()
+    if sys.platform == 'win32':
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.get_event_loop()
     tasks = [update_stock_prices(code) for code in codes]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))

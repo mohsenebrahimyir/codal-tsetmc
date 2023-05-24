@@ -1,4 +1,5 @@
 import requests
+import sys
 import re
 import asyncio
 import aiohttp
@@ -65,7 +66,11 @@ async def update_stock_table(code: str) -> Stocks:
         return e, code
 
 def update_stocks_table(codes, msg=""):
-    loop = asyncio.get_event_loop()
+    if sys.platform == 'win32':
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.get_event_loop()
+    
     tasks = [update_stock_table(code) for code in codes]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
