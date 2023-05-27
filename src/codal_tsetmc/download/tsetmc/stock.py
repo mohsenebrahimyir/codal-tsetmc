@@ -108,12 +108,12 @@ def get_stocks_groups(timeout = 10):
     return re.findall(r"\d{2}", r.text)
 
 def fill_stocks_table(timeout = 10):
+    index = ["32097828799138957"]
+    bonds = get_csv_from_github("treasury_bill")
+    update_stocks_table(index + bonds)
     i = 30
     while i > 1:
         print(f"Downloading group ids... seris: {31 - i}")
-        index = ["32097828799138957"]
-        bonds = get_csv_from_github("treasury_bill")
         ids = get_stock_ids(timeout=timeout)
-        stocks =  index + list(bonds.code) + ids
-        update_stocks_table(stocks)
+        update_stocks_table(ids)
         i -= 1
