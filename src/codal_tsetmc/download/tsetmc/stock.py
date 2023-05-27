@@ -5,16 +5,15 @@ import asyncio
 import aiohttp
 import codal_tsetmc.config as db
 from codal_tsetmc.models import Stocks
+from codal_tsetmc.tools import *
 
 def is_stock_in_bourse_or_fara_or_paye(code):
     group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
     return Stocks.query.filter_by(code=code).first().group_type in group_type
 
-def is_stock_in_akhza_or_gam(code):
-    group_type = ["I1", "I2", "I4", "N4", "O1"]
+def is_stock_in_akhza_bond(code):
+    group_type = ["I1", "I2", "I4"]
     return Stocks.query.filter_by(code=code).first().group_type in group_type
-
-    
 
 
 def get_stock_detail(code: str, timeout = 3):
@@ -52,6 +51,7 @@ async def update_stock_table(code: str) -> Stocks:
         stock = {
             "symbol": data["instrumentInfo"]["lVal18AFC"],
             "name": data["instrumentInfo"]["lVal30"],
+            "name_en": data["instrumentInfo"]["lVal18"],
             "isin": data["instrumentInfo"]["cIsin"],
             "code": code,
             "capital": data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000_000,
@@ -111,7 +111,9 @@ def fill_stocks_table(timeout = 10):
     i = 30
     while i > 1:
         print(f"Downloading group ids... seris: {31 - i}")
-        stocks = get_stock_ids(timeout=timeout)
-        stocks = ["32097828799138957"] + stocks
+        index = ["32097828799138957"]
+        bonds = get_csv_from_github("treasury_bill")
+        ids = get_stock_ids(timeout=timeout)
+        stocks =  index + bonds + ids
         update_stocks_table(stocks)
         i -= 1

@@ -22,6 +22,7 @@ class Stocks(Base):
     id = Column(Integer, primary_key=True)
     symbol = Column(String)
     name = Column(String)
+    name_en = Column(String)
     isin = Column(String)
     code = Column(String, unique=True)
     capital = Column(BIGINT)

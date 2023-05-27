@@ -33,7 +33,7 @@ def get_commodity_price_history(symbol: str) -> pd.DataFrame:
     response = requests.get(url, params=[], headers={}) #('length', '100'),
     new = cleanup_commodity_price_records(response)
     if symbol == "price_dollar_rl":
-        old = get_rawdata_from_github(symbol)
+        old = get_csv_from_github(symbol)
         old["date"] = old["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
         
         df = pd.concat(new, old[~old.date.isin(new.date)])
