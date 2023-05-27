@@ -114,6 +114,6 @@ def fill_stocks_table(timeout = 10):
         index = ["32097828799138957"]
         bonds = get_csv_from_github("treasury_bill")
         ids = get_stock_ids(timeout=timeout)
-        stocks =  index + bonds + ids
+        stocks =  index + list(bonds.code) + ids
         update_stocks_table(stocks)
         i -= 1
