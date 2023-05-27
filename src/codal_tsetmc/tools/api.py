@@ -31,8 +31,8 @@ def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):
     return response.json()
 
 
-def get_csv_from_github(symbol):
-    url = f"https://raw.githubusercontent.com/mohsenebrahimyir/codal-tsetmc/master/data/{symbol}.csv"
+def get_csv_from_github(name):
+    url = f"https://raw.githubusercontent.com/mohsenebrahimyir/codal-tsetmc/master/data/{name}.csv"
     df = pd.read_csv(url)
     return df
 

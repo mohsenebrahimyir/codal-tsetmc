@@ -118,7 +118,7 @@ def fill_commodities_prices_table():
             min_date = pd.read_sql(query, db.engine)
             first_date = min_date.date.iat[0]
             if first_date != "13600707000000":
-                df = get_rawdata_from_github(symbol)
+                df = get_csv_from_github(symbol)
                 df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
                 df["symbol"] = symbol
                 df["up_date"] = jdt.now().strftime("%Y%m%d000000")
