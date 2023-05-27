@@ -10,6 +10,13 @@ def is_stock_in_bourse_or_fara_or_paye(code):
     group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
     return Stocks.query.filter_by(code=code).first().group_type in group_type
 
+def is_stock_in_akhza_or_gam(code):
+    group_type = ["I1", "I2", "I4", "N4", "O1"]
+    return Stocks.query.filter_by(code=code).first().group_type in group_type
+
+    
+
+
 def get_stock_detail(code: str, timeout = 3):
     headers = {
         'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36',
