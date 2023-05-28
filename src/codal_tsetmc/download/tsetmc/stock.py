@@ -15,6 +15,10 @@ def is_stock_in_akhza_bond(code):
     group_type = ["I1", "I2", "I4"]
     return Stocks.query.filter_by(code=code).first().group_type in group_type
 
+def is_stock_in_gam_bond(code):
+    stock = Stocks.query.filter_by(code=code).first()
+    return stock.group_type in ["N4"] and stock.group_name in ["اوراق تامين مالي"]
+
 
 def get_stock_detail(code: str, timeout = 3):
     headers = {

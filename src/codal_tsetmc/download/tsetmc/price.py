@@ -12,6 +12,7 @@ from codal_tsetmc.models.stocks import Stocks
 from codal_tsetmc.tools import *
 from codal_tsetmc.download.tsetmc.stock import  (
     is_stock_in_akhza_bond, 
+    is_stock_in_gam_bond,
     is_stock_in_bourse_or_fara_or_paye
 )
 
@@ -76,7 +77,7 @@ def get_stock_prices_history(code: str) -> pd.DataFrame:
 
 async def update_stock_prices(code: str):
     try:
-        if not is_stock_in_bourse_or_fara_or_paye(code) and not is_stock_in_akhza_bond(code):
+        if not is_stock_in_bourse_or_fara_or_paye(code) and not is_stock_in_akhza_bond(code) and not is_stock_in_gam_bond(code):
             return
         
         now = datetime.now().strftime("%Y%m%d")
