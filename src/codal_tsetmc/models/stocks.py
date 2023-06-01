@@ -99,7 +99,6 @@ class Stocks(Base):
         df["code"]    = df["code"].ffill()
         df["index"]   = df["index"].ffill()
         df["dollar"]  = df["dollar"].ffill()
-
         df["market"]  = df["capital"] * df["price"]
         df["dollar"]  = df["market"] / df["dollar"]
 

@@ -11,7 +11,7 @@ class BadValueInput:
 
     def integer_type(self):
         if not isinstance(self.value, int):
-            raise TypeError("status must be integer")
+            raise TypeError("status must be Integer")
 
     def string_type(self):
         if not isinstance(self.value, str):

@@ -1,13 +1,11 @@
 import pandas as pd
 import urllib.parse as urlparse
 from urllib.parse import urlencode
-from jdatetime import datetime as jdatetime
 
-import codal_tsetmc.config as db
 from codal_tsetmc.tools import *
 from codal_tsetmc.models import (
-    CompanyStatuses, CompanyTypes, Companies,
-    ReportTypes, LetterTypes, Auditors, Letters
+    CompanyStatuses, CompanyTypes, 
+    ReportTypes, LetterTypes, Auditors,
 )
 
 
@@ -18,6 +16,7 @@ class CodalQuery:
         self.base_url = "codal.ir"
         self.report_list_html = f"https://{self.base_url}/ReportList.aspx?"
         self.search_query_xml = f"https://search.{self.base_url}/api/search/v2/q?"
+        self.pages = None
         self.params = {
             "PageNumber": 1,
             "Symbol": -1,
@@ -49,7 +48,6 @@ class CodalQuery:
     # تنظیم نام نماد
     def set_symbol(self, symbol: str = None) -> None:
         BadValueInput(symbol).string_type()
-        symbol = Companies.query.filter_by(symbol=symbol).first().symbol
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
     # تنظیم شماره ISIC
@@ -100,9 +98,7 @@ class CodalQuery:
     def set_length_period(self, period=-1) -> None:
         # طول دوره
         lengthPeriod = {
-            None: -1,
-            'همه موارد': -1,
-            '-۱': -1, '۰': -1,
+            None: -1, 'همه موارد': -1, '-۱': -1, '۰': -1,
             '۱': 1, '۲': 2, '۳': 3, '۴': 4, '۵': 5, '۶': 6,
             '۷': 7, '۸': 8, '۹': 9, '۱۰': 10, '۱۱': 11, '۱۲': 12,
             -1: -1, 0: -1,
@@ -183,6 +179,14 @@ class CodalQuery:
         else:
             self.params['PageNumber'] += 1
     
+    def get_page_number(self) -> int:
+        return self.params['PageNumber']
+    
+    def set_pages_number(self, number: int = None) -> None:
+        if bool(number):
+            BadValueInput(number).integer_type()
+            self.pages = number
+    
     """################
     گرفتن لینک کوئری کدال 
     ################"""
@@ -262,5 +266,3 @@ class CodalQuery:
     
     
     
-
-

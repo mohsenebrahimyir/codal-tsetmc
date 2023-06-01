@@ -46,7 +46,6 @@ def update_index_prices():
         text=f"stock: {index}"
     )
 
-
 def get_stock_price_daily(code: str, date: str):
     data = "ClosingPrice/GetClosingPriceDaily"
     dict_data = get_data_from_cdn_tsetmec_api(data, code, date)
@@ -74,7 +73,6 @@ def get_stock_prices_history(code: str) -> pd.DataFrame:
 
     return df
 
-
 async def update_stock_prices(code: str):
     try:
         if not is_stock_in_bourse_or_fara_or_paye(code) and not is_stock_in_akhza_bond(code) and not is_stock_in_gam_bond(code):
@@ -82,7 +80,7 @@ async def update_stock_prices(code: str):
         
         now = datetime.now().strftime("%Y%m%d")
         try:
-            query_index = f"select max(date) as date from stock_price where ticker = INDEX"
+            query_index = f"SELECT max(date) AS date FROM stock_price WHERE ticker = INDEX"
             max_date_index = pd.read_sql(query_index, db.engine)
             last_date_index = max_date_index.date.iat[0]
 
@@ -91,7 +89,7 @@ async def update_stock_prices(code: str):
                 max_date_index = pd.read_sql(query_index, db.engine)
                 last_date_index = max_date_index.date.iat[0]
 
-            query_stock = f"select max(date) as date from stock_price where code = {code}"
+            query_stock = f"SELECT max(date) AS date FROM stock_price WHERE code = {code}"
             max_date_stock = pd.read_sql(query_stock, db.engine)
             last_date_stock = max_date_stock.date.iat[0]
 
@@ -122,7 +120,7 @@ async def update_stock_prices(code: str):
         df["up_date"] = jdt.now().strftime("%Y%m%d000000")
 
         fill_table_of_db_with_df(
-            df, 
+            df,
             columns="date",
             table="stock_price",
             conditions=f"where code = '{code}'",

@@ -27,6 +27,7 @@ def fill_db():
     fill_stocks_prices_table()
     fill_stocks_capitals_table()
     fill_commodities_prices_table()
+    fill_bourse_and_fara_companies_letters()
     print("For more info go to:")
     print("https://github.com/mohsenebrahimyir/codal-tsetmc")
 

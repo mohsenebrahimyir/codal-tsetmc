@@ -3,9 +3,6 @@ from urllib.request import urlopen
 import requests
 import pandas as pd
 
-import asyncio
-import aiohttp
-
 def get_dict_from_xml_api(url: str) -> dict:
  
     try:
@@ -35,9 +32,3 @@ def get_csv_from_github(name):
     url = f"https://raw.githubusercontent.com/mohsenebrahimyir/codal-tsetmc/master/data/{name}.csv"
     df = pd.read_csv(url)
     return df
-
-
-async def get_async_api(url) -> dict:
-    async with aiohttp.ClientSession() as session:
-        async with session.get(url) as response:
-            return await response

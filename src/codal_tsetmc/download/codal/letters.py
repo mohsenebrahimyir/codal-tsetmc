@@ -1,52 +1,19 @@
-import requests
-import re
+import sys
 import asyncio
 import aiohttp
-import codal_tsetmc.config as db
-from codal_tsetmc.models import Stocks
-from codal_tsetmc.tools import *
-from jdatetime import datetime as jdatetime
+from jdatetime import datetime as jdt
 
-from codal_tsetmc.models import (
-    CompanyStatuses, CompanyTypes, Companies,
-    ReportTypes, LetterTypes, Auditors, Letters
-)
+import codal_tsetmc.config as db
+from codal_tsetmc.tools import *
+from codal_tsetmc.download import CodalQuery
+from codal_tsetmc.models import Companies
 
 """################
 گرفتن اطلاعات از کدال 
 ################"""
 
-# گرفتن اطلاعات کلی در یک صفحه
-def get_api_sigle_page(query) -> dict:
-    url = query.get_api_search_url()
-    response = get_dict_from_xml_api(url)
-    query.total = response["Total"]
-    query.page = response["Page"]
-    
-    return response["Letters"]
-
-
-# گرفتن اطلاعات کلی در همه صفحات
-def get_api_multi_page(query, pages: int = 0) -> dict:
-    last_letters = get_api_sigle_page(query)
-    letters = []
-    pages = pages if bool(pages) else query.page
-    reversed_range = list(range(2, pages + 1))
-    reversed_range.sort(reverse=True)
-    for page in reversed_range:
-        print(f"get page {page} of {pages}", end="\r", flush=True)
-        query.set_page_number(page)
-        letters += get_api_sigle_page(query)
-    
-    letters += last_letters
-
-    return letters
-
-
-# گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
-def get_letters(query, pages: int = 0, show = False) -> pd.DataFrame:
-    letters = query.get_api_multi_page(pages)
-    df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
+def convert_letter_list_to_df(data) -> pd.DataFrame:
+    df = pd.DataFrame(data).replace(regex=FA_TO_EN_DIGITS)
     df["LetterSerial"] = df["Url"].replace(regex={
         r"^.*LetterSerial=": "",
         r"\&.*$": ""
@@ -64,63 +31,115 @@ def get_letters(query, pages: int = 0, show = False) -> pd.DataFrame:
     df = df_col_to_snake_case(df)
     return df
 
-"""##########################
-آپدیت کردن گزارشات در دیتابیس
-##########################"""
 
-# آپدیت کردن دیتابیس
-def update_letters(query):
+async def get_letters_list_for_each_page_async(query, page = 1):
     try:
-        df = query.get_letters(show=True)
-        fill_table_of_db_with_df(df, "letters", "tracing_no")
+        headers = {
+        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
+        }
+        query.set_page_number(page)
+        url = query.get_query_url()
+        async with aiohttp.ClientSession() as session:
+            async with session.get(url, cookies={}, headers=headers, data="") as response:
+                data = await response.json()
+        
+        if data["Page"] == 1:
+            df = convert_letter_list_to_df(data["Letters"])
+            fill_table_of_db_with_df(df, "letters", "tracing_no")
+        
+        if query.pages is None:
+            query.pages = data["Page"]
+            return True
+        else:
+            df = convert_letter_list_to_df(data["Letters"])
+            fill_table_of_db_with_df(df, "letters", "tracing_no")
+        
         return True
+    
     except Exception as e:
         return e
 
-def update_company_letters(query):
-    try:
-        now = jdatetime.now().strftime("%Y%m%d%H%M%S")
-        try:
-            symbol = query.params["Symbol"]
-            max_date_query = (
-                f"select max(publish_date_time) as date from letters where company_symbol = '{symbol}'"
-            )
-            max_date = pd.read_sql(max_date_query, db.engine)
-            last_date = max_date.date.iat[0]
-        except Exception as e:
-            last_date = None
-        
-        try:
-            if last_date is None:  # no any record added in database
-                query.set_from_date("1301/01/01")
-            elif str(last_date) < now:  # need to updata new data
-                query.set_from_date(num_to_datetime(last_date, datetime=False))
-            else:  # The data for this symbol is updateed
-                return
-        
-        except Exception as e:
-            print(f"Error on formating:{str(e)}")
-            
-        query.update_letters()
+def update_letters_table_by_query_async(query, msg=""):
+    if sys.platform == 'win32' or sys.platform == 'win64':
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.get_event_loop()
     
-    except Exception as e:
-        return e, symbol
+    try:
+        tasks = [get_letters_list_for_each_page_async(query)]
 
-def update_companies_letters(query):
-    len_symbols = len(query.symbols)
-    for i, symbol in enumerate(query.symbols):
-        print(f"{' '*18} total progress: {100*(i+1)/len_symbols:.2f}% {symbol}", end="\r", flush=True)
-        query.set_symbol(symbol)
-        query.update_company_letters()
+        while query.pages is None:
+            results = loop.run_until_complete(asyncio.gather(*tasks))
 
-def update_companies_status_letters(query, status):
-    code = CompanyStatuses.query.filter_by(title=status).first().code
-    companies = db.session.query(Companies.symbol).filter_by(status_code=0).all()
-    query.symbols = [company[0] for company in companies]
-    query.update_companies_letters()
+        if query.pages > 1:
+            reversed_range = list(range(1, query.pages + 1))
+            tasks = [get_letters_list_for_each_page_async(query, page=page) for page in reversed_range]
+            results = loop.run_until_complete(asyncio.gather(*tasks))
+        
+        return results
+    
+    except RuntimeError:
+        WARNING_COLOR = "\033[93m"
+        ENDING_COLOR = "\033[0m"
+        print(
+            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
+        )
+        print("```")
+        print("%pip install nest_asyncio")
+        print("import nest_asyncio; nest_asyncio.apply()")
+        print("```")
+        raise RuntimeError
 
-def update_bourse_companies_letters(query):
-    query.update_companies_status_letters("پذیرفته شده در بورس تهران")
 
-def update_farabourse_companies_letters(query):
-    query.update_companies_status_letters("پذیرفته شده در فرابورس ایران")
+def update_company_information_and_interim_financial_statements_letters(symbol):
+    query = CodalQuery()
+    query.set_symbol(symbol)
+    query.set_category('اطلاعات و صورت مالی سالانه')
+    query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
+    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE company_symbol = '{symbol}' AND letter_code = 'ن-10'"
+    max_date = pd.read_sql(q, db.engine)
+    
+    if max_date.date.iat[0] is None:    
+        query.set_from_date("1350/01/01")
+    else:
+        last_date = jdt.strptime(str(max_date.date.iat[0]), "%Y%m%d%H%M%S")
+        query.set_from_date(last_date.strftime("%Y/%m/%d"))
+
+    results = update_letters_table_by_query_async(query)
+    return results
+
+
+def update_company_monthly_performance_report_letters(symbol):
+    query = CodalQuery()
+    query.set_symbol(symbol)
+    query.set_category('گزارش عملکرد ماهانه')
+    query.set_letter_type('گزارش فعالیت ماهانه')
+    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE company_symbol = '{symbol}' AND (letter_code = 'ن-30' OR letter_code = 'ن-31')"
+    max_date = pd.read_sql(q, db.engine)
+    
+    if max_date.date.iat[0] is None:    
+        query.set_from_date("1350/01/01")
+    else:
+        last_date = jdt.strptime(str(max_date.date.iat[0]), "%Y%m%d%H%M%S")
+        query.set_from_date(last_date.strftime("%Y/%m/%d"))
+
+    results = update_letters_table_by_query_async(query)
+    return results
+
+
+
+def fill_bourse_and_fara_companies_letters():
+    bors = db.session.query(db.distinct(Companies.symbol)).filter_by(status_code = 0)
+    fara = db.session.query(db.distinct(Companies.symbol)).filter_by(status_code = 1)
+    symbols = [symbol[0].strip() for symbol in bors] + [symbol[0].strip() for symbol in fara]
+    
+    for i, symbol in enumerate(symbols):
+        print(
+            f"total progress: {100*(i+1)/len(symbols):.2f}%",
+            end="\n"
+        )
+        update_company_information_and_interim_financial_statements_letters(symbol)
+        update_company_monthly_performance_report_letters(symbol)
+    
+    print("letters Download Finished.", " "*50)
+
