@@ -3,19 +3,19 @@ from urllib.request import urlopen
 import requests
 import pandas as pd
 
-def get_dict_from_xml_api(url: str) -> dict:
+def get_dict_from_xml_api(url: str):
  
     try:
         with urlopen(url) as file:
             string_json = file.read().decode('utf-8')
+        
+        return json.loads(string_json)
     except ConnectionError:
         print("fall back to manual mode")
         pass
     except Exception as e:
         print(e)
         pass
-
-    return json.loads(string_json)
 
 
 def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):

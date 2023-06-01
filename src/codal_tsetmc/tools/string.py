@@ -4,7 +4,7 @@ from jdatetime import datetime as jdt
 
 FA_TO_EN_DIGITS = {
     "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5",
-    "۶": "6", "۷": "7", "۸": "8", "۹": "9", "۰": "0",
+    "۶": "6", "۷": "7", "۸": "8", "۹": "9", "۰": "0"
 }
 
 
@@ -17,14 +17,6 @@ EMPTY_TO_NONE = {
     "^$": None,
     "^--$": None
 }
-
-REMOVE_COMMA_AND_ADD_MINUS_SIGN = {
-    "\,|\)": "",
-    "\(": "-"
-}
-
-FIX_DIGITS = {**FA_TO_EN_DIGITS, **REMOVE_COMMA_AND_ADD_MINUS_SIGN}
-
 
 SHEET_NAME_TO_ID = {
     "صورت وضعیت مالی": "0",

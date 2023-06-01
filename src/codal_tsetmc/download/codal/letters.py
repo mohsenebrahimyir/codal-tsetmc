@@ -5,7 +5,7 @@ from jdatetime import datetime as jdt
 
 import codal_tsetmc.config as db
 from codal_tsetmc.tools import *
-from codal_tsetmc.download import CodalQuery
+from codal_tsetmc.download.codal.query import CodalQuery
 from codal_tsetmc.models import Companies
 
 """################

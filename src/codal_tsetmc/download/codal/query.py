@@ -46,7 +46,7 @@ class CodalQuery:
     ###################"""
 
     # تنظیم نام نماد
-    def set_symbol(self, symbol: str = None) -> None:
+    def set_symbol(self, symbol: str = "") -> None:
         BadValueInput(symbol).string_type()
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
@@ -56,13 +56,13 @@ class CodalQuery:
         self.params['Isic'] = -1 if isic == "" else isic
 
     # تنظیم وضعیت ناشز
-    def set_publisher_status(self, title: str = None) -> None:
+    def set_publisher_status(self, title: str = "") -> None:
         BadValueInput(title).string_type()
         code = CompanyStatuses.query.filter_by(title=title).first()
         self.params['PublisherStatus'] = code.code if bool(code) else -1
 
     # تنظیم گروع اطلاعیه
-    def set_category(self, title: str = None) -> None:
+    def set_category(self, title: str = "") -> None:
         BadValueInput(title).string_type()
         code = ReportTypes.query.filter_by(title=title).first()
         self.params["Category"] = code.code if bool(code) else -1
@@ -172,7 +172,7 @@ class CodalQuery:
         return dictionary
 
     # تنظیم شماره صفحه
-    def set_page_number(self, number: int = None) -> None:
+    def set_page_number(self, number: int = 0) -> None:
         if bool(number):
             BadValueInput(number).integer_type()
             self.params['PageNumber'] = number
@@ -182,7 +182,7 @@ class CodalQuery:
     def get_page_number(self) -> int:
         return self.params['PageNumber']
     
-    def set_pages_number(self, number: int = None) -> None:
+    def set_pages_number(self, number: int = 0) -> None:
         if bool(number):
             BadValueInput(number).integer_type()
             self.pages = number

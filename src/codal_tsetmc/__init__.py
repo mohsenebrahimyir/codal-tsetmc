@@ -1,7 +1,7 @@
 import os
 
 import codal_tsetmc.config as db
-from .download import *
+from codal_tsetmc.download import *
 from codal_tsetmc.models import *
 from codal_tsetmc.tools import *
 
