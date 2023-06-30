@@ -90,27 +90,34 @@ class Letters(Base):
         return f"(گزارشات کدال)"
 
 
-# class FinancialStatement(Base):
-#     __tablename__ = "financial_statement"
+class FinancialStatement(Base):
+    __tablename__ = "financial_statement"
     
-#     id = Column(Integer, primary_key=True)
-#     tracing_no = Column(Integer)
-#     symbol = Column(String, ForeignKey("stocks.name"), index=True)
-#     period = Column(Integer)
-#     sent_date_time = Column(Integer)
-#     publish_date_time = Column(Integer)
-#     period_end_to_date = Column(Integer)
-#     year_end_to_date = Column(Integer)
-#     table_fa = Column(String)
-#     table_en = Column(String)
-#     alias_name = Column(String) 
-#     version_no = Column(Integer)
-#     item_fa = Column(String)
-#     item_en = Column(String)
-#     value = Column(Integer)
-#     is_audited = Column(Boolean)
-#     is_consolidated = Column(Boolean)
+    id = Column(Integer, primary_key=True)
+    head_company_name = Column(String)
+    head_listed_capital = Column(Integer)
+    head_symbol = Column(String)
+    head_isic = Column(String)
+    head_company_state = Column(String)
+    datasource_tracing_no = Column(Integer, ForeignKey("letters.tracing_no"), index=True)
+    datasource_title_fa = Column(String)
+    datasource_title_en = Column(String)
+    datasource_period_end_to_date = Column(Integer)
+    datasource_year_end_to_date = Column(Integer)
+    datasource_register_date_time = Column(Integer)
+    datasource_sent_date_time = Column(Integer)
+    datasource_publish_date_time = Column(Integer)
+    datasource_period_extra_day = Column(Integer)
+    datasource_is_consolidated = Column(Boolean)
+    datasource_tracing_no = Column(Integer)
+    datasource_is_audited = Column(Boolean)
+    datasource_audit_state = Column(Integer)
+    datasource_state = Column(Integer)
+    datasource_is_for_auditing = Column(Boolean)
+    datasource_type = Column(Integer)
+    datasource_subject = Column(Integer)
+    datasource_dsc = Column(Integer)
+    datasource_period = Column(Integer)
 
-#     def __repr__(self):
-#         return f"(صورت مالی, {self.name})"
-
+    def __repr__(self):
+        return f"(گزارشات صورت مالی)"
