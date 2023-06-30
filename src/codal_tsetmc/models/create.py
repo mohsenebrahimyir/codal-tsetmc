@@ -12,7 +12,9 @@ from .companies import (
     ReportTypes,
     LetterTypes,
     Auditors,
-    Letters
+    Letters,
+    FinancialStatement,
+    BalanceSheetIncomeStatementCashFlow
 )
 
 def create_table(Model):
@@ -27,6 +29,8 @@ def create():
         Companies, CompanyTypes, CompanyStatuses,
         ReportTypes, LetterTypes, Auditors, 
         Letters,
+        FinancialStatement,
+        BalanceSheetIncomeStatementCashFlow,
         CommodityPrice
     ]
     for model in models:
