@@ -91,7 +91,7 @@ def update_letters_table_by_query_async(query, msg=""):
         raise RuntimeError
 
 
-def update_company_information_and_interim_financial_statements_letters(symbol):
+def update_company_information_and_interim_financial_statements_letters(symbol, from_date="1350/01/01"):
     query = CodalQuery()
     query.set_symbol(symbol)
     query.set_category('اطلاعات و صورت مالی سالانه')
@@ -100,16 +100,20 @@ def update_company_information_and_interim_financial_statements_letters(symbol):
     max_date = pd.read_sql(q, db.engine)
     
     if max_date.date.iat[0] is None:    
-        query.set_from_date("1350/01/01")
+        query.set_from_date(from_date)
     else:
-        last_date = jdt.strptime(str(max_date.date.iat[0]), "%Y%m%d%H%M%S")
-        query.set_from_date(last_date.strftime("%Y/%m/%d"))
+        last_date = num_to_datetime(max_date.date.iat[0], datetime = False)
+
+        if last_date > from_date:
+            query.set_from_date(last_date)
+        else:
+            query.set_from_date(from_date)
 
     results = update_letters_table_by_query_async(query)
     return results
 
 
-def update_company_monthly_performance_report_letters(symbol):
+def update_company_monthly_performance_report_letters(symbol, from_date="1350/01/01"):
     query = CodalQuery()
     query.set_symbol(symbol)
     query.set_category('گزارش عملکرد ماهانه')
@@ -118,10 +122,15 @@ def update_company_monthly_performance_report_letters(symbol):
     max_date = pd.read_sql(q, db.engine)
     
     if max_date.date.iat[0] is None:    
-        query.set_from_date("1350/01/01")
+        query.set_from_date(from_date)
     else:
-        last_date = jdt.strptime(str(max_date.date.iat[0]), "%Y%m%d%H%M%S")
-        query.set_from_date(last_date.strftime("%Y/%m/%d"))
+        last_date = num_to_datetime(max_date.date.iat[0], datetime = False)
+        
+        if last_date > from_date:
+            query.set_from_date(last_date)
+        else:
+            query.set_from_date(from_date)
+
 
     results = update_letters_table_by_query_async(query)
     return results
@@ -139,7 +148,7 @@ def fill_bourse_and_fara_companies_letters():
             end="\n"
         )
         update_company_information_and_interim_financial_statements_letters(symbol)
-        update_company_monthly_performance_report_letters(symbol)
+        # update_company_monthly_performance_report_letters(symbol)
     
     print("letters Download Finished.", " "*50)
 
