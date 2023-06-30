@@ -2,6 +2,7 @@ import os
 
 from codal_tsetmc import db, models
 from codal_tsetmc.download import *
+from codal_tsetmc.download.codal.letters import fill_bourse_and_fara_companies_letters
 
 
 def init_db():
