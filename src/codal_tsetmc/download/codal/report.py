@@ -45,7 +45,7 @@ def extract_options(letter_string: str):
 def extract_symbol_and_name(letter_string: str) -> str:
     soup = BeautifulSoup(letter_string, 'html.parser')
     return {
-        "name": soup.find(id="ctl00_txbCompanyName").string,
+        "company_name": soup.find(id="ctl00_txbCompanyName").string,
         "capital": int(soup.find(id="ctl00_lblListedCapital").string.replace(",", "")),
         "symbol": soup.find(id="ctl00_txbSymbol").string,
         "isic": soup.find(id="ctl00_lblISIC").string,
@@ -84,13 +84,26 @@ def update_financial_statment_header(letter_string: str):
     )
 
     df = df[[
-        "name", "capital", "symbol", "isic", "company_state",
-        "title_fa", "title_en", "period_end_to_date",
-        "year_end_to_date", "register_date_time",
-        "sent_date_time", "publish_date_time",
-        "period_extra_day", "is_consolidated",
-        "tracing_no", "is_audited", "audit_state",
-        "is_for_auditing", "period"
+        "company_name", 
+        "capital",
+        "symbol",
+        "isic",
+        "company_state",
+        "title_fa",
+        "title_en",
+        "period_end_to_date",
+        "year_end_to_date",
+        "register_date_time",
+        "sent_date_time",
+        "publish_date_time",
+        "period_extra_day",
+        "is_consolidated",
+        "tracing_no",
+        "is_audited",
+        "audit_state",
+        "is_for_auditing",
+        "period",
+        "state"
     ]]
 
     fill_table_of_db_with_df(df, "financial_statement_header", "tracing_no")
@@ -137,17 +150,16 @@ def extract_table(sheet: dict, table: str = "صورت سود و زیان") -> pd
 def extract_cells(table: dict) -> pd.DataFrame:
     df = pd.DataFrame(table["cells"])
     df = df_col_to_snake_case(df)
-    df["value"] = df["value"].replace(regex=AR_TO_FA_LETTER).replace(regex=EMPTY_TO_NONE)
+    df = df.replace(regex=AR_TO_FA_LETTER).replace(regex=EMPTY_TO_NONE)
     df["row"] = df["address"].str.slice(start=1)
     df["col"] = df["address"].str.slice(stop=1)
     df = df[
         (df['value'].notna()) & 
         (df["is_visible"]) &
-        (df["cell_group_name"] == "Body") &
-        ~pd.isna(df["validations"])
+        (df["cell_group_name"] == "Body")
     ]
 
-    return df
+    return df.drop_duplicates()
 
 def extract_items(df: pd.DataFrame) -> pd.DataFrame:
     if "value_type_name" in df.columns:
@@ -157,7 +169,7 @@ def extract_items(df: pd.DataFrame) -> pd.DataFrame:
 
     df = df.rename(columns={"value": "item"})[["row", "category", "item"]]
 
-    return df
+    return df.drop_duplicates()
 
 def extract_values(df: pd.DataFrame) -> pd.DataFrame:
     if "value_type_name" in df.columns:
@@ -165,7 +177,7 @@ def extract_values(df: pd.DataFrame) -> pd.DataFrame:
     else:
         df = df[df["data_type_name"].isin(["Currency"])]
     
-    df = df[(df["period_end_to_date"] != "")]
+    df = df[~pd.isna(df["period_end_to_date"])]
     
     df["period_end_to_date"] = df["period_end_to_date"].apply(datetime_to_num)
 
@@ -190,7 +202,7 @@ def extract_values(df: pd.DataFrame) -> pd.DataFrame:
         "row", "value", "cell_id", "category",
         "year_end_to_date", "period_end_to_date",
     ]]
-    return  df
+    return  df.drop_duplicates()
 
 
 
@@ -278,14 +290,14 @@ async def update_stock_financial_statement_table_async(symbol, from_date = 1400,
 
 
 
-def update_stocks_financial_statement_table(symbols, msg=""):
+def update_stocks_financial_statement_table(symbols, from_date = 1400, to_date = 1500, msg=""):
     if symbols.__class__ != list: symbols = [symbols]
 
     if sys.platform == 'win32':
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.get_event_loop()
-    tasks = [update_stock_financial_statement_table_async(symbol) for symbol in symbols]
+    tasks = [update_stock_financial_statement_table_async(symbol, from_date, to_date) for symbol in symbols]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
     except RuntimeError:

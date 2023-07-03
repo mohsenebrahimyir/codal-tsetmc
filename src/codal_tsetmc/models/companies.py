@@ -100,7 +100,7 @@ class FinancialStatementHeader(Base):
 
     id = Column(Integer, primary_key=True)
     tracing_no = Column(Integer, ForeignKey("letters.tracing_no"), index=True)
-    name = Column(String)
+    company_name = Column(String)
     capital = Column(Integer)
     symbol = Column(String, ForeignKey("companies.symbol"), index=True)
     isic = Column(String)
