@@ -58,6 +58,12 @@ SHEET_NAME_TO_ID = {
     "24": "24",
     "خلاصه اطلاعات گزارش تفسیری - صفحه 5": "24",
     "Interpretative Report Summary - Page 5": "24",
+    "26": "26",
+    "خلاصه اطلاعات گزارش تفسیری - صفحه 6": "25",
+    "Interpretative Report Summary - Page 6": "25",
+    "26": "26",
+    "خلاصه اطلاعات گزارش تفسیری - صفحه 7": "26",
+    "Interpretative Report Summary - Page 7": "26",
     "1058": "1058",
     "صورت سود و زیان جامع": "1058",
     "Comprehensive Income Statement": "1058",
@@ -99,13 +105,16 @@ TRANSLATE_FA_TO_EN = {
 
 
 def replace_all(text, dic):
-    for i, j in dic.items():
-        text = text.replace(i, j)
+    text = str(text)
+    for k, v in dic.items():
+        text = re.sub(k, v, text)
+    
     return text
 
 def datetime_to_num(dt):
+    if dt == "": return None
     try:
-        dt = replace_all(dt, {":": "", "/": "", "-": "", " ": ""})
+        dt = replace_all(dt, {"\D": ""})
         return int(dt) * 10 ** (14 - len(dt))
     except:
         return dt
@@ -204,3 +213,4 @@ LETTERS_CODE_TO_TITLE = {
     "ن-80": "تغییر نشانی",
     "ن-81": "درخواست تکمیل مشخصات سهامداران",
 }
+

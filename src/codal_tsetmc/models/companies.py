@@ -10,7 +10,8 @@ class Companies(Base):
     name = Column(String)
     isic = Column(String)
     type_code = Column(String, ForeignKey("company_types.code"), index=True)
-    status_code = Column(String, ForeignKey("company_statuses.code"), index=True)
+    status_code = Column(String, ForeignKey(
+        "company_statuses.code"), index=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -21,7 +22,7 @@ class Companies(Base):
 
 class CompanyTypes(Base):
     __tablename__ = "company_types"
-    
+
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
     title = Column(String)
@@ -30,9 +31,10 @@ class CompanyTypes(Base):
     def __repr__(self):
         return f"({self.code}, {self.title})"
 
+
 class CompanyStatuses(Base):
     __tablename__ = "company_statuses"
-    
+
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
     title = Column(String)
@@ -41,9 +43,10 @@ class CompanyStatuses(Base):
     def __repr__(self):
         return f"({self.code}, {self.title})"
 
+
 class ReportTypes(Base):
     __tablename__ = "report_types"
-    
+
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
     title = Column(String)
@@ -51,9 +54,10 @@ class ReportTypes(Base):
     def __repr__(self):
         return f"({self.code}, {self.title})"
 
+
 class LetterTypes(Base):
     __tablename__ = "letter_types"
-    
+
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
     title = Column(String)
@@ -64,7 +68,7 @@ class LetterTypes(Base):
 
 class Auditors(Base):
     __tablename__ = "auditors"
-    
+
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
     name = Column(String)
@@ -72,9 +76,10 @@ class Auditors(Base):
     def __repr__(self):
         return f"({self.code}, {self.name})"
 
+
 class Letters(Base):
     __tablename__ = "letters"
-    
+
     id = Column(Integer, primary_key=True)
     publish_date_time = Column(Integer)
     sent_date_time = Column(Integer)
@@ -90,9 +95,9 @@ class Letters(Base):
         return f"(گزارشات کدال)"
 
 
-class FinancialStatement(Base):
-    __tablename__ = "financial_statement"
-    
+class FinancialStatementHeader(Base):
+    __tablename__ = "financial_statement_header"
+
     id = Column(Integer, primary_key=True)
     tracing_no = Column(Integer, ForeignKey("letters.tracing_no"), index=True)
     name = Column(String)
@@ -116,25 +121,25 @@ class FinancialStatement(Base):
     period = Column(Integer)
 
     def __repr__(self):
-        return f"(گزارشات صورت مالی)"
-    
+        return f"سربرگ صورت مالی"
 
-class BalanceSheetIncomeStatementCashFlow():
-    __tablename__ = "balance_sheet_income_statement_cash_flow"
-    
+
+class FinancialStatementTableWithSingleItem(Base):
+    __tablename__ = "financial_statement_table_with_single_item"
+
     id = Column(Integer, primary_key=True)
     tracing_no = Column(Integer, ForeignKey("letters.tracing_no"), index=True)
+    cell_id = Column(String, unique=True)
     sheet_title_fa = Column(String)
     sheet_title_en = Column(String)
     table_title_fa = Column(String)
     table_title_en = Column(String)
-    table_alias_name = Column(String)
+    alias_name = Column(String)
     period_end_to_date = Column(Integer)
     year_end_to_date = Column(Integer)
-    table_description = Column(String)
+    description = Column(String)
     item = Column(String)
     value = Column(Integer)
 
     def __repr__(self):
-        return f"(صورت وضعیت مالی، سود و زیاد و جریان نقد)"
-
+        return f"جدول صورت مالی‌های با تک آیتم"

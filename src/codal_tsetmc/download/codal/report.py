@@ -2,14 +2,15 @@ import re
 import json
 import requests
 import pandas as pd
+import sys
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
 import jalali_pandas
 from codal_tsetmc.tools import *
-from codal_tsetmc import db
+from codal_tsetmc.models.companies import Letters
 
-def get_sheet_id(sheet: str) -> str:
+def extract_sheet_id(sheet: str) -> str:
     if sheet in SHEET_NAME_TO_ID.keys():
         return f"&sheetId={SHEET_NAME_TO_ID[sheet]}"
     elif sheet in SHEET_NAME_TO_ID.values():
@@ -18,7 +19,7 @@ def get_sheet_id(sheet: str) -> str:
         return ""
 
 def get_letter(letter_serial: str, sheet: str = "") -> str:
-    sheet_id = get_sheet_id(sheet)
+    sheet_id = extract_sheet_id(sheet)
     headers={
         "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
     }
@@ -27,7 +28,7 @@ def get_letter(letter_serial: str, sheet: str = "") -> str:
     return response.text
 
 async def get_letter_async(serial: str, sheet: str = ""):
-    id = get_sheet_id(sheet)
+    id = extract_sheet_id(sheet)
     url = f"https://codal.ir/Reports/Decision.aspx?LetterSerial={serial}&rt=0&let=6&ct=0&ft=-1{id}"
     headers={
         "User-Agent": 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36'
@@ -37,58 +38,72 @@ async def get_letter_async(serial: str, sheet: str = ""):
             response = await resp.text()
             return response
 
-def get_options(letter_string: str):
+def extract_options(letter_string: str):
     soup = BeautifulSoup(letter_string, 'html.parser')
-    return {item.get("value"): item.string for item in soup.find_all("option")}
+    return [item.get("value") for item in soup.find_all("option")]
 
-def get_symbol_and_name(letter_string: str) -> str:
+def extract_symbol_and_name(letter_string: str) -> str:
     soup = BeautifulSoup(letter_string, 'html.parser')
     return {
         "name": soup.find(id="ctl00_txbCompanyName").string,
         "capital": int(soup.find(id="ctl00_lblListedCapital").string.replace(",", "")),
         "symbol": soup.find(id="ctl00_txbSymbol").string,
         "isic": soup.find(id="ctl00_lblISIC").string,
-        "state": soup.find(id="ctl00_lblCompanyState").string,
+        "company_state": soup.find(id="ctl00_lblCompanyState").string,
     } 
 
 
-def get_datasource(letter_string: str) -> dict:
-    regex = r"datasource = (.*);\r\n\r\n\r\n</script>"
+def edit_datasource_detail(datasource: dict) -> dict:
+    datasource = {to_snake_case(k):v for k,v in datasource.items()}
+    dates = [
+        "period_end_to_date", 
+        "year_end_to_date",
+        "register_date_time",
+        "sent_date_time",
+        "publish_date_time"
+    ]
+    for date in dates:
+        datasource[date] = datetime_to_num(datasource[date])
+
+    return datasource
+
+def extract_datasource(letter_string: str) -> dict:
+    regex = r"datasource = (.*);\r\n"
     data_json = re.search(regex, letter_string)
-    return json.loads(data_json.group(1))
+    datasource = json.loads(data_json.group(1))
+    return edit_datasource_detail(datasource)
 
 
-def get_datasource_detail(datasource: dict) -> dict:
-    return {
-        "title_fa": datasource['title_Fa'],
-        "title_en": datasource['title_En'],
-        "period_end_to_date": datetime_to_num(datasource["periodEndToDate"]),
-        "year_end_to_date": datetime_to_num(datasource["yearEndToDate"]),
-        "register_date_time": datetime_to_num(datasource["registerDateTime"]),
-        "sent_date_time": datetime_to_num(datasource["sentDateTime"]),
-        "publish_date_time": datetime_to_num(datasource["publishDateTime"]),
-        "period_extra_day": datetime_to_num(datasource['periodExtraDay']),
-        "is_consolidated": datasource['isConsolidated'],
-        "tracing_no": datasource['tracingNo'],
-        "is_audited": datasource['isAudited'],
-        "audit_state": datasource['auditState'],
-        "state": datasource['state'],
-        "is_for_auditing": datasource['isForAuditing'],
-        "period": datasource['period'],
-    }
+def update_financial_statment_header(letter_string: str):
 
-def get_sheet(datasource, sheet: str = "صورت سود و زیان") -> dict:
+    symbol_and_name = extract_symbol_and_name(letter_string)
+    datasource = extract_datasource(letter_string)
+
+    df = pd.DataFrame.from_records(
+        [{**symbol_and_name, **datasource}]
+    )
+
+    df = df[[
+        "name", "capital", "symbol", "isic", "company_state",
+        "title_fa", "title_en", "period_end_to_date",
+        "year_end_to_date", "register_date_time",
+        "sent_date_time", "publish_date_time",
+        "period_extra_day", "is_consolidated",
+        "tracing_no", "is_audited", "audit_state",
+        "is_for_auditing", "period"
+    ]]
+
+    fill_table_of_db_with_df(df, "financial_statement_header", "tracing_no")
+
+def edit_sheet_detail(sheet: dict) -> dict:
+    return {to_snake_case(k):v for k,v in sheet.items()}
+
+def extract_sheet(datasource, sheet: str = "صورت سود و زیان") -> dict:
     for sht in datasource["sheets"]:
         if sht["title_Fa"] == sheet:
-            return sht
+            return edit_sheet_detail(sht)
 
-def get_sheet_detail(sheet: dict) -> dict:
-    return {
-        "sheet_title_fa": sheet['title_Fa'],
-        "sheet_title_en": sheet['title_En'],
-    }
-
-def get_sheet_components(sheet: dict) -> dict:
+def extract_sheet_components(sheet: dict) -> dict:
     products = pd.DataFrame({"text": [], "value": []})
     # units = pd.DataFrame({"text": [],  "value": []})
     for id in sheet["sheetComponents"].keys():
@@ -103,86 +118,187 @@ def get_sheet_components(sheet: dict) -> dict:
 
     return products
 
-def get_table(sheet: dict, table: str = "صورت سود و زیان") -> pd.DataFrame:
+def edit_table_detail(table: dict) -> dict:
+    if table["title_En"] is not None:
+        table["title_En"] = replace_all(table["title_En"], {
+            "BalanceSheet": "Balance Sheet",
+            "Income Statment": "Income Statement"
+        })
+    else:
+        table["title_En"] = None
+    
+    return {to_snake_case(k):v for k,v in table.items()}
+
+def extract_table(sheet: dict, table: str = "صورت سود و زیان") -> pd.DataFrame:
     for tbl in sheet["tables"]:
         if tbl["title_Fa"] == table:
-            return tbl
+            return edit_table_detail(tbl)
 
-def get_table_detail(table: dict) -> dict:
-    return {
-        "table_title_en": None if table["title_En"] is None else table["title_En"].replace("Statment", "Statement"),
-        "table_title_fa": table["title_Fa"],
-        "table_description": table['description'],
-        "table_alias_name": table['aliasName']
-    }
-
-def get_cells(table: dict) -> pd.DataFrame:
+def extract_cells(table: dict) -> pd.DataFrame:
     df = pd.DataFrame(table["cells"])
+    df = df_col_to_snake_case(df)
     df["value"] = df["value"].replace(regex=AR_TO_FA_LETTER).replace(regex=EMPTY_TO_NONE)
     df["row"] = df["address"].str.slice(start=1)
     df["col"] = df["address"].str.slice(stop=1)
-    df = df[(df['value'].notna()) & (df["isVisible"]) & (df["cellGroupName"] == "Body")]
+    df = df[
+        (df['value'].notna()) & 
+        (df["is_visible"]) &
+        (df["cell_group_name"] == "Body") &
+        ~pd.isna(df["validations"])
+    ]
 
     return df
 
-def get_items(df: pd.DataFrame) -> pd.DataFrame:
-    item = df[
-        df.valueTypeName.isin(["Fix", "Component"])
-    ].rename(columns={"value": "item"})[
-        ["row", "category", "item"]
-    ]
+def extract_items(df: pd.DataFrame) -> pd.DataFrame:
+    if "value_type_name" in df.columns:
+        df = df[df["value_type_name"].isin(["Fix", "Component"])]
+    else:
+        df = df[df["col"].isin(["A"])]
 
-    return item
+    df = df.rename(columns={"value": "item"})[["row", "category", "item"]]
 
-def get_values(df: pd.DataFrame) -> pd.DataFrame:
-    df = df[(
-        (df.valueTypeName == "FormControl") | 
-        (df.valueTypeName == "-1")
-    )]
-    df = df[(df.periodEndToDate != "")]
-    df["period_end_to_date"] = df["periodEndToDate"].apply(datetime_to_num)
-    df["year_end_to_date"] = df["yearEndToDate"].apply(datetime_to_num)
+    return df
+
+def extract_values(df: pd.DataFrame) -> pd.DataFrame:
+    if "value_type_name" in df.columns:
+        df = df[df["value_type_name"].isin(["FormControl", "-1"])]
+    else:
+        df = df[df["data_type_name"].isin(["Currency"])]
+    
+    df = df[(df["period_end_to_date"] != "")]
+    
+    df["period_end_to_date"] = df["period_end_to_date"].apply(datetime_to_num)
+
+    if "year_end_to_date" in df.columns:
+        df["year_end_to_date"] = df["year_end_to_date"].apply(datetime_to_num)
+        df[["period_end_to_date", "year_end_to_date"]] = df[
+            ["period_end_to_date", "year_end_to_date"]
+        ].fillna(method="ffill", axis=1, limit=1)
+    else:
+        df["year_end_to_date"] = df["period_end_to_date"]
     
     df["value"] = pd.to_numeric(df["value"])
     df["cell_id"] = (
-        df["metaTableId"].astype(str) + 
-        '-' + df["metaTableCode"].astype(str) +
+        df["meta_table_id"].astype(str) + 
+        '-' + df["meta_table_code"].astype(str) +
         '-' + df["address"].astype(str) +
         '-' + df["category"].astype(str) +
         '-' + df["period_end_to_date"].astype(str)
     )
     
     df = df[[
-        "row", "category", "cell_id",
-        "period_end_to_date",
-        "year_end_to_date",
-        "value"
+        "row", "value", "cell_id", "category",
+        "year_end_to_date", "period_end_to_date",
     ]]
     return  df
 
-def get_table_of_item_and_value_df(table_dict: dict) -> pd.DataFrame:
-    cells_df = get_cells(table_dict)
-    items_df = get_items(cells_df)
-    values_df = get_values(cells_df)
-    df = pd.merge(values_df, items_df)[[
-        "cell_id", "period_end_to_date", "year_end_to_date", "item", "value"
+
+
+
+def extract_table_with_single_item(table: dict) -> pd.DataFrame:
+    cells = extract_cells(table)
+    items = extract_items(cells)
+    values = extract_values(cells)
+    df = pd.merge(values, items)[[
+        "cell_id", "period_end_to_date", 
+        "year_end_to_date", "item", "value"
     ]]
 
+    return df.drop_duplicates()
+
+
+def add_sheet_and_table_detail(df, datasource, sheet, table):
+    df["tracing_no"] = datasource["tracing_no"]
+    df["cell_id"] = df["tracing_no"].astype(str) + '-' + df["cell_id"]
+    df["sheet_title_en"] = sheet["title_en"]
+    df["sheet_title_fa"] = sheet["title_fa"]
+    df["table_title_en"] = table["title_en"]
+    df["table_title_fa"] = table["title_fa"]
+    df["description"] = table["description"]
+    df["alias_name"] = table["alias_name"]
     return df
 
-def update_head_of_financial_statment(letter_string: str):
 
-    symbol_and_name_dict = get_symbol_and_name(letter_string)
-    datasource_dict = get_datasource(letter_string)
-    datasource_detail_dict = get_datasource_detail(datasource_dict)
+TABLES_WHIT_SINGLE_ITEM = [
+    "Balance Sheet", 
+    "Income Statement",
+    "Cash Flow",
+    "Sales trend and cost over the last 5 years",
+    "The cost of the sold goods", 
+    "Staff status",
+    "Other operating income",
+    "Other operating expenses",
+    "Non-operation income and expenses investment income",
+    "Non-operation income and expenses miscellaneous items"
+]
 
-    df = pd.DataFrame.from_records(
-        [{**symbol_and_name_dict, **datasource_detail_dict}]
+def update_financial_statement_table(datasource, sheet, table):
+    sheet = edit_sheet_detail(sheet)
+    table = edit_table_detail(table)
+    if table["title_en"] in TABLES_WHIT_SINGLE_ITEM:
+        df = extract_table_with_single_item(table)
+        db_table = "financial_statement_table_with_single_item"
+        df = add_sheet_and_table_detail(df, datasource, sheet, table)
+        fill_table_of_db_with_df(df, db_table, "cell_id")
+    
+
+async def update_stock_financial_statement_table_async(symbol, from_date = 1400, to_date = 1500):
+
+    letter_serials = Letters.query.filter(
+        Letters.company_symbol == symbol,
+        Letters.publish_date_time > datetime_to_num(from_date),
+        Letters.publish_date_time < datetime_to_num(to_date),
+        Letters.letter_types == "صورت های مالی میان دوره ای"
     )
 
-    fill_table_of_db_with_df(df, "financial_statement", "tracing_no")
+    serials = [serial.letter_serial for serial in letter_serials]
+
+    for i, serial in enumerate(serials):
+        print(i, serial)
+        options = ["0"]
+        option_active = True
+        while option_active:
+            option = options[0]
+            letter_string = await get_letter_async(serial, option)
+            if option == "0":
+                options = extract_options(letter_string)
+                if "19" in options: options.remove("19")
+            
+            if "datasource" in letter_string:
+                update_financial_statment_header(letter_string)
+
+                datasource = extract_datasource(letter_string)
+                for sheet in datasource["sheets"]:
+                    for table in sheet["tables"]:
+                        if table["cells"] != []:
+                            update_financial_statement_table(datasource, sheet, table)
+                
+            options.remove(option)
+            if options == []: option_active = False
 
 
-def update_balance_sheet_income_statement_cash_flow_table(df):
-    fill_table_of_db_with_df(df, "balance_sheet_income_statement_cash_flow", "cell_id")
-    
+
+def update_stocks_financial_statement_table(symbols, msg=""):
+    if symbols.__class__ != list: symbols = [symbols]
+
+    if sys.platform == 'win32':
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.get_event_loop()
+    tasks = [update_stock_financial_statement_table_async(symbol) for symbol in symbols]
+    try:
+        results = loop.run_until_complete(asyncio.gather(*tasks))
+    except RuntimeError:
+        WARNING_COLOR = "\033[93m"
+        ENDING_COLOR = "\033[0m"
+        print(WARNING_COLOR, "Please update company table", ENDING_COLOR)
+        print(
+            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
+        )
+        print("```")
+        print("%pip install nest_asyncio")
+        print("import nest_asyncio; nest_asyncio.apply()")
+        print("```")
+        raise RuntimeError
+    print(msg, end="\r")
+    return results

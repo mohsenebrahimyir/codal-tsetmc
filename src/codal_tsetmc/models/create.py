@@ -13,8 +13,8 @@ from .companies import (
     LetterTypes,
     Auditors,
     Letters,
-    FinancialStatement,
-    BalanceSheetIncomeStatementCashFlow
+    FinancialStatementHeader,
+    FinancialStatementTableWithSingleItem
 )
 
 def create_table(Model):
@@ -26,11 +26,10 @@ def create_table(Model):
 def create():
     models = [
         Stocks, StockPrice, StockCapital,
-        Companies, CompanyTypes, CompanyStatuses,
+        Companies, CompanyTypes, CompanyStatuses, 
         ReportTypes, LetterTypes, Auditors, 
-        Letters,
-        FinancialStatement,
-        BalanceSheetIncomeStatementCashFlow,
+        Letters, FinancialStatementHeader, 
+        FinancialStatementTableWithSingleItem,
         CommodityPrice
     ]
     for model in models:
