@@ -5,26 +5,5 @@
     "title": "پکیجی برای ذخیره اطلاعات بنیادی و بازاری",
     "section": "",
     "text": "پیش گفتار\nاین بسته توسط محسن ابراهیمی [1] در حال توسعه است. نظرات و پیشنهادات خود را می‌توانید از طریق ایمیل mohsenebrahimy.ir@gmail.com برای بهبود بسته به برنامه نویس ارسال کنید تا در هر بروزرسانی اصلاحات صورت گیرد. این نسخه در تاریخ 1402-06-08 بروزرسانی شده است.\n\n\nراهنما:\n\nhttps://mohsenebrahimyir.github.io/codal-tsetmc/\n\nگیت هاب:\n\nhttps://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\nامیدوارم این کتاب برایتان مفید باشد.\n\n\n\n\n\n\nهشدار\n\n\n\nاگر این متن را میبینید یعنی این پکیج درحال توسعه است و قابلیت استفاده در پروژه‌های مهم را ندارد.\n\n\n\n\n\n\n[1] محسن ابراهیمی, https://mohsenebrahimy.ir"
-  },
-  {
-    "objectID": "intro.html",
-    "href": "intro.html",
-    "title": "مقدمه",
-    "section": "",
-    "text": "برای روش‌های تحلیل‌های بنیادی و ارزشگذاری سهام نیاز به دسترسی سریع به صورت‌های مالی شرکت‌های بورسی است که در سایت کدال [1] گزارش می‌شود. از آنجایی که بسته‌های زیادی در زمینه ذخیره داده‌های سایت بورس تهران [2] وجود دارد، جای خالی بسته‌ای برای تهیه صورت مالی احساس می‌شد. بنابراین در پی تهیه این بسته پایتونی شدم تا قدمی در جهت دسترسی آسان و سریع تر به اطلاعات بورسی بردارم. قطعا هر گونه پیشنهاد و اصلاحات از طرف توسعه دهندگان پذیرفته می‌شود که می‌توانند به صفخه گیت‌هاب [3] پروژه ارسال کنند.\nبرای استفاده از این بسته می‌توانید به صفحه راهنمای [4] بسته مراجع کنید.\n\nمحسن ابراهیمی [5]\n\n\n\n\n\n[1] کدال, “سامانه جامع اطلاع رسانی ناشران.” https://codal.ir/\n\n\n[2] بورس تهران, “شرکت مدیریت فناوری بورس تهران.” http://tsetmc.com/\n\n\n[3] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\n[4] محسن ابراهیمی, “صفحه راهنمای بسته کدال و بورس تهران در پایتون.” https://mohsenebrahimyir.github.io/codal-tsetmc/\n\n\n[5] محسن ابراهیمی, https://mohsenebrahimy.ir"
-  },
-  {
-    "objectID": "installation.html",
-    "href": "installation.html",
-    "title": "1  نصب",
-    "section": "",
-    "text": "برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.\npython -m venv .venv\nفعال سازی محیط مجازی در لینوکس\nsource .venv/bin/activate\nفعال سازی محیط مجازی در ویندوز\n.\\venv\\Scripts\\activate\nنصب [1]:\npip install --upgrade codal-tsetmc\nنصب در حال توسعه [2]:\npip install --upgrade git+https://github.com/mohsenebrahimyir/codal-tsetmc.git\n\n\n\n\n[1] محسن ابراهیمی, “صفحه نصب بسته کدال و بورس تهران در پایتون.” https://pypi.org/project/codal-tsetmc/\n\n\n[2] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/"
-  },
-  {
-    "objectID": "references.html",
-    "href": "references.html",
-    "title": "منابع",
-    "section": "",
-    "text": "[1] محسن ابراهیمی, https://mohsenebrahimy.ir\n\n\n[2] محسن ابراهیمی, “صفحه نصب بسته کدال و بورس\nتهران در پایتون.” https://pypi.org/project/codal-tsetmc/\n\n\n[3] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و\nبورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\n[4] محسن ابراهیمی, “صفحه راهنمای بسته کدال و\nبورس تهران در پایتون.” https://mohsenebrahimyir.github.io/codal-tsetmc/\n\n\n[5] کدال, “سامانه جامع اطلاع رسانی\nناشران.” https://codal.ir/\n\n\n[6] بورس تهران, “شرکت مدیریت فناوری بورس\nتهران.” http://tsetmc.com/"
   }
 ]
