@@ -1,9 +1,65 @@
 [
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "پکیجی برای ذخیره اطلاعات بنیادی و بازاری",
+    "objectID": "guide.html#گرفتن-اطلاعات-مستقیم",
+    "href": "guide.html#گرفتن-اطلاعات-مستقیم",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.1 گرفتن اطلاعات مستقیم",
+    "text": "2.1 گرفتن اطلاعات مستقیم\nگرفتن تاریخچه قیمت شاخص\nfrom codal_tsetmc.download.tsetmc.price import get_index_prices_history\n\nget_index_prices_history()\n    date    price   code    ticker\n0   13870914000000  9248.9  32097828799138957   INDEX\n1   13870915000000  9248.9  32097828799138957   INDEX\n2   13870916000000  9178.3  32097828799138957   INDEX\n3   13870917000000  9130.5  32097828799138957   INDEX\n4   13870918000000  9089.2  32097828799138957   INDEX\n... ... ... ... ...\n3480    14020220000000  2277713.1   32097828799138957   INDEX\n3481    14020223000000  2214024.3   32097828799138957   INDEX\n3482    14020224000000  2285904.0   32097828799138957   INDEX\n3483    14020225000000  2301380.1   32097828799138957   INDEX\n3484    14020227000000  2321336.1   32097828799138957   INDEX\n\n2.1.1 گرفتن تایخچه قیمت سهم\nsymbol = \"فولاد\"\ncode = \"46348559193224090\"\nfrom codal_tsetmc.download.tsetmc.price import get_stock_prices_history\n\nget_stock_prices_history(code)\n    date    ticker  price   code\n0   13851220000000  FOLD    1900.0  46348559193224090\n1   13851221000000  FOLD    1938.0  46348559193224090\n2   13851222000000  FOLD    1973.0  46348559193224090\n3   13851223000000  FOLD    1934.0  46348559193224090\n4   13851226000000  FOLD    1898.0  46348559193224090\n... ... ... ... ...\n3562    14020219000000  FOLD    6580.0  46348559193224090\n3563    14020220000000  FOLD    6560.0  46348559193224090\n3564    14020223000000  FOLD    6420.0  46348559193224090\n3565    14020224000000  FOLD    6670.0  46348559193224090\n3566    14020225000000  FOLD    6680.0  46348559193224090\n\n\n2.1.2 گرفتن تاریخچه افزایش سرمایه\nfrom codal_tsetmc.download.tsetmc.capital import get_stock_capitals_history\n\nget_stock_capitals_history(code)\ndate    new old code\n8   13891125000000  2.580000e+10    1.580000e+10    46348559193224090\n7   13920505000000  3.600000e+10    2.580000e+10    46348559193224090\n6   13930515000000  5.000000e+10    3.600000e+10    46348559193224090\n5   13940726000000  7.500000e+10    5.000000e+10    46348559193224090\n4   13971130000000  1.300000e+11    7.500000e+10    46348559193224090\n3   13981022000000  2.090000e+11    1.300000e+11    46348559193224090\n2   14000303000000  2.930000e+11    2.090000e+11    46348559193224090\n1   14010518000000  5.300000e+11    2.930000e+11    46348559193224090\n0   14011228000000  8.000000e+11    5.300000e+11    46348559193224090"
+  },
+  {
+    "objectID": "guide.html#ساختن-دیتابیس",
+    "href": "guide.html#ساختن-دیتابیس",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.2 ساختن دیتابیس",
+    "text": "2.2 ساختن دیتابیس\nایجاد دیتابیس\nfrom codal_tsetmc import init_db\n\ninit_db()\nاگر در محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.\nimport nest_asyncio; nest_asyncio.apply()\nپر کردن تمام پایگاه داده (این کار زمان بر است اما برای اولین بار پیشنهاد می‌شود)\nfrom codal_tsetmc import fill_db\n\nfill_db()"
+  },
+  {
+    "objectID": "guide.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
+    "href": "guide.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.3 گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال",
+    "text": "2.3 گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال\nدانلود داده‌های مورد نیاز برای جستجو\nfrom codal_tsetmc import fill_categories_table\n\nfill_categories_table()\nپر کردن جدول شرکت‌های لیست شده در کدال\nfrom codal_tsetmc import fill_companies_table\n\nfill_companies_table()\n\n2.3.1 تعریف یک جستجو\n\nتنظیم فیلترهای دلخواه\n\nfrom codal_tsetmc import CodalQuery\n \nquery = CodalQuery()\n\nنام نماد\n\nquery.set_symbol(\"فولاد\")\n\nاز تاریخ\n\nquery.set_from_date(\"1400/01/01\")\n\nگروه اطلاعیه\n\nquery.set_category('اطلاعات و صورت مالی سالانه')\n\nنوع اطلاعیه\n\nquery.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')\n\nحذف حسابرسی نشده‌ها\n\nquery.set_not_audited(False)\n\nفقط زیر مجموعه‌ها\n\nquery.set_childs(False)\n\nگرفتن لینک برای مرورگر\n\nquery.get_report_list_url()\n\nگرفتن لینک برای api\n\nquery.get_query_url()\n\nگرفتن لیست گزارشات\n\nquery.get_api_multi_page()"
+  },
+  {
+    "objectID": "guide.html#ذخیره-دادههای-tsetmc",
+    "href": "guide.html#ذخیره-دادههای-tsetmc",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.4 ذخیره داده‌های tsetmc",
+    "text": "2.4 ذخیره داده‌های tsetmc\nپر کردن جدوال اطلاعات سهام‌ها\nfrom codal_tsetmc import fill_stocks_table\n\nfill_stocks_table()\nپر کردن جدول قیمت شرکت‌ها\nfrom codal_tsetmc import fill_stocks_prices_table\n\nfill_stocks_prices_table()\nپر کردن جدول افزایش سرمایه‌ها\nfrom codal_tsetmc import fill_stocks_capitals_table\n\nfill_stocks_capitals_table()"
+  },
+  {
+    "objectID": "guide.html#ذخیره-دادههای-کامودیتی-از-سایتهایی-مثل-tgju",
+    "href": "guide.html#ذخیره-دادههای-کامودیتی-از-سایتهایی-مثل-tgju",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.5 ذخیره داده‌های کامودیتی از سایت‌هایی مثل tgju",
+    "text": "2.5 ذخیره داده‌های کامودیتی از سایت‌هایی مثل tgju\nfrom codal_tsetmc import fill_commodities_prices_table\n\nfill_commodities_prices_table()"
+  },
+  {
+    "objectID": "guide.html#اطلاعات-یک-سهم",
+    "href": "guide.html#اطلاعات-یک-سهم",
+    "title": "2  راهنمای استفاده از بسته",
+    "section": "2.6 اطلاعات یک سهم",
+    "text": "2.6 اطلاعات یک سهم\nساختن یک شی از سهام\nfrom codal_tsetmc import Stocks\n\nstock = Stocks.query.filter_by(symbol=\"فولاد\").first()\nstock\nفولاد-فولاد مباركه اصفهان-فلزات اساسي\nمشاهده مشخصات سهم\nprint(f\"\"\"\nsymbol: {stock.symbol}\nname: {stock.name}\nisin: {stock.isin}\ncode: {stock.code}\ncapital: {stock.capital}\n\"\"\")\nsymbol: فولاد\nname: فولاد مباركه اصفهان\nisin: IRO1FOLD0009\ncode: 46348559193224090\ncapital: 800000000000\nگرفتن اطلاعات تاریخی سهم\nstock.df\n    jdate   ticker  symbol  code    price   capital index   dollar  market\ndate                                    \n2008-12-06  13870916    FOLD    فولاد   46348559193224090   2199.0  1.580000e+10    9.178300e+12    3.392988e+09    3.474420e+13\n2008-12-07  13870917    FOLD    فولاد   46348559193224090   2134.0  1.580000e+10    9.130500e+12    3.289483e+09    3.371720e+13\n2008-12-08  13870918    FOLD    فولاد   46348559193224090   2070.0  1.580000e+10    9.089200e+12    3.197067e+09    3.270600e+13\n2008-12-10  13870920    FOLD    فولاد   46348559193224090   2008.0  1.580000e+10    9.023700e+12    3.122677e+09    3.172640e+13\n2008-12-13  13870923    FOLD    فولاد   46348559193224090   1948.0  1.580000e+10    8.973300e+12    3.056445e+09    3.077840e+13\n... ... ... ... ... ... ... ... ... ...\n2023-05-09  14020219    FOLD    فولاد   46348559193224090   6580.0  8.000000e+11    2.305838e+15    9.897714e+09    5.264000e+15\n2023-05-10  14020220    FOLD    فولاد   46348559193224090   6560.0  8.000000e+11    2.277713e+15    9.911050e+09    5.248000e+15\n2023-05-13  14020223    FOLD    فولاد   46348559193224090   6420.0  8.000000e+11    2.214024e+15    9.699534e+09    5.136000e+15\n2023-05-14  14020224    FOLD    فولاد   46348559193224090   6670.0  8.000000e+11    2.285904e+15    1.007724e+10    5.336000e+15\n2023-05-15  14020225    FOLD    فولاد   46348559193224090   6680.0  8.000000e+11    2.301380e+15    1.009235e+10    5.344000e+15"
+  },
+  {
+    "objectID": "intro.html",
+    "href": "intro.html",
+    "title": "مقدمه",
     "section": "",
-    "text": "پیش گفتار\nاین بسته توسط محسن ابراهیمی [1] در حال توسعه است. نظرات و پیشنهادات خود را می‌توانید از طریق ایمیل mohsenebrahimy.ir@gmail.com برای بهبود بسته به برنامه نویس ارسال کنید تا در هر بروزرسانی اصلاحات صورت گیرد. این نسخه در تاریخ 1402-06-08 بروزرسانی شده است.\n\n\nراهنما:\n\nhttps://mohsenebrahimyir.github.io/codal-tsetmc/\n\nگیت هاب:\n\nhttps://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\nامیدوارم این کتاب برایتان مفید باشد.\n\n\n\n\n\n\nهشدار\n\n\n\nاگر این متن را میبینید یعنی این پکیج درحال توسعه است و قابلیت استفاده در پروژه‌های مهم را ندارد.\n\n\n\n\n\n\n[1] محسن ابراهیمی, https://mohsenebrahimy.ir"
+    "text": "برای روش‌های تحلیل‌های بنیادی و ارزشگذاری سهام نیاز به دسترسی سریع به صورت‌های مالی شرکت‌های بورسی است که در سایت کدال [1] گزارش می‌شود. از آنجایی که بسته‌های زیادی در زمینه ذخیره داده‌های سایت بورس تهران [2] وجود دارد، جای خالی بسته‌ای برای تهیه صورت مالی احساس می‌شد. بنابراین در پی تهیه این بسته پایتونی شدم تا قدمی در جهت دسترسی آسان و سریع تر به اطلاعات بورسی بردارم. قطعا هر گونه پیشنهاد و اصلاحات از طرف توسعه دهندگان پذیرفته می‌شود که می‌توانند به صفخه گیت‌هاب [3] پروژه ارسال کنند.\nبرای استفاده از این بسته می‌توانید به صفحه راهنمای [4] بسته مراجع کنید.\n\nمحسن ابراهیمی [5]\n\n\n\n\n\n[1] کدال, “سامانه جامع اطلاع رسانی ناشران.” https://codal.ir/\n\n\n[2] بورس تهران, “شرکت مدیریت فناوری بورس تهران.” http://tsetmc.com/\n\n\n[3] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\n[4] محسن ابراهیمی, “صفحه راهنمای بسته کدال و بورس تهران در پایتون.” https://mohsenebrahimyir.github.io/codal-tsetmc/\n\n\n[5] محسن ابراهیمی, https://mohsenebrahimy.ir"
+  },
+  {
+    "objectID": "installation.html",
+    "href": "installation.html",
+    "title": "1  نصب",
+    "section": "",
+    "text": "برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.\npython -m venv .venv\nفعال سازی محیط مجازی در لینوکس\nsource .venv/bin/activate\nفعال سازی محیط مجازی در ویندوز\n.\\venv\\Scripts\\activate\nنصب [1]:\npip install --upgrade codal-tsetmc\nنصب در حال توسعه [2]:\npip install --upgrade git+https://github.com/mohsenebrahimyir/codal-tsetmc.git\n\n\n\n\n[1] محسن ابراهیمی, “صفحه نصب بسته کدال و بورس تهران در پایتون.” https://pypi.org/project/codal-tsetmc/\n\n\n[2] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/"
+  },
+  {
+    "objectID": "references.html",
+    "href": "references.html",
+    "title": "منابع",
+    "section": "",
+    "text": "[1] محسن ابراهیمی, https://mohsenebrahimy.ir\n\n\n[2] محسن ابراهیمی, “صفحه نصب بسته کدال و بورس\nتهران در پایتون.” https://pypi.org/project/codal-tsetmc/\n\n\n[3] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و\nبورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\n[4] محسن ابراهیمی, “صفحه راهنمای بسته کدال و\nبورس تهران در پایتون.” https://mohsenebrahimyir.github.io/codal-tsetmc/\n\n\n[5] کدال, “سامانه جامع اطلاع رسانی\nناشران.” https://codal.ir/\n\n\n[6] بورس تهران, “شرکت مدیریت فناوری بورس\nتهران.” http://tsetmc.com/"
   }
 ]

@@ -51,7 +51,8 @@ get_stock_prices_history(code)
 3566	14020225000000	FOLD	6680.0	46348559193224090
 ```
 
-### گرفتن تاریخچه افزایش سرمایه
+### گرفتن تاریخچه افزایش سرمایه
+
 
 ```python
 from codal_tsetmc.download.tsetmc.capital import get_stock_capitals_history

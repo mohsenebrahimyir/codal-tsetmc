@@ -31,6 +31,7 @@ book:
     - index.qmd
     - intro.qmd
     - installation.qmd
+    - guide.qmd
     - references.qmd
 
 bibliography: 
