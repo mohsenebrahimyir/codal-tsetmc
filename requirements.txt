@@ -1,3 +1,3 @@
--r test/requirements-tests.txt
--r docs_src/requirements-docs.txt
+-r tests/requirements.txt
+-r docs_src/requirements.txt
 uvicorn[standard]==0.22.0
