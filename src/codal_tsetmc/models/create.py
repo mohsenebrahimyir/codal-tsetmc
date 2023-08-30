@@ -25,10 +25,17 @@ def create_table(Model):
 
 def create():
     models = [
-        Stocks, StockPrice, StockCapital,
-        Companies, CompanyTypes, CompanyStatuses, 
-        ReportTypes, LetterTypes, Auditors, 
-        Letters, FinancialStatementHeader, 
+        Stocks,
+        StockPrice,
+        StockCapital,
+        Companies,
+        CompanyTypes,
+        CompanyStatuses,
+        ReportTypes,
+        LetterTypes,
+        Auditors, 
+        Letters,
+        FinancialStatementHeader, 
         FinancialStatementTableWithSingleItem,
         CommodityPrice
     ]

@@ -1,0 +1,3 @@
+-r requirements-tests.txt
+-r requirements-docs.txt
+uvicorn[standard]==0.22.0

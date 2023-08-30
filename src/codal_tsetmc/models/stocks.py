@@ -1,9 +1,6 @@
 from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
 import pandas as pd
-import requests
-import jalali_pandas
-
 
 def add_event(df, event, ratio):
     df = df.merge(event[["date", ratio]], how="outer", on="date")
@@ -136,6 +133,7 @@ class StockPrice(Base):
     code = Column(String, ForeignKey("stocks.code"), index=True)
     ticker = Column(String)
     date = Column(String)
+    volume = Column(Float)
     price = Column(Float)
     up_date = Column(String)
 
@@ -163,6 +161,7 @@ class CommodityPrice(Base):
     id = Column(Integer, primary_key=True)
     symbol = Column(String)
     date = Column(String, index=True)
+    volume = Column(Float)
     price = Column(Float)
     up_date = Column(String)
 

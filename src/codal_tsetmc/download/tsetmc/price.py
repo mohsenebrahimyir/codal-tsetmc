@@ -1,4 +1,3 @@
-from jdatetime import date as jdate
 from jdatetime import datetime as jdt
 from datetime import datetime
 import asyncio

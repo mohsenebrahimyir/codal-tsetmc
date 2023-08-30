@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="محسن ابراهیمی">
-<meta name="dcterms.date" content="2022-01-01">
 
-<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری</title>
+<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - 1&nbsp; نصب</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 /* CSS for citations */
 div.csl-bib-body { }
@@ -51,7 +83,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./intro.html" rel="next">
+<link href="./references.html" rel="next">
+<link href="./intro.html" rel="prev">
 <link href="./img/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -112,7 +145,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">پیش گفتار</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./installation.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">نصب بسته</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -148,7 +181,7 @@ div.csl-indent {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">پیش گفتار</span></a>
   </div>
 </li>
@@ -160,7 +193,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./installation.html" class="sidebar-item-text sidebar-link">
+  <a href="./installation.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">نصب بسته</span></span></a>
   </div>
 </li>
@@ -176,40 +209,21 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">فهرست مطالب</h2>
-   
-  <ul>
-  <li><a href="#پیش-گفتار" id="toc-پیش-گفتار" class="nav-link active" data-scroll-target="#پیش-گفتار">پیش گفتار</a></li>
-  </ul>
-</nav>
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">پکیجی برای ذخیره اطلاعات بنیادی و بازاری</h1>
-<p class="subtitle lead">تحلیل و بررسی روش‌های مختلف تحلیل داده‌های fMRI</p>
+<h1 class="title"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">نصب</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">نویسنده</div>
-    <div class="quarto-title-meta-contents">
-             <p>محسن ابراهیمی </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">منتشر شده</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">2022-01-01</p>
-    </div>
-  </div>
   
     <div>
     <div class="quarto-title-meta-heading">اصلاح شده</div>
@@ -224,43 +238,26 @@ div.csl-indent {
 
 </header>
 
-
-<section id="پیش-گفتار" class="level1 unnumbered">
-<h1 class="unnumbered">پیش گفتار</h1><p><img src="img/cover.png" title="پکیجی برای ذخیره اطلاعات بنیادی و بازاری" class="quarto-cover-image img-fluid"></p>
-<p>این بسته توسط محسن ابراهیمی <span class="citation" data-cites="mohsenebrahimy.ir"><a href="references.html#ref-mohsenebrahimy.ir" role="doc-biblioref">[1]</a></span> در حال توسعه است. نظرات و پیشنهادات خود را می‌توانید از طریق ایمیل <a href="mailto:mohsenebrahimy.ir@gmail.com" class="email">mohsenebrahimy.ir@gmail.com</a> برای بهبود بسته به برنامه نویس ارسال کنید تا در هر بروزرسانی اصلاحات صورت گیرد. این نسخه در تاریخ <span dir="ltr"><strong>1402-06-08</strong></span> بروزرسانی شده است.</p>
-<hr>
-<ul>
-<li>راهنما:
-<ul>
-<li><span dir="ltr"><a href="https://mohsenebrahimyir.github.io/codal-tsetmc/" class="uri">https://mohsenebrahimyir.github.io/codal-tsetmc/</a></span></li>
-</ul></li>
-<li>گیت هاب:
-<ul>
-<li><span dir="ltr"><a href="https://github.com/mohsenebrahimyir/codal-tsetmc/" class="uri">https://github.com/mohsenebrahimyir/codal-tsetmc/</a></span></li>
-</ul></li>
-</ul>
-<p>امیدوارم این کتاب برایتان مفید باشد.</p>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-هشدار
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>اگر این متن را میبینید یعنی این پکیج درحال توسعه است و قابلیت استفاده در پروژه‌های مهم را ندارد.</p>
-</div>
-</div>
+<p>برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>فعال سازی محیط مجازی در لینوکس</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>فعال سازی محیط مجازی در ویندوز</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span><span class="dt">\v</span>env<span class="dt">\S</span>cripts<span class="dt">\a</span>ctivate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>نصب <span class="citation" data-cites="codal-tsetmc"><a href="references.html#ref-codal-tsetmc" role="doc-biblioref">[1]</a></span>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> codal-tsetmc</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>نصب در حال توسعه <span class="citation" data-cites="codal-tsetmc.github"><a href="references.html#ref-codal-tsetmc.github" role="doc-biblioref">[2]</a></span>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> git+https://github.com/mohsenebrahimyir/codal-tsetmc.git</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 <div id="refs" class="references csl-bib-body" role="list" style="display: none">
-<div id="ref-mohsenebrahimy.ir" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">محسن ابراهیمی, <a href="https://mohsenebrahimy.ir">https://mohsenebrahimy.ir</a></div>
+<div id="ref-codal-tsetmc" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[1] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه نصب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://pypi.org/project/codal-tsetmc/">https://pypi.org/project/codal-tsetmc/</a></div>
+</div>
+<div id="ref-codal-tsetmc.github" class="csl-entry" role="listitem">
+<div class="csl-left-margin">[2] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://github.com/mohsenebrahimyir/codal-tsetmc/">https://github.com/mohsenebrahimyir/codal-tsetmc/</a></div>
 </div>
 </div>
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -753,10 +750,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./intro.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">مقدمه</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./intro.html" class="pagination-link">
-        <span class="nav-page-text">مقدمه</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./references.html" class="pagination-link">
+        <span class="nav-page-text">منابع</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

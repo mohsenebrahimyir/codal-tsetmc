@@ -1,0 +1,31 @@
+# پیش گفتار {-}
+
+```{python}
+from jdatetime import datetime as jdt
+
+now = jdt.now().strftime("%Y-%m-%d")
+```
+
+
+این بسته توسط محسن ابراهیمی
+@mohsenebrahimy.ir
+در حال توسعه است. نظرات و
+پیشنهادات خود را می‌توانید از طریق ایمیل
+[mohsenebrahimy.ir\@gmail.com](mailto:mohsenebrahimy.ir@gmail.com){.email}
+برای بهبود بسته به برنامه نویس ارسال کنید تا در هر بروزرسانی اصلاحات صورت
+گیرد. این نسخه در تاریخ
+[**`{python} now`**]{dir="ltr"}
+بروزرسانی شده است.
+
+***
+
+- راهنما:
+  * [<https://mohsenebrahimyir.github.io/codal-tsetmc/>]{dir="ltr"}
+- گیت هاب:
+  * [<https://github.com/mohsenebrahimyir/codal-tsetmc/>]{dir="ltr"}
+
+امیدوارم این کتاب برایتان مفید باشد.
+
+::: {.callout-warning}
+اگر این متن را میبینید یعنی این پکیج درحال توسعه است و قابلیت استفاده در پروژه‌های مهم را ندارد.
+::::::

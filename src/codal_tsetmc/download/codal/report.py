@@ -6,7 +6,6 @@ import sys
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
-import jalali_pandas
 from codal_tsetmc.tools import *
 from codal_tsetmc.models.companies import Letters
 

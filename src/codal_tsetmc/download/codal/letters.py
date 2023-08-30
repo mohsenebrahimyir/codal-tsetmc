@@ -1,7 +1,6 @@
 import sys
 import asyncio
 import aiohttp
-from jdatetime import datetime as jdt
 
 import codal_tsetmc.config as db
 from codal_tsetmc.tools import *
