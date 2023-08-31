@@ -1,0 +1,183 @@
+# کدال
+
+## گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال
+
+پر کردن جدول شرکت‌های لیست شده در کدال
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_companies_table
+
+fill_companies_table()
+```
+
+### تعریف یک جستجو
+
+
+0. دانلود داده‌های مورد نیاز برای جستجو
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_categories_table
+
+fill_categories_table()
+```
+
+1. تنظیم فیلترهای دلخواه
+
+```{python}
+#| eval: false
+from codal_tsetmc import CodalQuery
+ 
+query = CodalQuery()
+```
+
+2. نام نماد
+
+```{python}
+#| eval: false
+query.set_symbol("فولاد")
+```
+
+3. از تاریخ
+
+```{python}
+#| eval: false
+query.set_from_date("1400/01/01")
+```
+
+4. گروه اطلاعیه
+
+```{python}
+#| eval: false
+query.set_category('اطلاعات و صورت مالی سالانه')
+```
+
+5. نوع اطلاعیه
+
+```{python}
+#| eval: false
+query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
+```
+
+6. حذف حسابرسی نشده‌ها
+
+```{python}
+#| eval: false
+query.set_not_audited(False)
+```
+
+7. فقط زیر مجموعه‌ها
+
+```{python}
+#| eval: false
+query.set_childs(False)
+```
+
+8. گرفتن لینک برای مرورگر
+
+```{python}
+#| eval: false
+query.get_report_list_url()
+```
+```
+'https://codal.ir/ReportList.aspx?search&PageNumber=1&Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&Category=1&LetterType=6&FromDate=1400%2F01%2F01&Audited=true&NotAudited=false&Consolidatable=true&NotConsolidatable=true&Childs=false&Mains=true&Publisher=false'
+```
+
+9. گرفتن لینک برای api
+
+```{python}
+#| eval: false
+query.get_query_url()
+```
+```
+'https://search.codal.ir/api/search/v2/q?&PageNumber=1&Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&Category=1&LetterType=6&FromDate=1400%2F01%2F01&Audited=true&NotAudited=false&Consolidatable=true&NotConsolidatable=true&Childs=false&Mains=true&Publisher=false&search=true'
+```
+
+10. گرفتن لیست گزارشات 
+
+```{python}
+#| eval: false
+query.get_api_multi_page()
+```
+```
+[{'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 1055774,
+  'Symbol': 'فولاد',
+  'CompanyName': 'فولاد مبارکه اصفهان',
+  'UnderSupervision': 0,
+  'Title': 'صورت\u200cهای مالی تلفیقی سال مالی منتهی به ۱۴۰۱/۱۲/۲۹ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',
+  'PublishDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&rt=0&let=6&ct=0&ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&ft=1005&let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 982256,
+  'Symbol': 'فولاد',
+  'CompanyName': 'فولاد مبارکه اصفهان',
+...
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d&ft=1005&let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'}]
+```
+
+## ذخیره لیست تمام گزارشات مالی در دیتابیس
+
+## یک یا چند شرکت
+
+```{python}
+#| eval: false
+from codal_tsetmc.download.codal.letters import (
+  update_company_information_and_interim_financial_statements_letters
+)
+
+update_company_information_and_interim_financial_statements_letters("فولاد", from_date="1390/01/01")
+```
+
+### همه شرکت‌های بورس و فرابورس
+
+::: {.warning}
+این کار زمان بر است و به صورت مکرر استفاده از آن توصیه نمی‌شود.
+:::
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_bourse_and_fara_companies_letters
+
+fill_bourse_and_fara_companies_letters()
+```
+```
+total progress: 0.14%
+total progress: 0.28%
+total progress: 0.42%
+...
+total progress: 99.72%
+total progress: 99.86%
+total progress: 100.00%
+letters Download Finished.     
+```
+
+## گرفتن لینک تمام گزارشات صورت مالی شرکت
+
+```{python}
+#| eval: false
+from codal_tsetmc import read_table_by_conditions
+
+read_table_by_conditions("letters", "symbol", "فولاد")
+```
+```
+فولاد-فولاد مباركه اصفهان-فلزات اساسي
+```

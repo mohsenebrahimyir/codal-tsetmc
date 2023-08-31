@@ -1,0 +1,19 @@
+# دیگر سایت‌ها
+
+ذخیره داده‌های کامودیتی 
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_commodities_prices_table
+
+fill_commodities_prices_table()
+```
+
+
+```{python}
+#| eval: false
+from codal_tsetmc import read_table_by_conditions
+
+comp = read_table_by_conditions("commodity_price", "symbol", "price_dollar_rl")
+comp
+```

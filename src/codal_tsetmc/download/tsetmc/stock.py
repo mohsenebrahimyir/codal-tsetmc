@@ -3,9 +3,9 @@ import sys
 import re
 import asyncio
 import aiohttp
-import codal_tsetmc.config as db
-from codal_tsetmc.models import Stocks
-from codal_tsetmc.tools import *
+from codal_tsetmc.config.engine import session
+from codal_tsetmc.tools.api import get_csv_from_github
+from codal_tsetmc.models.stocks import Stocks
 
 def is_stock_in_bourse_or_fara_or_paye(code):
     group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
@@ -30,13 +30,13 @@ def get_stock_detail(code: str, timeout = 3):
 
 def create_or_update_stock_from_dict(stock):
     print(f"creating stock with code {stock['code']}")
-    db.session.add(Stocks(**stock))
+    session.add(Stocks(**stock))
     
     try:
-        db.session.commit()
+        session.commit()
     except:
         print(f"stock {stock['code']} exist", end="\r", flush=True)
-        db.session.rollback()
+        session.rollback()
 
 async def update_stock_table(code: str) -> Stocks:
     try:
@@ -77,7 +77,7 @@ async def update_stock_table(code: str) -> Stocks:
         return e, code
 
 def update_stocks_table(codes, msg=""):
-    if sys.platform == 'win32':
+    if sys.platform == 'win32' or sys.platform == 'win64':
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.get_event_loop()

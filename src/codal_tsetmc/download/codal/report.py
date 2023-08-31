@@ -6,7 +6,11 @@ import sys
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
-from codal_tsetmc.tools import *
+from codal_tsetmc.tools.string import (
+    SHEET_NAME_TO_ID, EMPTY_TO_NONE, AR_TO_FA_LETTER,
+    to_snake_case, df_col_to_snake_case, datetime_to_num, replace_all, 
+)
+from codal_tsetmc.tools.database import fill_table_of_db_with_df
 from codal_tsetmc.models.companies import Letters
 
 def extract_sheet_id(sheet: str) -> str:
@@ -44,7 +48,7 @@ def extract_options(letter_string: str):
 def extract_symbol_and_name(letter_string: str) -> str:
     soup = BeautifulSoup(letter_string, 'html.parser')
     return {
-        "company_name": soup.find(id="ctl00_txbCompanyName").string,
+        "name": soup.find(id="ctl00_txbCompanyName").string,
         "capital": int(soup.find(id="ctl00_lblListedCapital").string.replace(",", "")),
         "symbol": soup.find(id="ctl00_txbSymbol").string,
         "isic": soup.find(id="ctl00_lblISIC").string,
@@ -83,7 +87,7 @@ def update_financial_statment_header(letter_string: str):
     )
 
     df = df[[
-        "company_name", 
+        "name", 
         "capital",
         "symbol",
         "isic",
@@ -256,7 +260,7 @@ def update_financial_statement_table(datasource, sheet, table):
 async def update_stock_financial_statement_table_async(symbol, from_date = 1400, to_date = 1500):
 
     letter_serials = Letters.query.filter(
-        Letters.company_symbol == symbol,
+        Letters.symbol == symbol,
         Letters.publish_date_time > datetime_to_num(from_date),
         Letters.publish_date_time < datetime_to_num(to_date),
         Letters.letter_types == "صورت های مالی میان دوره ای"
@@ -292,7 +296,7 @@ async def update_stock_financial_statement_table_async(symbol, from_date = 1400,
 def update_stocks_financial_statement_table(symbols, from_date = 1400, to_date = 1500, msg=""):
     if symbols.__class__ != list: symbols = [symbols]
 
-    if sys.platform == 'win32':
+    if sys.platform == 'win32' or sys.platform == 'win64':
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.get_event_loop()

@@ -6,7 +6,7 @@ jupyter: python3
 
 book:
   title: "پکیجی برای ذخیره اطلاعات بنیادی و بازاری"
-  subtitle: "تحلیل و بررسی روش‌های مختلف تحلیل داده‌های fMRI"
+  subtitle: "تحلیل و بررسی داده‌های مالی شرکت‌های بورسی"
   author: "محسن ابراهیمی"  
   date: "2022"
   
@@ -31,7 +31,12 @@ book:
     - index.qmd
     - intro.qmd
     - installation.qmd
-    - guide.qmd
+    - part: guide.qmd
+      chapters: 
+        - codal.qmd
+        - tsetmc.qmd
+        - other.qmd
+
     - references.qmd
 
 bibliography: 
@@ -39,12 +44,13 @@ bibliography:
 
 language: yml/_fa.yml
 
+number-sections: false
 crossref:
   labels: arabic
   subref-labels: arabic
 
 execute: 
-  echo: false
+  echo: true
   warning: false
 
 format:

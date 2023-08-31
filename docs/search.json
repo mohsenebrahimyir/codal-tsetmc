@@ -1,45 +1,10 @@
 [
   {
-    "objectID": "guide.html#گرفتن-اطلاعات-مستقیم",
-    "href": "guide.html#گرفتن-اطلاعات-مستقیم",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.1 گرفتن اطلاعات مستقیم",
-    "text": "2.1 گرفتن اطلاعات مستقیم\nگرفتن تاریخچه قیمت شاخص\nfrom codal_tsetmc.download.tsetmc.price import get_index_prices_history\n\nget_index_prices_history()\n    date    price   code    ticker\n0   13870914000000  9248.9  32097828799138957   INDEX\n1   13870915000000  9248.9  32097828799138957   INDEX\n2   13870916000000  9178.3  32097828799138957   INDEX\n3   13870917000000  9130.5  32097828799138957   INDEX\n4   13870918000000  9089.2  32097828799138957   INDEX\n... ... ... ... ...\n3480    14020220000000  2277713.1   32097828799138957   INDEX\n3481    14020223000000  2214024.3   32097828799138957   INDEX\n3482    14020224000000  2285904.0   32097828799138957   INDEX\n3483    14020225000000  2301380.1   32097828799138957   INDEX\n3484    14020227000000  2321336.1   32097828799138957   INDEX\n\n2.1.1 گرفتن تایخچه قیمت سهم\nsymbol = \"فولاد\"\ncode = \"46348559193224090\"\nfrom codal_tsetmc.download.tsetmc.price import get_stock_prices_history\n\nget_stock_prices_history(code)\n    date    ticker  price   code\n0   13851220000000  FOLD    1900.0  46348559193224090\n1   13851221000000  FOLD    1938.0  46348559193224090\n2   13851222000000  FOLD    1973.0  46348559193224090\n3   13851223000000  FOLD    1934.0  46348559193224090\n4   13851226000000  FOLD    1898.0  46348559193224090\n... ... ... ... ...\n3562    14020219000000  FOLD    6580.0  46348559193224090\n3563    14020220000000  FOLD    6560.0  46348559193224090\n3564    14020223000000  FOLD    6420.0  46348559193224090\n3565    14020224000000  FOLD    6670.0  46348559193224090\n3566    14020225000000  FOLD    6680.0  46348559193224090\n\n\n2.1.2 گرفتن تاریخچه افزایش سرمایه\nfrom codal_tsetmc.download.tsetmc.capital import get_stock_capitals_history\n\nget_stock_capitals_history(code)\ndate    new old code\n8   13891125000000  2.580000e+10    1.580000e+10    46348559193224090\n7   13920505000000  3.600000e+10    2.580000e+10    46348559193224090\n6   13930515000000  5.000000e+10    3.600000e+10    46348559193224090\n5   13940726000000  7.500000e+10    5.000000e+10    46348559193224090\n4   13971130000000  1.300000e+11    7.500000e+10    46348559193224090\n3   13981022000000  2.090000e+11    1.300000e+11    46348559193224090\n2   14000303000000  2.930000e+11    2.090000e+11    46348559193224090\n1   14010518000000  5.300000e+11    2.930000e+11    46348559193224090\n0   14011228000000  8.000000e+11    5.300000e+11    46348559193224090"
-  },
-  {
-    "objectID": "guide.html#ساختن-دیتابیس",
-    "href": "guide.html#ساختن-دیتابیس",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.2 ساختن دیتابیس",
-    "text": "2.2 ساختن دیتابیس\nایجاد دیتابیس\nfrom codal_tsetmc import init_db\n\ninit_db()\nاگر در محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.\nimport nest_asyncio; nest_asyncio.apply()\nپر کردن تمام پایگاه داده (این کار زمان بر است اما برای اولین بار پیشنهاد می‌شود)\nfrom codal_tsetmc import fill_db\n\nfill_db()"
-  },
-  {
-    "objectID": "guide.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
-    "href": "guide.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.3 گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال",
-    "text": "2.3 گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال\nدانلود داده‌های مورد نیاز برای جستجو\nfrom codal_tsetmc import fill_categories_table\n\nfill_categories_table()\nپر کردن جدول شرکت‌های لیست شده در کدال\nfrom codal_tsetmc import fill_companies_table\n\nfill_companies_table()\n\n2.3.1 تعریف یک جستجو\n\nتنظیم فیلترهای دلخواه\n\nfrom codal_tsetmc import CodalQuery\n \nquery = CodalQuery()\n\nنام نماد\n\nquery.set_symbol(\"فولاد\")\n\nاز تاریخ\n\nquery.set_from_date(\"1400/01/01\")\n\nگروه اطلاعیه\n\nquery.set_category('اطلاعات و صورت مالی سالانه')\n\nنوع اطلاعیه\n\nquery.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')\n\nحذف حسابرسی نشده‌ها\n\nquery.set_not_audited(False)\n\nفقط زیر مجموعه‌ها\n\nquery.set_childs(False)\n\nگرفتن لینک برای مرورگر\n\nquery.get_report_list_url()\n\nگرفتن لینک برای api\n\nquery.get_query_url()\n\nگرفتن لیست گزارشات\n\nquery.get_api_multi_page()"
-  },
-  {
-    "objectID": "guide.html#ذخیره-دادههای-tsetmc",
-    "href": "guide.html#ذخیره-دادههای-tsetmc",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.4 ذخیره داده‌های tsetmc",
-    "text": "2.4 ذخیره داده‌های tsetmc\nپر کردن جدوال اطلاعات سهام‌ها\nfrom codal_tsetmc import fill_stocks_table\n\nfill_stocks_table()\nپر کردن جدول قیمت شرکت‌ها\nfrom codal_tsetmc import fill_stocks_prices_table\n\nfill_stocks_prices_table()\nپر کردن جدول افزایش سرمایه‌ها\nfrom codal_tsetmc import fill_stocks_capitals_table\n\nfill_stocks_capitals_table()"
-  },
-  {
-    "objectID": "guide.html#ذخیره-دادههای-کامودیتی-از-سایتهایی-مثل-tgju",
-    "href": "guide.html#ذخیره-دادههای-کامودیتی-از-سایتهایی-مثل-tgju",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.5 ذخیره داده‌های کامودیتی از سایت‌هایی مثل tgju",
-    "text": "2.5 ذخیره داده‌های کامودیتی از سایت‌هایی مثل tgju\nfrom codal_tsetmc import fill_commodities_prices_table\n\nfill_commodities_prices_table()"
-  },
-  {
-    "objectID": "guide.html#اطلاعات-یک-سهم",
-    "href": "guide.html#اطلاعات-یک-سهم",
-    "title": "2  راهنمای استفاده از بسته",
-    "section": "2.6 اطلاعات یک سهم",
-    "text": "2.6 اطلاعات یک سهم\nساختن یک شی از سهام\nfrom codal_tsetmc import Stocks\n\nstock = Stocks.query.filter_by(symbol=\"فولاد\").first()\nstock\nفولاد-فولاد مباركه اصفهان-فلزات اساسي\nمشاهده مشخصات سهم\nprint(f\"\"\"\nsymbol: {stock.symbol}\nname: {stock.name}\nisin: {stock.isin}\ncode: {stock.code}\ncapital: {stock.capital}\n\"\"\")\nsymbol: فولاد\nname: فولاد مباركه اصفهان\nisin: IRO1FOLD0009\ncode: 46348559193224090\ncapital: 800000000000\nگرفتن اطلاعات تاریخی سهم\nstock.df\n    jdate   ticker  symbol  code    price   capital index   dollar  market\ndate                                    \n2008-12-06  13870916    FOLD    فولاد   46348559193224090   2199.0  1.580000e+10    9.178300e+12    3.392988e+09    3.474420e+13\n2008-12-07  13870917    FOLD    فولاد   46348559193224090   2134.0  1.580000e+10    9.130500e+12    3.289483e+09    3.371720e+13\n2008-12-08  13870918    FOLD    فولاد   46348559193224090   2070.0  1.580000e+10    9.089200e+12    3.197067e+09    3.270600e+13\n2008-12-10  13870920    FOLD    فولاد   46348559193224090   2008.0  1.580000e+10    9.023700e+12    3.122677e+09    3.172640e+13\n2008-12-13  13870923    FOLD    فولاد   46348559193224090   1948.0  1.580000e+10    8.973300e+12    3.056445e+09    3.077840e+13\n... ... ... ... ... ... ... ... ... ...\n2023-05-09  14020219    FOLD    فولاد   46348559193224090   6580.0  8.000000e+11    2.305838e+15    9.897714e+09    5.264000e+15\n2023-05-10  14020220    FOLD    فولاد   46348559193224090   6560.0  8.000000e+11    2.277713e+15    9.911050e+09    5.248000e+15\n2023-05-13  14020223    FOLD    فولاد   46348559193224090   6420.0  8.000000e+11    2.214024e+15    9.699534e+09    5.136000e+15\n2023-05-14  14020224    FOLD    فولاد   46348559193224090   6670.0  8.000000e+11    2.285904e+15    1.007724e+10    5.336000e+15\n2023-05-15  14020225    FOLD    فولاد   46348559193224090   6680.0  8.000000e+11    2.301380e+15    1.009235e+10    5.344000e+15"
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "پکیجی برای ذخیره اطلاعات بنیادی و بازاری",
+    "section": "",
+    "text": "پیش گفتار\nاین بسته توسط محسن ابراهیمی [1] در حال توسعه است. نظرات و پیشنهادات خود را می‌توانید از طریق ایمیل mohsenebrahimy.ir@gmail.com برای بهبود بسته به برنامه نویس ارسال کنید تا در هر بروزرسانی اصلاحات صورت گیرد. این نسخه در تاریخ 1402-06-09 بروزرسانی شده است.\n\n\nراهنما:\n\nhttps://mohsenebrahimyir.github.io/codal-tsetmc/\n\nگیت هاب:\n\nhttps://github.com/mohsenebrahimyir/codal-tsetmc/\n\n\nامیدوارم این کتاب برایتان مفید باشد.\n\n\n\n\n\n\nهشدار\n\n\n\nاگر این متن را میبینید یعنی این پکیج درحال توسعه است و قابلیت استفاده در پروژه‌های مهم را ندارد.\n\n\n\n\n\n\n[1] محسن ابراهیمی, https://mohsenebrahimy.ir"
   },
   {
     "objectID": "intro.html",
@@ -51,9 +16,72 @@
   {
     "objectID": "installation.html",
     "href": "installation.html",
-    "title": "1  نصب",
+    "title": "نصب",
     "section": "",
     "text": "برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.\npython -m venv .venv\nفعال سازی محیط مجازی در لینوکس\nsource .venv/bin/activate\nفعال سازی محیط مجازی در ویندوز\n.\\venv\\Scripts\\activate\nنصب [1]:\npip install --upgrade codal-tsetmc\nنصب در حال توسعه [2]:\npip install --upgrade git+https://github.com/mohsenebrahimyir/codal-tsetmc.git\n\n\n\n\n[1] محسن ابراهیمی, “صفحه نصب بسته کدال و بورس تهران در پایتون.” https://pypi.org/project/codal-tsetmc/\n\n\n[2] محسن ابراهیمی, “صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.” https://github.com/mohsenebrahimyir/codal-tsetmc/"
+  },
+  {
+    "objectID": "guide.html#گرفتن-اطلاعات-مستقیم",
+    "href": "guide.html#گرفتن-اطلاعات-مستقیم",
+    "title": "راهنمای استفاده از بسته",
+    "section": "گرفتن اطلاعات مستقیم",
+    "text": "گرفتن اطلاعات مستقیم\nگرفتن تاریخچه قیمت شاخص\n\nfrom codal_tsetmc.download.tsetmc.price import get_index_prices_history\n\nget_index_prices_history()\n\n    date    price   jdate   code    ticker\n0   2008-12-04  9248.9  1387-09-14  32097828799138957   INDEX\n1   2008-12-05  9248.9  1387-09-15  32097828799138957   INDEX\n2   2008-12-06  9178.3  1387-09-16  32097828799138957   INDEX\n3   2008-12-07  9130.5  1387-09-17  32097828799138957   INDEX\n4   2008-12-08  9089.2  1387-09-18  32097828799138957   INDEX\n... ... ... ... ... ...\n3551    2023-08-23  1946593.9   1402-06-01  32097828799138957   INDEX\n3552    2023-08-26  1993097.2   1402-06-04  32097828799138957   INDEX\n3553    2023-08-27  2051471.9   1402-06-05  32097828799138957   INDEX\n3554    2023-08-28  2084168.4   1402-06-06  32097828799138957   INDEX\n3555    2023-08-29  2095048.9   1402-06-07  32097828799138957   INDEX\n\nگرفتن تایخچه قیمت سهم\n\nsymbol = \"فولاد\"\ncode = \"46348559193224090\"\n\n\nfrom codal_tsetmc.download.tsetmc.price import get_stock_prices_history\n\nget_stock_prices_history(code)\n\ndate    high    low price   close   open    yesterday   value   volume  count   jdate   code\n0   2023-08-29  5730.0  5520.0  5610.0  5530.0  5630.0  5580.0  7.397634e+11    131877599   5665    1402-06-07  46348559193224090\n1   2023-08-28  5690.0  5480.0  5580.0  5550.0  5590.0  5500.0  9.294742e+11    166512551   7310    1402-06-06  46348559193224090\n2   2023-08-27  5580.0  5270.0  5500.0  5520.0  5340.0  5220.0  1.282123e+12    233151626   9017    1402-06-05  46348559193224090\n3   2023-08-26  5310.0  5050.0  5220.0  5260.0  5110.0  5000.0  8.011761e+11    153494477   5931    1402-06-04  46348559193224090\n4   2023-08-23  5050.0  4950.0  5000.0  5040.0  4960.0  5000.0  3.489348e+11    69737133    3823    1402-06-01  46348559193224090\n... ... ... ... ... ... ... ... ... ... ... ... ...\n3630    2007-03-17  1927.0  1896.0  1898.0  1898.0  1896.0  1934.0  2.823901e+10    14877283    1514    1385-12-26  46348559193224090\n3631    2007-03-14  1966.0  1934.0  1934.0  1934.0  1934.0  1973.0  5.166638e+10    26705128    1901    1385-12-23  46348559193224090\n3632    2007-03-13  1976.0  1915.0  1973.0  1973.0  1976.0  1938.0  2.492415e+11    126270939   5862    1385-12-22  46348559193224090\n3633    2007-03-12  1938.0  1938.0  1938.0  1938.0  1938.0  1900.0  1.938795e+11    100041000   9214    1385-12-21  46348559193224090\n3634    2007-03-11  1938.0  1900.0  1900.0  1900.0  1900.0  1900.0  8.894372e+11    468077431   7736    1385-12-20  46348559193224090\n\n\nگرفتن تاریخچه افزایش سرمایه\n\nfrom codal_tsetmc.download.tsetmc.capital import get_stock_capitals_history\n\nget_stock_capitals_history(code)\n\n    date    new old code\n8   13891125000000  2.580000e+10    1.580000e+10    46348559193224090\n7   13920505000000  3.600000e+10    2.580000e+10    46348559193224090\n6   13930515000000  5.000000e+10    3.600000e+10    46348559193224090\n5   13940726000000  7.500000e+10    5.000000e+10    46348559193224090\n4   13971130000000  1.300000e+11    7.500000e+10    46348559193224090\n3   13981022000000  2.090000e+11    1.300000e+11    46348559193224090\n2   14000303000000  2.930000e+11    2.090000e+11    46348559193224090\n1   14010518000000  5.300000e+11    2.930000e+11    46348559193224090\n0   14011228000000  8.000000e+11    5.300000e+11    46348559193224090"
+  },
+  {
+    "objectID": "guide.html#ساختن-دیتابیس",
+    "href": "guide.html#ساختن-دیتابیس",
+    "title": "راهنمای استفاده از بسته",
+    "section": "ساختن دیتابیس",
+    "text": "ساختن دیتابیس\nایجاد دیتابیس\n\nfrom codal_tsetmc import init_db\n\ninit_db()\n\n\nنکته. اگر در محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.\n\nimport nest_asyncio; nest_asyncio.apply()\n\n\nپر کردن تمام پایگاه داده\n\nاین پر کردن تمام دیتابیس کاری زمان بر است و در حالت کلی استفاه از آن پیشنهاد نمی‌شود.\n\n\nfrom codal_tsetmc import fill_db\n\nfill_db()"
+  },
+  {
+    "objectID": "codal.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
+    "href": "codal.html#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال",
+    "title": "کدال",
+    "section": "گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال",
+    "text": "گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال\nپر کردن جدول شرکت‌های لیست شده در کدال\n\nfrom codal_tsetmc import fill_companies_table\n\nfill_companies_table()\n\n\nتعریف یک جستجو\n\nدانلود داده‌های مورد نیاز برای جستجو\n\n\nfrom codal_tsetmc import fill_categories_table\n\nfill_categories_table()\n\n\nتنظیم فیلترهای دلخواه\n\n\nfrom codal_tsetmc import CodalQuery\n \nquery = CodalQuery()\n\n\nنام نماد\n\n\nquery.set_symbol(\"فولاد\")\n\n\nاز تاریخ\n\n\nquery.set_from_date(\"1400/01/01\")\n\n\nگروه اطلاعیه\n\n\nquery.set_category('اطلاعات و صورت مالی سالانه')\n\n\nنوع اطلاعیه\n\n\nquery.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')\n\n\nحذف حسابرسی نشده‌ها\n\n\nquery.set_not_audited(False)\n\n\nفقط زیر مجموعه‌ها\n\n\nquery.set_childs(False)\n\n\nگرفتن لینک برای مرورگر\n\n\nquery.get_report_list_url()\n\n'https://codal.ir/ReportList.aspx?search&PageNumber=1&Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&Category=1&LetterType=6&FromDate=1400%2F01%2F01&Audited=true&NotAudited=false&Consolidatable=true&NotConsolidatable=true&Childs=false&Mains=true&Publisher=false'\n\nگرفتن لینک برای api\n\n\nquery.get_query_url()\n\n'https://search.codal.ir/api/search/v2/q?&PageNumber=1&Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&Category=1&LetterType=6&FromDate=1400%2F01%2F01&Audited=true&NotAudited=false&Consolidatable=true&NotConsolidatable=true&Childs=false&Mains=true&Publisher=false&search=true'\n\nگرفتن لیست گزارشات\n\n\nquery.get_api_multi_page()\n\n[{'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},\n  'TracingNo': 1055774,\n  'Symbol': 'فولاد',\n  'CompanyName': 'فولاد مبارکه اصفهان',\n  'UnderSupervision': 0,\n  'Title': 'صورت\\u200cهای مالی تلفیقی سال مالی منتهی به ۱۴۰۱/۱۲/۲۹ (حسابرسی شده)',\n  'LetterCode': 'ن-۱۰',\n  'SentDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',\n  'PublishDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',\n  'HasHtml': True,\n  'IsEstimate': False,\n  'Url': '/Reports/Decision.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&rt=0&let=6&ct=0&ft=-1',\n  'HasExcel': True,\n  'HasPdf': True,\n  'HasXbrl': False,\n  'HasAttachment': True,\n  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d',\n  'PdfUrl': 'DownloadFile.aspx?hs=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&ft=1005&let=6',\n  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d/0',\n  'XbrlUrl': '',\n  'TedanUrl': 'http://www.tedan.ir'},\n {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},\n  'TracingNo': 982256,\n  'Symbol': 'فولاد',\n  'CompanyName': 'فولاد مبارکه اصفهان',\n...\n  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d',\n  'PdfUrl': 'DownloadFile.aspx?hs=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d&ft=1005&let=6',\n  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d/0',\n  'XbrlUrl': '',\n  'TedanUrl': 'http://www.tedan.ir'}]"
+  },
+  {
+    "objectID": "codal.html#ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس",
+    "href": "codal.html#ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس",
+    "title": "کدال",
+    "section": "ذخیره لیست تمام گزارشات مالی در دیتابیس",
+    "text": "ذخیره لیست تمام گزارشات مالی در دیتابیس"
+  },
+  {
+    "objectID": "codal.html#یک-یا-چند-شرکت",
+    "href": "codal.html#یک-یا-چند-شرکت",
+    "title": "کدال",
+    "section": "یک یا چند شرکت",
+    "text": "یک یا چند شرکت\n\nfrom codal_tsetmc.download.codal.letters import (\n  update_company_information_and_interim_financial_statements_letters\n)\n\nupdate_company_information_and_interim_financial_statements_letters(\"فولاد\", from_date=\"1390/01/01\")\n\n\nهمه شرکت‌های بورس و فرابورس\n\nاین کار زمان بر است و به صورت مکرر استفاده از آن توصیه نمی‌شود.\n\n\nfrom codal_tsetmc import fill_bourse_and_fara_companies_letters\n\nfill_bourse_and_fara_companies_letters()\n\ntotal progress: 0.14%\ntotal progress: 0.28%\ntotal progress: 0.42%\n...\ntotal progress: 99.72%\ntotal progress: 99.86%\ntotal progress: 100.00%\nletters Download Finished."
+  },
+  {
+    "objectID": "codal.html#گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت",
+    "href": "codal.html#گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت",
+    "title": "کدال",
+    "section": "گرفتن لینک تمام گزارشات صورت مالی شرکت",
+    "text": "گرفتن لینک تمام گزارشات صورت مالی شرکت\n\nfrom codal_tsetmc import read_table_by_conditions\n\nread_table_by_conditions(\"letters\", \"symbol\", \"فولاد\")\n\nفولاد-فولاد مباركه اصفهان-فلزات اساسي"
+  },
+  {
+    "objectID": "tsetmc.html#ذخیره-دادههای-tsetmc",
+    "href": "tsetmc.html#ذخیره-دادههای-tsetmc",
+    "title": "بورس تهران",
+    "section": "ذخیره داده‌های tsetmc",
+    "text": "ذخیره داده‌های tsetmc\nپر کردن جدوال اطلاعات سهام‌ها\n\nfrom codal_tsetmc import fill_stocks_table\n\nfill_stocks_table()\n\nstock with code 19101865588701374 exist\nstock with code 24455170564393447 exist\nstock with code 67327029014085707 exist\nstock with code 65157472039220905 exist\nstock with code 6858820559759769 exist\nstock with code 69171897374421261 exist\nپر کردن جدول قیمت شرکت‌ها\n\nfrom codal_tsetmc import fill_stocks_prices_table\n\nfill_stocks_prices_table()\n\nپر کردن جدول افزایش سرمایه‌ها\n\nfrom codal_tsetmc import fill_stocks_capitals_table\n\nfill_stocks_capitals_table()"
+  },
+  {
+    "objectID": "tsetmc.html#اطلاعات-یک-سهم",
+    "href": "tsetmc.html#اطلاعات-یک-سهم",
+    "title": "بورس تهران",
+    "section": "اطلاعات یک سهم",
+    "text": "اطلاعات یک سهم\n\nگرفتن قیمت سهام از دیتابیس بدون تعریف شی\n\nfrom codal_tsetmc import read_table_by_conditions\n\nread_table_by_conditions(\"stock_price\", \"symbol\", \"فولاد\")\n\n                date symbol ticker               code   price     volume          value         up_date\n0     13851220000000  فولاد   FOLD  46348559193224090  1900.0  468077431   889437216900  14020608000000\n1     13851221000000  فولاد   FOLD  46348559193224090  1938.0  100041000   193879458000  14020608000000\n2     13851222000000  فولاد   FOLD  46348559193224090  1973.0  126270939   249241504527  14020608000000\n3     13851223000000  فولاد   FOLD  46348559193224090  1934.0   26705128    51666379451  14020608000000\n4     13851226000000  فولاد   FOLD  46348559193224090  1898.0   14877283    28239006789  14020608000000\n...              ...    ...    ...                ...     ...        ...            ...             ...\n3631  14020604000000  فولاد   FOLD  46348559193224090  5220.0  153494477   801176126890  14020608000000\n3632  14020605000000  فولاد   FOLD  46348559193224090  5500.0  233151626  1282123166740  14020608000000\n3633  14020606000000  فولاد   FOLD  46348559193224090  5580.0  166512551   929474239300  14020608000000\n3634  14020607000000  فولاد   FOLD  46348559193224090  5610.0  131877599   739763385740  14020608000000\n3635  14020608000000  فولاد   FOLD  46348559193224090  5620.0  125955299   708472236280  14020608000000\n\n\nساختن یک شی سهام\n\nfrom codal_tsetmc import Stocks\n\nstock = Stocks.query.filter_by(symbol=\"فولاد\").first()\nstock\n\nفولاد-فولاد مباركه اصفهان-فلزات اساسي\nمشاهده مشخصات سهم\n\nprint(f\"\"\"\nsymbol: {stock.symbol}\nname: {stock.name}\nisin: {stock.isin}\ncode: {stock.code}\ncapital: {stock.capital}\n\"\"\")\n\nsymbol: فولاد\nname: فولاد مباركه اصفهان\nisin: IRO1FOLD0009\ncode: 46348559193224090\ncapital: 800000000000\nگرفتن اطلاعات قیمت تاریخی سهم\n\nstock.price\n\n               jdate ticker symbol               code   price          value     volume\ndate                                                                                   \n2007-03-11  13851220   FOLD  فولاد  46348559193224090  1900.0   889437216900  468077431\n2007-03-12  13851221   FOLD  فولاد  46348559193224090  1938.0   193879458000  100041000\n2007-03-13  13851222   FOLD  فولاد  46348559193224090  1973.0   249241504527  126270939\n2007-03-14  13851223   FOLD  فولاد  46348559193224090  1934.0    51666379451   26705128\n2007-03-17  13851226   FOLD  فولاد  46348559193224090  1898.0    28239006789   14877283\n...              ...    ...    ...                ...     ...            ...        ...\n2023-08-26  14020604   FOLD  فولاد  46348559193224090  5220.0   801176126890  153494477\n2023-08-27  14020605   FOLD  فولاد  46348559193224090  5500.0  1282123166740  233151626\n2023-08-28  14020606   FOLD  فولاد  46348559193224090  5580.0   929474239300  166512551\n2023-08-29  14020607   FOLD  فولاد  46348559193224090  5610.0   739763385740  131877599\n2023-08-30  14020608   FOLD  فولاد  46348559193224090  5620.0   708472236280  125955299\nگرفتن اطلاعات ارزش بازار تاریخی سهم\n\nstock.market\n\n               jdate symbol        market          value\ndate                                                    \n2007-03-11  13851220  فولاد  3.002000e+13   889437216900\n2007-03-12  13851221  فولاد  3.062040e+13   193879458000\n2007-03-13  13851222  فولاد  3.117340e+13   249241504527\n2007-03-14  13851223  فولاد  3.055720e+13    51666379451\n2007-03-17  13851226  فولاد  2.998840e+13    28239006789\n...              ...    ...           ...            ...\n2023-08-26  14020604  فولاد  4.176000e+15   801176126890\n2023-08-27  14020605  فولاد  4.400000e+15  1282123166740\n2023-08-28  14020606  فولاد  4.464000e+15   929474239300\n2023-08-29  14020607  فولاد  4.488000e+15   739763385740\n2023-08-30  14020608  فولاد  4.496000e+15   708472236280\nگرفتن اطلاعات ارزش بازار موازی با شاخص تاریخی سهم\n\nstock.index\n\n               jdate symbol        market          value\ndate                                                    \n2007-03-11  13851220  فولاد  3.002000e+13   889437216900\n2007-03-12  13851221  فولاد  3.062040e+13   193879458000\n2007-03-13  13851222  فولاد  3.117340e+13   249241504527\n2007-03-14  13851223  فولاد  3.055720e+13    51666379451\n2007-03-17  13851226  فولاد  2.998840e+13    28239006789\n...              ...    ...           ...            ...\n2023-08-26  14020604  فولاد  4.176000e+15   801176126890\n2023-08-27  14020605  فولاد  4.400000e+15  1282123166740\n2023-08-28  14020606  فولاد  4.464000e+15   929474239300\n2023-08-29  14020607  فولاد  4.488000e+15   739763385740\n2023-08-30  14020608  فولاد  4.496000e+15   708472236280\nضریب بتای سهم\n\nstock.beta(3650)\n\n1.37213757610768"
+  },
+  {
+    "objectID": "other.html",
+    "href": "other.html",
+    "title": "دیگر سایت‌ها",
+    "section": "",
+    "text": "ذخیره داده‌های کامودیتی\n\nfrom codal_tsetmc import fill_commodities_prices_table\n\nfill_commodities_prices_table()\n\n\nfrom codal_tsetmc import read_table_by_conditions\n\ncomp = read_table_by_conditions(\"commodity_price\", \"symbol\", \"price_dollar_rl\")\ncomp"
   },
   {
     "objectID": "references.html",

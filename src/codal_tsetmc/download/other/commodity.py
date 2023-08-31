@@ -1,11 +1,14 @@
 from jdatetime import datetime as jdt
 import asyncio
 import aiohttp
+import sys
 import pandas as pd
+import jalali_pandas
 import requests
 
-import codal_tsetmc.config as db
-from codal_tsetmc.tools import *
+from codal_tsetmc.config.engine import engine
+from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.api import get_csv_from_github
 
 
 def cleanup_commodity_price_records(response):
@@ -47,7 +50,7 @@ async def update_commodity_prices(symbol: str):
         jnow = jdt.now()
         try:
             query = f"select max(date) as date from commodity_price where symbol = '{symbol}'"
-            max_date = pd.read_sql(query, db.engine)
+            max_date = pd.read_sql(query, engine)
             last_date = max_date.date.iat[0]
             days = jnow - jdt.strptime(last_date, "%Y%m%d%H%M%S")
 
@@ -86,7 +89,11 @@ async def update_commodity_prices(symbol: str):
 
 def update_commodities_prices(symbols, msg=""):
     print(f"{' '*25} update Compdities ", end="\r")
-    loop = asyncio.get_event_loop()
+    if sys.platform == 'win32' or sys.platform == 'win64':
+        loop = asyncio.ProactorEventLoop()
+    else:
+        loop = asyncio.get_event_loop()
+    
     tasks = [update_commodity_prices(symbol) for symbol in symbols]
     try:
         results = loop.run_until_complete(asyncio.gather(*tasks))
@@ -112,7 +119,7 @@ def fill_commodities_prices_table():
         if symbol == "price_dollar_rl":
 
             query = f"select min(date) as date from commodity_price where symbol = '{symbol}'"
-            min_date = pd.read_sql(query, db.engine)
+            min_date = pd.read_sql(query, engine)
             first_date = min_date.date.iat[0]
             if first_date != "13600707000000":
                 df = get_csv_from_github(symbol)

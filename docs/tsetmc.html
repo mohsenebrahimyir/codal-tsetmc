@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - نصب</title>
+<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - بورس تهران</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -54,26 +54,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -83,8 +64,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./guide.html" rel="next">
-<link href="./intro.html" rel="prev">
+<link href="./other.html" rel="next">
+<link href="./codal.html" rel="prev">
 <link href="./img/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -145,7 +126,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./installation.html"><span class="chapter-title">نصب</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./guide.html">راهنمای استفاده از بسته</a></li><li class="breadcrumb-item"><a href="./tsetmc.html"><span class="chapter-title">بورس تهران</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -193,7 +174,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./installation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">نصب</span></a>
+  <a href="./installation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">نصب</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -212,7 +193,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tsetmc.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">بورس تهران</span></a>
+  <a href="./tsetmc.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">بورس تهران</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -234,14 +215,25 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">فهرست مطالب</h2>
+   
+  <ul>
+  <li><a href="#ذخیره-دادههای-tsetmc" id="toc-ذخیره-دادههای-tsetmc" class="nav-link active" data-scroll-target="#ذخیره-دادههای-tsetmc">ذخیره داده‌های <code>tsetmc</code></a></li>
+  <li><a href="#اطلاعات-یک-سهم" id="toc-اطلاعات-یک-سهم" class="nav-link" data-scroll-target="#اطلاعات-یک-سهم">اطلاعات یک سهم</a>
+  <ul class="collapse">
+  <li><a href="#گرفتن-قیمت-سهام-از-دیتابیس-بدون-تعریف-شی" id="toc-گرفتن-قیمت-سهام-از-دیتابیس-بدون-تعریف-شی" class="nav-link" data-scroll-target="#گرفتن-قیمت-سهام-از-دیتابیس-بدون-تعریف-شی">گرفتن قیمت سهام از دیتابیس بدون تعریف شی</a></li>
+  <li><a href="#ساختن-یک-شی-سهام" id="toc-ساختن-یک-شی-سهام" class="nav-link" data-scroll-target="#ساختن-یک-شی-سهام">ساختن یک شی سهام</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./guide.html">راهنمای استفاده از بسته</a></li><li class="breadcrumb-item"><a href="./tsetmc.html"><span class="chapter-title">بورس تهران</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">نصب</span></h1>
+<h1 class="title"><span class="chapter-title">بورس تهران</span></h1>
 </div>
 
 
@@ -263,26 +255,139 @@ div.csl-indent {
 
 </header>
 
-<p>برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>فعال سازی محیط مجازی در لینوکس</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>فعال سازی محیط مجازی در ویندوز</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span><span class="dt">\v</span>env<span class="dt">\S</span>cripts<span class="dt">\a</span>ctivate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>نصب <span class="citation" data-cites="codal-tsetmc"><a href="references.html#ref-codal-tsetmc" role="doc-biblioref">[1]</a></span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> codal-tsetmc</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>نصب در حال توسعه <span class="citation" data-cites="codal-tsetmc.github"><a href="references.html#ref-codal-tsetmc.github" role="doc-biblioref">[2]</a></span>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> git+https://github.com/mohsenebrahimyir/codal-tsetmc.git</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="ذخیره-دادههای-tsetmc" class="level2">
+<h2 class="anchored" data-anchor-id="ذخیره-دادههای-tsetmc">ذخیره داده‌های <code>tsetmc</code></h2>
+<p>پر کردن جدوال اطلاعات سهام‌ها</p>
+<div id="5d2db37f" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_stocks_table</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fill_stocks_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>stock with code 19101865588701374 exist
+stock with code 24455170564393447 exist
+stock with code 67327029014085707 exist
+stock with code 65157472039220905 exist
+stock with code 6858820559759769 exist
+stock with code 69171897374421261 exist</code></pre>
+<p>پر کردن جدول قیمت شرکت‌ها</p>
+<div id="b44c8572" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_stocks_prices_table</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fill_stocks_prices_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>پر کردن جدول افزایش سرمایه‌ها</p>
+<div id="c6c74d51" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_stocks_capitals_table</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fill_stocks_capitals_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="اطلاعات-یک-سهم" class="level2">
+<h2 class="anchored" data-anchor-id="اطلاعات-یک-سهم">اطلاعات یک سهم</h2>
+<section id="گرفتن-قیمت-سهام-از-دیتابیس-بدون-تعریف-شی" class="level3">
+<h3 class="anchored" data-anchor-id="گرفتن-قیمت-سهام-از-دیتابیس-بدون-تعریف-شی">گرفتن قیمت سهام از دیتابیس بدون تعریف شی</h3>
+<div id="7a36033d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> read_table_by_conditions</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>read_table_by_conditions(<span class="st">"stock_price"</span>, <span class="st">"symbol"</span>, <span class="st">"فولاد"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>                date symbol ticker               code   price     volume          value         up_date
+0     13851220000000  فولاد   FOLD  46348559193224090  1900.0  468077431   889437216900  14020608000000
+1     13851221000000  فولاد   FOLD  46348559193224090  1938.0  100041000   193879458000  14020608000000
+2     13851222000000  فولاد   FOLD  46348559193224090  1973.0  126270939   249241504527  14020608000000
+3     13851223000000  فولاد   FOLD  46348559193224090  1934.0   26705128    51666379451  14020608000000
+4     13851226000000  فولاد   FOLD  46348559193224090  1898.0   14877283    28239006789  14020608000000
+...              ...    ...    ...                ...     ...        ...            ...             ...
+3631  14020604000000  فولاد   FOLD  46348559193224090  5220.0  153494477   801176126890  14020608000000
+3632  14020605000000  فولاد   FOLD  46348559193224090  5500.0  233151626  1282123166740  14020608000000
+3633  14020606000000  فولاد   FOLD  46348559193224090  5580.0  166512551   929474239300  14020608000000
+3634  14020607000000  فولاد   FOLD  46348559193224090  5610.0  131877599   739763385740  14020608000000
+3635  14020608000000  فولاد   FOLD  46348559193224090  5620.0  125955299   708472236280  14020608000000</code></pre>
+</section>
+<section id="ساختن-یک-شی-سهام" class="level3">
+<h3 class="anchored" data-anchor-id="ساختن-یک-شی-سهام">ساختن یک شی سهام</h3>
+<div id="22a9a427" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> Stocks</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>stock <span class="op">=</span> Stocks.query.filter_by(symbol<span class="op">=</span><span class="st">"فولاد"</span>).first()</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>stock</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>فولاد-فولاد مباركه اصفهان-فلزات اساسي</code></pre>
+<p>مشاهده مشخصات سهم</p>
+<div id="40b25c00" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"""</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ss">symbol: </span><span class="sc">{</span>stock<span class="sc">.</span>symbol<span class="sc">}</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ss">name: </span><span class="sc">{</span>stock<span class="sc">.</span>name<span class="sc">}</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ss">isin: </span><span class="sc">{</span>stock<span class="sc">.</span>isin<span class="sc">}</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ss">code: </span><span class="sc">{</span>stock<span class="sc">.</span>code<span class="sc">}</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ss">capital: </span><span class="sc">{</span>stock<span class="sc">.</span>capital<span class="sc">}</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="ss">"""</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>symbol: فولاد
+name: فولاد مباركه اصفهان
+isin: IRO1FOLD0009
+code: 46348559193224090
+capital: 800000000000</code></pre>
+<p>گرفتن اطلاعات قیمت تاریخی سهم</p>
+<div id="86eb6453" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>stock.price</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>               jdate ticker symbol               code   price          value     volume
+date                                                                                   
+2007-03-11  13851220   FOLD  فولاد  46348559193224090  1900.0   889437216900  468077431
+2007-03-12  13851221   FOLD  فولاد  46348559193224090  1938.0   193879458000  100041000
+2007-03-13  13851222   FOLD  فولاد  46348559193224090  1973.0   249241504527  126270939
+2007-03-14  13851223   FOLD  فولاد  46348559193224090  1934.0    51666379451   26705128
+2007-03-17  13851226   FOLD  فولاد  46348559193224090  1898.0    28239006789   14877283
+...              ...    ...    ...                ...     ...            ...        ...
+2023-08-26  14020604   FOLD  فولاد  46348559193224090  5220.0   801176126890  153494477
+2023-08-27  14020605   FOLD  فولاد  46348559193224090  5500.0  1282123166740  233151626
+2023-08-28  14020606   FOLD  فولاد  46348559193224090  5580.0   929474239300  166512551
+2023-08-29  14020607   FOLD  فولاد  46348559193224090  5610.0   739763385740  131877599
+2023-08-30  14020608   FOLD  فولاد  46348559193224090  5620.0   708472236280  125955299</code></pre>
+<p>گرفتن اطلاعات ارزش بازار تاریخی سهم</p>
+<div id="343cdcd0" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>stock.market</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>               jdate symbol        market          value
+date                                                    
+2007-03-11  13851220  فولاد  3.002000e+13   889437216900
+2007-03-12  13851221  فولاد  3.062040e+13   193879458000
+2007-03-13  13851222  فولاد  3.117340e+13   249241504527
+2007-03-14  13851223  فولاد  3.055720e+13    51666379451
+2007-03-17  13851226  فولاد  2.998840e+13    28239006789
+...              ...    ...           ...            ...
+2023-08-26  14020604  فولاد  4.176000e+15   801176126890
+2023-08-27  14020605  فولاد  4.400000e+15  1282123166740
+2023-08-28  14020606  فولاد  4.464000e+15   929474239300
+2023-08-29  14020607  فولاد  4.488000e+15   739763385740
+2023-08-30  14020608  فولاد  4.496000e+15   708472236280</code></pre>
+<p>گرفتن اطلاعات ارزش بازار موازی با شاخص تاریخی سهم</p>
+<div id="4b0f6b08" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>stock.index</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>               jdate symbol        market          value
+date                                                    
+2007-03-11  13851220  فولاد  3.002000e+13   889437216900
+2007-03-12  13851221  فولاد  3.062040e+13   193879458000
+2007-03-13  13851222  فولاد  3.117340e+13   249241504527
+2007-03-14  13851223  فولاد  3.055720e+13    51666379451
+2007-03-17  13851226  فولاد  2.998840e+13    28239006789
+...              ...    ...           ...            ...
+2023-08-26  14020604  فولاد  4.176000e+15   801176126890
+2023-08-27  14020605  فولاد  4.400000e+15  1282123166740
+2023-08-28  14020606  فولاد  4.464000e+15   929474239300
+2023-08-29  14020607  فولاد  4.488000e+15   739763385740
+2023-08-30  14020608  فولاد  4.496000e+15   708472236280</code></pre>
+<p>ضریب بتای سهم</p>
+<div id="bb4abd7f" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>stock.beta(<span class="dv">3650</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>1.37213757610768</code></pre>
 
 
-<div id="refs" class="references csl-bib-body" role="list" style="display: none">
-<div id="ref-codal-tsetmc" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه نصب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://pypi.org/project/codal-tsetmc/">https://pypi.org/project/codal-tsetmc/</a></div>
-</div>
-<div id="ref-codal-tsetmc.github" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[2] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://github.com/mohsenebrahimyir/codal-tsetmc/">https://github.com/mohsenebrahimyir/codal-tsetmc/</a></div>
-</div>
-</div>
+</section>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -775,13 +880,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">مقدمه</span>
+      <a href="./codal.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">کدال</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./guide.html" class="pagination-link">
-        <span class="nav-page-text">راهنمای استفاده از بسته</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./other.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">دیگر سایت‌ها</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

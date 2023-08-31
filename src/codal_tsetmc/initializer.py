@@ -1,13 +1,21 @@
 import os
 
-from codal_tsetmc import db, models
-from codal_tsetmc.download import *
-from codal_tsetmc.download.codal.letters import fill_bourse_and_fara_companies_letters
+from codal_tsetmc.config.engine import CDL_TSE_FOLDER, HOME_PATH
+from codal_tsetmc.models.create import create
+from codal_tsetmc.download.codal.company   import fill_companies_table
+from codal_tsetmc.download.codal.category  import fill_categories_table
+from codal_tsetmc.download.tsetmc.stock    import fill_stocks_table
+from codal_tsetmc.download.tsetmc.price    import fill_stocks_prices_table
+from codal_tsetmc.download.tsetmc.capital  import fill_stocks_capitals_table
+from codal_tsetmc.download.other.commodity import fill_commodities_prices_table
+from codal_tsetmc.download.codal.letters   import fill_bourse_and_fara_companies_letters
+
+
 
 
 def init_db():
     print("creating database")
-    path = os.path.join(db.HOME_PATH, db.CDL_TSE_FOLDER)
+    path = os.path.join(HOME_PATH, CDL_TSE_FOLDER)
     try:
         os.mkdir(path)
         print("making package folder...")
@@ -15,7 +23,7 @@ def init_db():
         print("you can change config.yml to your needs.")
     except FileExistsError:
         print("folder already exists")
-    models.create()
+    create()
     print(f"DataBase created in: {path}")
     fill_companies_table()
     fill_categories_table()

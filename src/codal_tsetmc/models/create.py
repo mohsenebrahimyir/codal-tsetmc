@@ -1,11 +1,11 @@
-import codal_tsetmc.config as db
-from .stocks import (
+from codal_tsetmc.config.engine import engine
+from codal_tsetmc.models.stocks import (
     Stocks,
     StockPrice,
     StockCapital,
     CommodityPrice
 )
-from .companies import (
+from codal_tsetmc.models.companies import (
     Companies,
     CompanyTypes,
     CompanyStatuses,
@@ -19,7 +19,7 @@ from .companies import (
 
 def create_table(Model):
     try:
-        Model.__table__.create(db.engine)
+        Model.__table__.create(engine)
     except:
         pass
 

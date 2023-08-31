@@ -3,12 +3,17 @@ from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
+import jalali_pandas
 import io
 import requests
 import sys
-import codal_tsetmc.config as db
+from codal_tsetmc.config.engine import session
 from codal_tsetmc.models.stocks import Stocks
-from codal_tsetmc.tools import *
+from codal_tsetmc.tools.database import (
+    fill_table_of_db_with_df,
+    read_table_by_conditions
+)
+from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
 from codal_tsetmc.download.tsetmc.stock import  (
     is_stock_in_akhza_bond, 
     is_stock_in_gam_bond,
@@ -27,7 +32,10 @@ def get_index_prices_history():
     df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
     df["jdate"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y-%m-%d'))
     df["code"] = code
+    df["symbol"] = "شاخص كل6"
     df["ticker"] = "INDEX"
+    df["value"] = pd.NA
+    df["volume"] = pd.NA
     df = df.sort_values("date")
 
     return df
@@ -38,7 +46,7 @@ def update_index_prices():
     df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
     df["up_date"] = jdt.now().strftime("%Y%m%d000000")
     fill_table_of_db_with_df(
-        df[["date", "price", "ticker", "code", "up_date"]], 
+        df[["date", "symbol", "ticker", "code", "price", "volume", "value", "up_date"]], 
         columns="date",
         table="stock_price",
         conditions=f"where code = '{index}'",
@@ -57,9 +65,10 @@ def cleanup_stock_prices_records(response):
     df["date"] = df["dtyyyymmdd"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
     df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
     df["price"] = df["close"]
+    df["volume"] = df["vol"]
     df = df.sort_values("date")
 
-    return df[["date", "ticker", "price"]]
+    return df[["date", "ticker", "volume", "value", "price"]]
 
 def get_stock_prices_history(code: str) -> pd.DataFrame:
     url = f"http://old.tsetmc.com/tsev2/data/InstTradeHistory.aspx?i={code}&Top=999999&A=0"
@@ -79,22 +88,16 @@ async def update_stock_prices(code: str):
         
         now = datetime.now().strftime("%Y%m%d")
         try:
-            query_index = f"SELECT max(date) AS date FROM stock_price WHERE ticker = INDEX"
-            max_date_index = pd.read_sql(query_index, db.engine)
-            last_date_index = max_date_index.date.iat[0]
 
-            if last_date_index is None:
-                update_index_prices()
-                max_date_index = pd.read_sql(query_index, db.engine)
-                last_date_index = max_date_index.date.iat[0]
-
-            query_stock = f"SELECT max(date) AS date FROM stock_price WHERE code = {code}"
-            max_date_stock = pd.read_sql(query_stock, db.engine)
+            max_date_stock = read_table_by_conditions("stock_price", "code", code, "max(date) AS date")
             last_date_stock = max_date_stock.date.iat[0]
 
-            if last_date_index < last_date_stock:
+            max_date_index = read_table_by_conditions("stock_price", "ticker", "INDEX", "max(date) AS date")
+            last_date_index = max_date_index.date.iat[0]
+
+            if last_date_index is None or last_date_index < last_date_stock:
                 update_index_prices()
-                max_date_index = pd.read_sql(query_index, db.engine)
+                max_date_index = read_table_by_conditions("stock_price", "ticker", "INDEX", "max(date) AS date")
                 last_date_index = max_date_index.date.iat[0]
 
         except Exception as e:
@@ -113,9 +116,11 @@ async def update_stock_prices(code: str):
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
                 response = await resp.text()
-
+        
         df = cleanup_stock_prices_records(response)
         df["code"] = code
+        stock = Stocks.query.filter_by(code=code).first()
+        df["symbol"] = stock.symbol
         df["up_date"] = jdt.now().strftime("%Y%m%d000000")
 
         fill_table_of_db_with_df(
@@ -132,7 +137,7 @@ async def update_stock_prices(code: str):
         return e, code
 
 def update_stocks_prices(codes, msg=""):
-    if sys.platform == 'win32':
+    if sys.platform == 'win32' or sys.platform == 'win64':
         loop = asyncio.ProactorEventLoop()
     else:
         loop = asyncio.get_event_loop()
@@ -156,7 +161,7 @@ def update_stocks_prices(codes, msg=""):
 
 
 def update_stocks_group_prices(group_code):
-    stocks = db.session.query(Stocks.code).filter_by(group_code=group_code).all()
+    stocks = session.query(Stocks.code).filter_by(group_code=group_code).all()
     print(f"{' '*25} group: {group_code}", end="\r")
     codes = [stock[0] for stock in stocks]
     msg = "group " + group_code + " updated"
@@ -166,7 +171,7 @@ def update_stocks_group_prices(group_code):
 
 def fill_stocks_prices_table():
     update_index_prices()
-    codes = db.session.query(db.distinct(Stocks.group_code)).all()
+    codes = session.query(Stocks.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(
             f"{' '*35} total progress: {100*(i+1)/len(codes):.2f}%",

@@ -1,5 +1,10 @@
-from codal_tsetmc.config import *
 from sqlalchemy.orm import relationship
+import pandas as pd
+import jalali_pandas
+
+from codal_tsetmc.config.engine import (
+    Column, Integer, String, Boolean, ForeignKey, Base
+)
 
 
 class Companies(Base):
@@ -10,8 +15,8 @@ class Companies(Base):
     name = Column(String)
     isic = Column(String)
     type_code = Column(String, ForeignKey("company_types.code"), index=True)
-    status_code = Column(String, ForeignKey(
-        "company_statuses.code"), index=True)
+    status_code = Column(String, 
+                         ForeignKey("company_statuses.code"), index=True)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -88,8 +93,8 @@ class Letters(Base):
     letter_title = Column(String)
     letter_code = Column(String)
     letter_types = Column(String, ForeignKey("letter_types.title"), index=True)
-    company_symbol = Column(String, ForeignKey("companies.symbol"), index=True)
-    company_name = Column(String)
+    symbol = Column(String, ForeignKey("companies.symbol"), index=True)
+    name = Column(String)
 
     def __repr__(self):
         return f"(گزارشات کدال)"
@@ -100,7 +105,7 @@ class FinancialStatementHeader(Base):
 
     id = Column(Integer, primary_key=True)
     tracing_no = Column(Integer, ForeignKey("letters.tracing_no"), index=True)
-    company_name = Column(String)
+    name = Column(String)
     capital = Column(Integer)
     symbol = Column(String, ForeignKey("companies.symbol"), index=True)
     isic = Column(String)

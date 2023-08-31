@@ -1,11 +1,18 @@
 import sys
 import asyncio
 import aiohttp
+import pandas as pd
 
-import codal_tsetmc.config as db
-from codal_tsetmc.tools import *
+from codal_tsetmc.config.engine import session, engine
+from codal_tsetmc.tools.string import (
+    FA_TO_EN_DIGITS, LETTERS_CODE_TO_TITLE, 
+    datetime_to_num, df_col_to_snake_case, num_to_datetime
+)
+
+from codal_tsetmc.tools.database import fill_table_of_db_with_df
+
 from codal_tsetmc.download.codal.query import CodalQuery
-from codal_tsetmc.models import Companies
+from codal_tsetmc.models.companies import Companies
 
 """################
 گرفتن اطلاعات از کدال 
@@ -21,11 +28,11 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
     df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_num)
     df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_num)
     df["LetterTitle"] = df["Title"]
-    df["CompanySymbol"] = df["Symbol"]
+    df["Name"] = df["CompanyName"]
     df = df[[
         "PublishDateTime", "SentDateTime", "TracingNo",
         "LetterSerial", "LetterCode", "LetterTypes", "LetterTitle",
-        "CompanySymbol", "CompanyName",
+        "Symbol", "Name",
     ]]
     df = df_col_to_snake_case(df)
     return df
@@ -95,8 +102,8 @@ def update_company_information_and_interim_financial_statements_letters(symbol, 
     query.set_symbol(symbol)
     query.set_category('اطلاعات و صورت مالی سالانه')
     query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
-    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE company_symbol = '{symbol}' AND letter_code = 'ن-10'"
-    max_date = pd.read_sql(q, db.engine)
+    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE symbol = '{symbol}' AND letter_code = 'ن-10'"
+    max_date = pd.read_sql(q, engine)
     
     if max_date.date.iat[0] is None:    
         query.set_from_date(from_date)
@@ -117,8 +124,8 @@ def update_company_monthly_performance_report_letters(symbol, from_date="1350/01
     query.set_symbol(symbol)
     query.set_category('گزارش عملکرد ماهانه')
     query.set_letter_type('گزارش فعالیت ماهانه')
-    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE company_symbol = '{symbol}' AND (letter_code = 'ن-30' OR letter_code = 'ن-31')"
-    max_date = pd.read_sql(q, db.engine)
+    q = f"SELECT max(publish_date_time) AS date FROM letters WHERE symbol = '{symbol}' AND (letter_code = 'ن-30' OR letter_code = 'ن-31')"
+    max_date = pd.read_sql(q, engine)
     
     if max_date.date.iat[0] is None:    
         query.set_from_date(from_date)
@@ -137,8 +144,8 @@ def update_company_monthly_performance_report_letters(symbol, from_date="1350/01
 
 
 def fill_bourse_and_fara_companies_letters():
-    bors = db.session.query(db.distinct(Companies.symbol)).filter_by(status_code = 0)
-    fara = db.session.query(db.distinct(Companies.symbol)).filter_by(status_code = 1)
+    bors = session.query(Companies.symbol).filter_by(status_code = 0).distinct()
+    fara = session.query(Companies.symbol).filter_by(status_code = 1).distinct()
     symbols = [symbol[0].strip() for symbol in bors] + [symbol[0].strip() for symbol in fara]
     
     for i, symbol in enumerate(symbols):

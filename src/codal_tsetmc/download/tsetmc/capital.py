@@ -3,12 +3,15 @@ from datetime import datetime
 import asyncio
 import aiohttp
 import pandas as pd
+import jalali_pandas
 import requests
 import io
 import sys
-import codal_tsetmc.config as db
-from codal_tsetmc.models import Stocks
-from codal_tsetmc.tools import *
+from codal_tsetmc.config.engine import engine, session
+from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
+from codal_tsetmc.tools.string import value_to_float
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 
@@ -61,7 +64,7 @@ async def update_stock_capitals(code: str):
             max_date_query = (
                 f"select max(up_date) as up_date from stock_capital where code = '{code}'"
             )
-            max_date = pd.read_sql(max_date_query, db.engine)
+            max_date = pd.read_sql(max_date_query, engine)
             last_up_date = max_date.up_date.iat[0]
 
         except Exception as e:
@@ -123,7 +126,7 @@ def update_stocks_capitals(codes, msg=""):
 
 
 def update_stocks_group_capitals(group_code):
-    stocks = db.session.query(Stocks.code).filter_by(group_code=group_code).all()
+    stocks = session.query(Stocks.code).filter_by(group_code=group_code).all()
     print(f"{' '*25} group: {group_code}", end="\r")
     codes = [stock[0] for stock in stocks]
     msg = "group "+group_code+" updated"
@@ -132,7 +135,7 @@ def update_stocks_group_capitals(group_code):
 
 
 def fill_stocks_capitals_table():
-    codes = db.session.query(db.distinct(Stocks.group_code)).all()
+    codes = session.query(Stocks.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(
             f"{' '*35} total progress: {100*(i+1)/len(codes):.2f}%",

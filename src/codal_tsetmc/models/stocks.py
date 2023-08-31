@@ -1,6 +1,13 @@
-from codal_tsetmc.config import *
-from sqlalchemy.orm import relationship
+import numpy as np
 import pandas as pd
+import jalali_pandas
+from sqlalchemy.orm import relationship
+
+from codal_tsetmc.config.engine import (
+    Column, Integer, String, BIGINT, Float, ForeignKey,
+    Base, session
+)
+from codal_tsetmc.tools.database import read_table_by_conditions
 
 def add_event(df, event, ratio):
     df = df.merge(event[["date", ratio]], how="outer", on="date")
@@ -34,81 +41,144 @@ class Stocks(Base):
     companies = relationship('Companies', backref='stock')
     prices = relationship("StockPrice", backref="stock")
     capitals = relationship("StockCapital", backref="stock")
-    _df_cached = False
-    _df_counter = 0
+    _price_cached = False
+    _price_counter = 0
+    _market_cached = False
+    _market_counter = 0
+    _dollar_cached = False
+    _dollar_counter = 0
+    _index_cached = False
+    _index_counter = 0
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
+    
     @property
-    def df(self) -> pd.DataFrame:
+    def price(self) -> pd.DataFrame:
         """dataframe of stock price with date and OHLC"""
-        self._df_counter += 1
-        if self._df_cached:
-            return self._df
+        self._price_counter += 1
+        if self._price_cached:
+            return self._price
         
-        query = f"select * from stock_price where code = '{self.code}'"
-        price = pd.read_sql(query, engine)
-        price["jdate"] = price["date"].replace(regex={"000000$": ""})
-        price["date"] = price["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
-        price.set_index("date", inplace=True)
+        df = read_table_by_conditions("stock_price", "code", self.code)
+        if df.empty:
+            self._price_cached = True
+            self._price = df
+            return self._price
+        
+        df["jdate"] = df["date"].replace(regex={"000000$": ""})
+        df["date"] = df["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        df.set_index("date", inplace=True)
+        self._price_cached = True
+        self._price = df[[
+            "jdate", "ticker", "symbol", "code", "price", "value", "volume"
+        ]].dropna()
 
-        query = f"select * from stock_capital where code = '{self.code}'"
-        capital = pd.read_sql(query, engine).rename(columns={"new": "capital"})
+        return self._price
+
+    
+    @property
+    def market(self) -> pd.DataFrame:
+        """dataframe of stock price with date and OHLC"""
+        self._market_counter += 1
+        if self._market_cached:
+            return self._market
+        
+        df = self.price
+        if df.empty:
+            self._market_cached = True
+            self._market = df
+            return self._market
+
+        capital = read_table_by_conditions("stock_capital", "code", self.code).rename(columns={"new": "capital"})
         capital["date"] = capital["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
         capital.set_index("date", inplace=True)
 
-        query = f"select * from stock_price where code = '32097828799138957'"
-        index = pd.read_sql(query, engine).rename(columns={"price": "index"})
-        index["date"] = index["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
-        index["index"] = index["index"] * 1_000_000_000
-        index.set_index("date", inplace=True)
+        df = df.join(capital[["capital"]], how="outer").sort_index()
 
-        query = f"select * from commodity_price where symbol = 'price_dollar_rl'"
-        dollar = pd.read_sql(query, engine).rename(columns={"price": "dollar"})
-        dollar["date"] = dollar["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
-        dollar.set_index("date", inplace=True)
-
-        if price.empty:
-            self._df_cached = True
-            self._df = price
-            return self._df
-
-        price["symbol"] = self.symbol
-        df = price[["jdate", "ticker", "symbol", "code", "price"]].join(
-                capital[["capital"]], how="outer"
-            ).join(
-                index[["index"]], how="outer"
-            ).join(
-                dollar[["dollar"]], how="outer"
-            ).sort_index()
-        
         if capital.empty:
             df["capital"].iat[0] = self.capital
         else:
             df["capital"].iat[0] = capital["old"].iloc[0]
         
-
         df["capital"] = df["capital"].ffill()
-        df["ticker"]  = df["ticker"].ffill()
-        df["symbol"]  = df["symbol"].ffill()
-        df["price"]   = df["price"].ffill()
-        df["code"]    = df["code"].ffill()
-        df["index"]   = df["index"].ffill()
-        df["dollar"]  = df["dollar"].ffill()
         df["market"]  = df["capital"] * df["price"]
-        df["dollar"]  = df["market"] / df["dollar"]
+        self._market_cached = True
+        self._market = df[["jdate", "symbol", "market", "value"]].dropna()
 
-        self._df_cached = True
-        self._df = df.dropna()
+        return self._market
+    
 
-        return self._df
+    @property
+    def dollar(self) -> pd.DataFrame:
+        """dataframe of stock price with date and OHLC"""
+        self._dollar_counter += 1
+        if self._dollar_cached:
+            return self._dollar
+        
+        df = self.market
+        if df.empty:
+            self._dollar_cached = True
+            self._dollar = df
+            return self._dollar
+
+        dollar = read_table_by_conditions("commodity_price", "symbol", "price_dollar_rl").rename(columns={"price": "dollar"})
+        dollar["date"] = dollar["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        dollar.set_index("date", inplace=True)
+        df = df.join(dollar[["dollar"]], how="outer").sort_index()
+        df["dollar"] = df["dollar"].ffill()
+        df["market"] = df["market"] / df["dollar"]
+        df["value"]  = df["value"]  / df["dollar"]
+        self._dollar_cached = True
+        self._dollar = df[["jdate", "symbol", "market", "value"]].dropna()
+
+        return self._dollar
+
+
+    @property
+    def index(self) -> pd.DataFrame:
+        """dataframe of stock price with date and OHLC"""
+        self._index_counter += 1
+        if self._index_cached:
+            return self._index
+        
+        df = self.market
+        if df.empty:
+            self._index_cached = True
+            self._index = df
+            return self._index
+
+        index = read_table_by_conditions("stock_price", "code", "32097828799138957").rename(columns={"price": "index"})
+        index["date"] = index["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
+        index["index"] = index["index"] * 1_000_000_000
+        index.set_index("date", inplace=True)
+        df = df.join(index[["index"]], how="outer")
+        df["jdate"]  = df["jdate"].ffill()
+        df["symbol"] = df["symbol"].ffill()
+        df["market"] = df["market"].ffill()
+        self._index_cached = True
+        self._index = df[["jdate", "symbol", "market", "index"]].dropna()
+
+        return self._index
+    
+    def beta(self, during = 3650):
+        df = self.index[["market", "index"]][-during:].pct_change().dropna()
+        return np.cov(df["market"], df["index"])[0,1] / np.var(df["index"])
+
 
     def update_price(self):
         from codal_tsetmc.download.tsetmc.price import update_stocks_prices
-
         try:
             return update_stocks_prices([self.code])
+        except:
+            return False
+    
+
+    def update_capital(self):
+        from codal_tsetmc.download.tsetmc.capital import update_stocks_capitals
+
+        try:
+            return update_stocks_capitals([self.code])
         except:
             return False
 
@@ -131,9 +201,11 @@ class StockPrice(Base):
 
     id = Column(Integer, primary_key=True)
     code = Column(String, ForeignKey("stocks.code"), index=True)
+    symbol = Column(String)
     ticker = Column(String)
     date = Column(String)
-    volume = Column(Float)
+    volume = Column(BIGINT)
+    value = Column(BIGINT)
     price = Column(Float)
     up_date = Column(String)
 
@@ -161,7 +233,6 @@ class CommodityPrice(Base):
     id = Column(Integer, primary_key=True)
     symbol = Column(String)
     date = Column(String, index=True)
-    volume = Column(Float)
     price = Column(Float)
     up_date = Column(String)
 

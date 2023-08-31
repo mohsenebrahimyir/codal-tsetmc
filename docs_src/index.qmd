@@ -1,6 +1,7 @@
 # پیش گفتار {-}
 
 ```{python}
+#| echo: false
 from jdatetime import datetime as jdt
 
 now = jdt.now().strftime("%Y-%m-%d")

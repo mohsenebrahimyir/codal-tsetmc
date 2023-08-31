@@ -1,5 +1,6 @@
 import pandas as pd
-from codal_tsetmc.tools import *
+from codal_tsetmc.tools.api import get_dict_from_xml_api
+from codal_tsetmc.tools.database import fill_table_of_db_with_df
 
 
 def get_companies():

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - نصب</title>
+<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - کدال</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -54,26 +54,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -83,8 +64,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./guide.html" rel="next">
-<link href="./intro.html" rel="prev">
+<link href="./tsetmc.html" rel="next">
+<link href="./guide.html" rel="prev">
 <link href="./img/favicon.ico" rel="icon">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -145,7 +126,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./installation.html"><span class="chapter-title">نصب</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./guide.html">راهنمای استفاده از بسته</a></li><li class="breadcrumb-item"><a href="./codal.html"><span class="chapter-title">کدال</span></a></li></ol></nav>
         <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
@@ -193,7 +174,7 @@ div.csl-indent {
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./installation.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">نصب</span></a>
+  <a href="./installation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">نصب</span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -207,7 +188,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./codal.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">کدال</span></a>
+  <a href="./codal.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">کدال</span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -234,14 +215,29 @@ div.csl-indent {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">فهرست مطالب</h2>
+   
+  <ul>
+  <li><a href="#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" id="toc-گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" class="nav-link active" data-scroll-target="#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال">گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال</a>
+  <ul class="collapse">
+  <li><a href="#تعریف-یک-جستجو" id="toc-تعریف-یک-جستجو" class="nav-link" data-scroll-target="#تعریف-یک-جستجو">تعریف یک جستجو</a></li>
+  </ul></li>
+  <li><a href="#ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس" id="toc-ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس" class="nav-link" data-scroll-target="#ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس">ذخیره لیست تمام گزارشات مالی در دیتابیس</a></li>
+  <li><a href="#یک-یا-چند-شرکت" id="toc-یک-یا-چند-شرکت" class="nav-link" data-scroll-target="#یک-یا-چند-شرکت">یک یا چند شرکت</a>
+  <ul class="collapse">
+  <li><a href="#همه-شرکتهای-بورس-و-فرابورس" id="toc-همه-شرکتهای-بورس-و-فرابورس" class="nav-link" data-scroll-target="#همه-شرکتهای-بورس-و-فرابورس">همه شرکت‌های بورس و فرابورس</a></li>
+  </ul></li>
+  <li><a href="#گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت" id="toc-گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت" class="nav-link" data-scroll-target="#گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت">گرفتن لینک تمام گزارشات صورت مالی شرکت</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./guide.html">راهنمای استفاده از بسته</a></li><li class="breadcrumb-item"><a href="./codal.html"><span class="chapter-title">کدال</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-title">نصب</span></h1>
+<h1 class="title"><span class="chapter-title">کدال</span></h1>
 </div>
 
 
@@ -263,26 +259,164 @@ div.csl-indent {
 
 </header>
 
-<p>برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-m</span> venv .venv</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>فعال سازی محیط مجازی در لینوکس</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> .venv/bin/activate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>فعال سازی محیط مجازی در ویندوز</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">.</span><span class="dt">\v</span>env<span class="dt">\S</span>cripts<span class="dt">\a</span>ctivate</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>نصب <span class="citation" data-cites="codal-tsetmc"><a href="references.html#ref-codal-tsetmc" role="doc-biblioref">[1]</a></span>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> codal-tsetmc</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>نصب در حال توسعه <span class="citation" data-cites="codal-tsetmc.github"><a href="references.html#ref-codal-tsetmc.github" role="doc-biblioref">[2]</a></span>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">--upgrade</span> git+https://github.com/mohsenebrahimyir/codal-tsetmc.git</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" class="level2">
+<h2 class="anchored" data-anchor-id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال">گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال</h2>
+<p>پر کردن جدول شرکت‌های لیست شده در کدال</p>
+<div id="d0b9505b" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_companies_table</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fill_companies_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="تعریف-یک-جستجو" class="level3">
+<h3 class="anchored" data-anchor-id="تعریف-یک-جستجو">تعریف یک جستجو</h3>
+<ol start="0" type="1">
+<li>دانلود داده‌های مورد نیاز برای جستجو</li>
+</ol>
+<div id="e5d40c21" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_categories_table</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fill_categories_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol type="1">
+<li>تنظیم فیلترهای دلخواه</li>
+</ol>
+<div id="b36e7c40" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> CodalQuery</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> CodalQuery()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>نام نماد</li>
+</ol>
+<div id="2f21fd8e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>query.set_symbol(<span class="st">"فولاد"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>از تاریخ</li>
+</ol>
+<div id="ea1cf361" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>query.set_from_date(<span class="st">"1400/01/01"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>گروه اطلاعیه</li>
+</ol>
+<div id="05c9685e" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>query.set_category(<span class="st">'اطلاعات و صورت مالی سالانه'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li>نوع اطلاعیه</li>
+</ol>
+<div id="df427148" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>query.set_letter_type(<span class="st">'اطلاعات و صورتهای مالی میاندوره ای'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="6" type="1">
+<li>حذف حسابرسی نشده‌ها</li>
+</ol>
+<div id="15778b50" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>query.set_not_audited(<span class="va">False</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="7" type="1">
+<li>فقط زیر مجموعه‌ها</li>
+</ol>
+<div id="4b9ef9db" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>query.set_childs(<span class="va">False</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="8" type="1">
+<li>گرفتن لینک برای مرورگر</li>
+</ol>
+<div id="2f81c6e3" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>query.get_report_list_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>'https://codal.ir/ReportList.aspx?search&amp;PageNumber=1&amp;Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&amp;Category=1&amp;LetterType=6&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false'</code></pre>
+<ol start="9" type="1">
+<li>گرفتن لینک برای api</li>
+</ol>
+<div id="0ddd1015" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>query.get_query_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>'https://search.codal.ir/api/search/v2/q?&amp;PageNumber=1&amp;Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&amp;Category=1&amp;LetterType=6&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false&amp;search=true'</code></pre>
+<ol start="10" type="1">
+<li>گرفتن لیست گزارشات</li>
+</ol>
+<div id="08b41442" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>query.get_api_multi_page()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>[{'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 1055774,
+  'Symbol': 'فولاد',
+  'CompanyName': 'فولاد مبارکه اصفهان',
+  'UnderSupervision': 0,
+  'Title': 'صورت\u200cهای مالی تلفیقی سال مالی منتهی به ۱۴۰۱/۱۲/۲۹ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',
+  'PublishDateTime': '۱۴۰۲/۰۴/۲۶ ۲۱:۴۹:۵۲',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&amp;rt=0&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 982256,
+  'Symbol': 'فولاد',
+  'CompanyName': 'فولاد مبارکه اصفهان',
+...
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/NDR8Dkp6Fm%2bEHtNIfHDW5A%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'}]</code></pre>
+</section>
+</section>
+<section id="ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس" class="level2">
+<h2 class="anchored" data-anchor-id="ذخیره-لیست-تمام-گزارشات-مالی-در-دیتابیس">ذخیره لیست تمام گزارشات مالی در دیتابیس</h2>
+</section>
+<section id="یک-یا-چند-شرکت" class="level2">
+<h2 class="anchored" data-anchor-id="یک-یا-چند-شرکت">یک یا چند شرکت</h2>
+<div id="7c9d7084" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.download.codal.letters <span class="im">import</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  update_company_information_and_interim_financial_statements_letters</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>update_company_information_and_interim_financial_statements_letters(<span class="st">"فولاد"</span>, from_date<span class="op">=</span><span class="st">"1390/01/01"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="همه-شرکتهای-بورس-و-فرابورس" class="level3">
+<h3 class="anchored" data-anchor-id="همه-شرکتهای-بورس-و-فرابورس">همه شرکت‌های بورس و فرابورس</h3>
+<div class="warning">
+<p>این کار زمان بر است و به صورت مکرر استفاده از آن توصیه نمی‌شود.</p>
+</div>
+<div id="0c02d7c0" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_bourse_and_fara_companies_letters</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>fill_bourse_and_fara_companies_letters()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>total progress: 0.14%
+total progress: 0.28%
+total progress: 0.42%
+...
+total progress: 99.72%
+total progress: 99.86%
+total progress: 100.00%
+letters Download Finished.     </code></pre>
+</section>
+</section>
+<section id="گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت" class="level2">
+<h2 class="anchored" data-anchor-id="گرفتن-لینک-تمام-گزارشات-صورت-مالی-شرکت">گرفتن لینک تمام گزارشات صورت مالی شرکت</h2>
+<div id="7eda722c" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> read_table_by_conditions</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>read_table_by_conditions(<span class="st">"letters"</span>, <span class="st">"symbol"</span>, <span class="st">"فولاد"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>فولاد-فولاد مباركه اصفهان-فلزات اساسي</code></pre>
 
 
-<div id="refs" class="references csl-bib-body" role="list" style="display: none">
-<div id="ref-codal-tsetmc" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[1] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه نصب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://pypi.org/project/codal-tsetmc/">https://pypi.org/project/codal-tsetmc/</a></div>
-</div>
-<div id="ref-codal-tsetmc.github" class="csl-entry" role="listitem">
-<div class="csl-left-margin">[2] </div><div class="csl-right-inline">محسن ابراهیمی, <span>“صفحه گیت‌هاب بسته کدال و بورس تهران در پایتون.”</span> <a href="https://github.com/mohsenebrahimyir/codal-tsetmc/">https://github.com/mohsenebrahimyir/codal-tsetmc/</a></div>
-</div>
-</div>
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -775,13 +909,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./intro.html" class="pagination-link">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">مقدمه</span>
+      <a href="./guide.html" class="pagination-link">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">راهنمای استفاده از بسته</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./guide.html" class="pagination-link">
-        <span class="nav-page-text">راهنمای استفاده از بسته</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./tsetmc.html" class="pagination-link">
+        <span class="nav-page-text"><span class="chapter-title">بورس تهران</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
