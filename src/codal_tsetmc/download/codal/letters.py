@@ -70,7 +70,6 @@ def get_letter_urls_parallel(urls):
 
     try:
         results = loop.run_until_complete(get_letters_urls_async(urls))
-        loop.close()
 
     except RuntimeError:
         WARNING_COLOR = "\033[93m"
@@ -88,7 +87,6 @@ def get_letter_urls_parallel(urls):
     return results
 
 
-
 def get_letters_urls_by_symbols(query, symbols, msg=""):
     print(f"update letters urls ", end="\r")
     
@@ -104,38 +102,92 @@ def get_letters_urls_by_symbols(query, symbols, msg=""):
 
     return results
 
-
-async def update_letters_table_by_url_async(url):
+async def update_letters_for_each_url_async(session, url):
     try:
         headers = {
             'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 Safari/537.36',
         }
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, cookies={}, headers=headers, data="") as response:
-                data = await response.json()
+        async with session.get(url, cookies={}, headers=headers, data="") as response:
+            data = await response.json()
 
-        df = convert_letter_list_to_df(data["Letters"])
-        fill_table_of_db_with_df(df, "letters", "tracing_no")
+            df = convert_letter_list_to_df(data["Letters"])
+            fill_table_of_db_with_df(df, "letters", "tracing_no")
 
-        return True
+            return True
 
     except Exception as e:
         return e
 
 
+async def update_letters_for_urls_async(urls):
+    tasks = []
+    results = []
+    async with aiohttp.ClientSession() as session:
+        for url in urls:
+            tasks.append(update_letters_for_each_url_async(session, url))
+        results = await asyncio.gather(*tasks)
+
+    return results
+
+
+def update_letter_urls_parallel(urls):
+    
+    if sys.platform == 'win32':
+        ##############################################################################
+        from functools import wraps
+
+        from asyncio.proactor_events import _ProactorBasePipeTransport
+
+        def silence_event_loop_closed(func):
+            @wraps(func)
+            def wrapper(self, *args, **kwargs):
+                try:
+                    return func(self, *args, **kwargs)
+                except RuntimeError as e:
+                    if str(e) != 'Event loop is closed':
+                        raise
+            return wrapper
+
+        _ProactorBasePipeTransport.__del__ = silence_event_loop_closed(_ProactorBasePipeTransport.__del__)
+        
+        ##############################################################################
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+    
+    loop = asyncio.get_event_loop()
+    
+    try:
+        results = loop.run_until_complete(update_letters_for_urls_async(urls))
+
+    except RuntimeError:
+        WARNING_COLOR = "\033[93m"
+        ENDING_COLOR = "\033[0m"
+        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
+        print(
+            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
+        )
+        print("```")
+        print("%pip install nest_asyncio")
+        print("import nest_asyncio; nest_asyncio.apply()")
+        print("```")
+        raise RuntimeError
+    
+    finally:
+        loop.close()
+        return results
+  
+
+
+
 def update_letters_table_by_symbols(query, symbols, msg=""):
     print(f"update letters ", end="\r")
-    results = get_letters_urls_by_symbols(query, symbols)
+    urls_list = get_letters_urls_by_symbols(query, symbols)
 
     letter_urls = []
-    for urls in results:
+    for urls in urls_list:
         for url in urls:
             letter_urls += [url]
-
-    tasks = [update_letters_table_by_url_async(url) for url in letter_urls]
-    results = get_results_by_asyncio_loop(tasks)
-    print(msg, end="\r")
-
+    
+    results = update_letter_urls_parallel(letter_urls)
     return results
 
 
