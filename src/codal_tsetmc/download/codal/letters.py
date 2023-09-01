@@ -61,14 +61,16 @@ async def get_letters_urls_async(urls):
 
 
 def get_letter_urls_parallel(urls):
+
+    if sys.platform == 'win32':
+        loop = asyncio.ProactorEventLoop()
+        asyncio.set_event_loop(loop)
+    else:
+        loop = asyncio.get_event_loop()
+
     try:
-        if sys.platform == 'win32':
-            loop = asyncio.ProactorEventLoop()
-            asyncio.set_event_loop_policy(loop)
-            results = asyncio.run(get_letters_urls_async(urls))
-        else:
-            loop = asyncio.get_event_loop()
-            results = loop.run_until_complete(get_letters_urls_async(urls))
+        results = loop.run_until_complete(get_letters_urls_async(urls))
+        loop.close()
 
     except RuntimeError:
         WARNING_COLOR = "\033[93m"

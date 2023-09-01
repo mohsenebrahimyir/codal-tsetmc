@@ -39,14 +39,15 @@ def get_csv_from_github(name):
 
 
 def get_results_by_asyncio_loop(tasks):
+
+    if sys.platform == 'win32':
+        loop = asyncio.ProactorEventLoop()
+        asyncio.set_event_loop(loop)
+    else:
+        loop = asyncio.get_event_loop()
+
     try:
-        if sys.platform == 'win32':
-            loop = asyncio.ProactorEventLoop()
-            asyncio.set_event_loop_policy(loop)
-            results = asyncio.run(syncio.gather(*tasks))
-        else:
-            loop = asyncio.get_event_loop()
-            results = loop.run_until_complete(asyncio.gather(*tasks))
+        results = loop.run_until_complete(asyncio.gather(*tasks))
 
     except RuntimeError:
         WARNING_COLOR = "\033[93m"
