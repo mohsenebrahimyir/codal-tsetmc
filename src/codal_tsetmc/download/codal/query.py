@@ -22,7 +22,6 @@ class CodalQuery:
         self.report_list_html = f"https://{self.base_url}/ReportList.aspx?"
         self.search_query_xml = f"https://search.{self.base_url}/api/search/v2/q?"
         self.pages = None
-        self.urls = []
         self.params = {
             "PageNumber": 1,
             "Symbol": -1,

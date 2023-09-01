@@ -4,6 +4,7 @@ from urllib.request import urlopen
 import requests
 import pandas as pd
 import asyncio
+import aiohttp
 
 
 def get_dict_from_xml_api(url: str):
