@@ -17,3 +17,6 @@ from codal_tsetmc import read_table_by_conditions
 comp = read_table_by_conditions("commodity_price", "symbol", "price_dollar_rl")
 comp
 ```
+
+
+‍‍

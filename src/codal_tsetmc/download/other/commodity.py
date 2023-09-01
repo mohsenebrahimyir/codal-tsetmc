@@ -8,7 +8,10 @@ import requests
 
 from codal_tsetmc.config.engine import engine
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
-from codal_tsetmc.tools.api import get_csv_from_github
+from codal_tsetmc.tools.api import (
+    get_csv_from_github,
+    get_results_by_asyncio_loop
+)
 
 
 def cleanup_commodity_price_records(response):
@@ -88,28 +91,11 @@ async def update_commodity_prices(symbol: str):
         return e, symbol
 
 def update_commodities_prices(symbols, msg=""):
-    print(f"{' '*25} update Compdities ", end="\r")
-    if sys.platform == 'win32' or sys.platform == 'win64':
-        loop = asyncio.ProactorEventLoop()
-    else:
-        loop = asyncio.get_event_loop()
-    
+    print(f"{' '*25} update Commodities ", end="\r")
     tasks = [update_commodity_prices(symbol) for symbol in symbols]
-    try:
-        results = loop.run_until_complete(asyncio.gather(*tasks))
-    except RuntimeError:
-        WARNING_COLOR = "\033[93m"
-        ENDING_COLOR = "\033[0m"
-        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
-        print(
-            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
-        )
-        print("```")
-        print("%pip install nest_asyncio")
-        print("import nest_asyncio; nest_asyncio.apply()")
-        print("```")
-        raise RuntimeError
+    results = get_results_by_asyncio_loop(tasks)
     print(msg, end="\r")
+
     return results
 
 def fill_commodities_prices_table():

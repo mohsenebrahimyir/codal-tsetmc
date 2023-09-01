@@ -4,7 +4,10 @@ import re
 import asyncio
 import aiohttp
 from codal_tsetmc.config.engine import session
-from codal_tsetmc.tools.api import get_csv_from_github
+from codal_tsetmc.tools.api import (
+    get_csv_from_github,
+    get_results_by_asyncio_loop
+)
 from codal_tsetmc.models.stocks import Stocks
 
 def is_stock_in_bourse_or_fara_or_paye(code):
@@ -53,20 +56,20 @@ async def update_stock_table(code: str) -> Stocks:
                 data = await resp.json()
 
         stock = {
-            "symbol": data["instrumentInfo"]["lVal18AFC"],
-            "name": data["instrumentInfo"]["lVal30"],
-            "name_en": data["instrumentInfo"]["lVal18"],
-            "isin": data["instrumentInfo"]["cIsin"],
-            "code": code,
-            "capital": data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000_000,
+            "symbol":          data["instrumentInfo"]["lVal18AFC"],
+            "name":            data["instrumentInfo"]["lVal30"],
+            "name_en":         data["instrumentInfo"]["lVal18"],
+            "isin":            data["instrumentInfo"]["cIsin"],
+            "code":            code,
+            "capital":         data["instrumentInfo"]["zTitad"] if code != "32097828799138957" else 1_000_000_000,
             "instrument_code": data["instrumentInfo"]["insCode"],
-            "instrument_id": data["instrumentInfo"]["instrumentID"],
-            "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
-            "group_code": data["instrumentInfo"]["sector"]["cSecVal"].replace(" ", ""),
-            "group_type": data["instrumentInfo"]["cgrValCot"],
-            "market_name": data["instrumentInfo"]["flowTitle"],
-            "market_code": data["instrumentInfo"]["flow"],
-            "market_type": data["instrumentInfo"]["cgrValCotTitle"],
+            "instrument_id":   data["instrumentInfo"]["instrumentID"],
+            "group_name":      data["instrumentInfo"]["sector"]["lSecVal"],
+            "group_code":      data["instrumentInfo"]["sector"]["cSecVal"].replace(" ", ""),
+            "group_type":      data["instrumentInfo"]["cgrValCot"],
+            "market_name":     data["instrumentInfo"]["flowTitle"],
+            "market_code":     data["instrumentInfo"]["flow"],
+            "market_type":     data["instrumentInfo"]["cgrValCotTitle"],
         }
 
         create_or_update_stock_from_dict(stock)
@@ -77,28 +80,9 @@ async def update_stock_table(code: str) -> Stocks:
         return e, code
 
 def update_stocks_table(codes, msg=""):
-    if sys.platform == 'win32' or sys.platform == 'win64':
-        loop = asyncio.ProactorEventLoop()
-    else:
-        loop = asyncio.get_event_loop()
-    
     tasks = [update_stock_table(code) for code in codes]
-    try:
-        results = loop.run_until_complete(asyncio.gather(*tasks))
-    except RuntimeError:
-        WARNING_COLOR = "\033[93m"
-        ENDING_COLOR = "\033[0m"
-        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
-        print(
-            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
-        )
-        print("```")
-        print("%pip install nest_asyncio")
-        print("import nest_asyncio; nest_asyncio.apply()")
-        print("```")
-        raise RuntimeError
+    get_results_by_asyncio_loop(tasks)
     print(msg, end="\r")
-    return results
 
 def get_stock_ids(timeout = 10):
     url = "http://old.tsetmc.com/tsev2/data/MarketWatchPlus.aspx?"

@@ -11,7 +11,7 @@ from .initializer import (
     fill_db,
     fill_companies_table,
     fill_categories_table,
-    fill_bourse_and_fara_companies_letters,
+    fill_interim_financial_statements_letters,
     fill_stocks_table,
     fill_stocks_prices_table,
     fill_stocks_capitals_table,

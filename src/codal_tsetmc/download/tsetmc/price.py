@@ -13,7 +13,10 @@ from codal_tsetmc.tools.database import (
     fill_table_of_db_with_df,
     read_table_by_conditions
 )
-from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
+from codal_tsetmc.tools.api import (
+    get_data_from_cdn_tsetmec_api,
+    get_results_by_asyncio_loop
+)
 from codal_tsetmc.download.tsetmc.stock import  (
     is_stock_in_akhza_bond, 
     is_stock_in_gam_bond,
@@ -137,27 +140,9 @@ async def update_stock_prices(code: str):
         return e, code
 
 def update_stocks_prices(codes, msg=""):
-    if sys.platform == 'win32' or sys.platform == 'win64':
-        loop = asyncio.ProactorEventLoop()
-    else:
-        loop = asyncio.get_event_loop()
     tasks = [update_stock_prices(code) for code in codes]
-    try:
-        results = loop.run_until_complete(asyncio.gather(*tasks))
-    except RuntimeError:
-        WARNING_COLOR = "\033[93m"
-        ENDING_COLOR = "\033[0m"
-        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
-        print(
-            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
-        )
-        print("```")
-        print("%pip install nest_asyncio")
-        print("import nest_asyncio; nest_asyncio.apply()")
-        print("```")
-        raise RuntimeError
+    get_results_by_asyncio_loop(tasks)
     print(msg, end="\r")
-    return results
 
 
 def update_stocks_group_prices(group_code):

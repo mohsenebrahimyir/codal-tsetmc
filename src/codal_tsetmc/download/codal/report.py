@@ -6,9 +6,13 @@ import sys
 import asyncio
 import aiohttp
 from bs4 import BeautifulSoup
+from codal_tsetmc.tools.api import get_results_by_asyncio_loop
 from codal_tsetmc.tools.string import (
     SHEET_NAME_TO_ID, EMPTY_TO_NONE, AR_TO_FA_LETTER,
-    to_snake_case, df_col_to_snake_case, datetime_to_num, replace_all, 
+    to_snake_case,
+    df_col_to_snake_case,
+    datetime_to_num,
+    replace_all,
 )
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
 from codal_tsetmc.models.companies import Letters
@@ -294,26 +298,9 @@ async def update_stock_financial_statement_table_async(symbol, from_date = 1400,
 
 
 def update_stocks_financial_statement_table(symbols, from_date = 1400, to_date = 1500, msg=""):
-    if symbols.__class__ != list: symbols = [symbols]
-
-    if sys.platform == 'win32' or sys.platform == 'win64':
-        loop = asyncio.ProactorEventLoop()
-    else:
-        loop = asyncio.get_event_loop()
+    if symbols.__class__ != list:
+        symbols = [symbols]
+    
     tasks = [update_stock_financial_statement_table_async(symbol, from_date, to_date) for symbol in symbols]
-    try:
-        results = loop.run_until_complete(asyncio.gather(*tasks))
-    except RuntimeError:
-        WARNING_COLOR = "\033[93m"
-        ENDING_COLOR = "\033[0m"
-        print(WARNING_COLOR, "Please update company table", ENDING_COLOR)
-        print(
-            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
-        )
-        print("```")
-        print("%pip install nest_asyncio")
-        print("import nest_asyncio; nest_asyncio.apply()")
-        print("```")
-        raise RuntimeError
+    get_results_by_asyncio_loop(tasks)
     print(msg, end="\r")
-    return results

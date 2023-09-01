@@ -8,7 +8,7 @@ from codal_tsetmc.download.tsetmc.stock    import fill_stocks_table
 from codal_tsetmc.download.tsetmc.price    import fill_stocks_prices_table
 from codal_tsetmc.download.tsetmc.capital  import fill_stocks_capitals_table
 from codal_tsetmc.download.other.commodity import fill_commodities_prices_table
-from codal_tsetmc.download.codal.letters   import fill_bourse_and_fara_companies_letters
+from codal_tsetmc.download.codal.letters   import fill_interim_financial_statements_letters
 
 
 
@@ -36,7 +36,7 @@ def fill_db():
     fill_stocks_prices_table()
     fill_stocks_capitals_table()
     fill_commodities_prices_table()
-    fill_bourse_and_fara_companies_letters()
+    fill_interim_financial_statements_letters()
     print("For more info go to:")
     print("https://github.com/mohsenebrahimyir/codal-tsetmc")
 

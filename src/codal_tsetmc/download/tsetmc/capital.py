@@ -10,7 +10,10 @@ import sys
 from codal_tsetmc.config.engine import engine, session
 from codal_tsetmc.models.stocks import Stocks
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
-from codal_tsetmc.tools.api import get_data_from_cdn_tsetmec_api
+from codal_tsetmc.tools.api import (
+    get_data_from_cdn_tsetmec_api,
+    get_results_by_asyncio_loop
+)
 from codal_tsetmc.tools.string import value_to_float
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
@@ -102,27 +105,9 @@ async def update_stock_capitals(code: str):
 
 
 def update_stocks_capitals(codes, msg=""):
-    if sys.platform == 'win32':
-        loop = asyncio.ProactorEventLoop()
-    else:
-        loop = asyncio.get_event_loop()
     tasks = [update_stock_capitals(code) for code in codes]
-    try:
-        results = loop.run_until_complete(asyncio.gather(*tasks))
-    except RuntimeError:
-        WARNING_COLOR = "\033[93m"
-        ENDING_COLOR = "\033[0m"
-        print(WARNING_COLOR, "Please update stock table", ENDING_COLOR)
-        print(
-            f"{WARNING_COLOR}If you are using jupyter notebook, please run following command:{ENDING_COLOR}"
-        )
-        print("```")
-        print("%pip install nest_asyncio")
-        print("import nest_asyncio; nest_asyncio.apply()")
-        print("```")
-        raise RuntimeError
+    get_results_by_asyncio_loop(tasks)
     print(msg, end="\r")
-    return results
 
 
 def update_stocks_group_capitals(group_code):
