@@ -28,7 +28,7 @@ fill_categories_table()
 ```{python}
 #| eval: false
 from codal_tsetmc import CodalQuery
- 
+
 query = CodalQuery()
 ```
 
@@ -94,7 +94,7 @@ query.get_query_url()
 'https://search.codal.ir/api/search/v2/q?&PageNumber=1&Symbol=%D9%81%D9%88%D9%84%D8%A7%D8%AF&Category=1&LetterType=6&FromDate=1400%2F01%2F01&Audited=true&NotAudited=false&Consolidatable=true&NotConsolidatable=true&Childs=false&Mains=true&Publisher=false&search=true'
 ```
 
-10. گرفتن لیست گزارشات 
+10. گرفتن لیست گزارشات
 
 ```{python}
 #| eval: false
@@ -122,7 +122,7 @@ query.get_api_multi_page()
   'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d/0',
   'XbrlUrl': '',
   'TedanUrl': 'http://www.tedan.ir'},
- {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
   'TracingNo': 982256,
   'Symbol': 'فولاد',
   'CompanyName': 'فولاد مبارکه اصفهان',
@@ -167,7 +167,7 @@ total progress: 0.42%
 total progress: 99.72%
 total progress: 99.86%
 total progress: 100.00%
-letters Download Finished.     
+letters Download Finished.
 ```
 
 ## گرفتن لینک تمام گزارشات صورت مالی شرکت
