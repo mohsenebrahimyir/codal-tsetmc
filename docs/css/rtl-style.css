@@ -360,9 +360,7 @@ button {
 
 /* pre, code ----------------------------------------------------*/
 
-pre, code {
-    border-radius: 0.2rem;
-    color: #212529;
+pre code {
     text-align: left;
     direction: ltr;
 }
@@ -370,27 +368,27 @@ pre, code {
 /* Popup --------------------------------------------------------*/
 /* Popup container - can be anything you want */
 .popup {
-  position: relative;
-  display: inline-block;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 /* The actual popup */
 .popup .popuptext {
-  visibility: hidden;
-  min-width: 50px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 8px  5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
+    visibility: hidden;
+    min-width: 50px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px  5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
 }
 
 /* Popup arrow */

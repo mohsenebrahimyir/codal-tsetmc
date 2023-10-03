@@ -2,15 +2,10 @@
 
 ```{python}
 #| echo: false
-def digit_en_to_fa(string: str) -> str:
-    fa = "۰۱۲۳۴۵۶۷۸۹"
-    for i in range(len(string)):
-        if string[i] in "0123456789":
-            string = string.replace(string[i], fa[int(string[i])])
-
-    return string
+from py.string_tools import digit_en_to_fa
 
 from jdatetime import datetime as jdt
+
 now = jdt.now().strftime("%Y-%m-%d")
 now = digit_en_to_fa(now)
 
