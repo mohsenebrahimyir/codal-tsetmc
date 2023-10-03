@@ -23,10 +23,10 @@ python3 -m twine upload --repository pypi dist/*
 ### TSETMC
 
 - [X] `tehran_stocks`: الهام از بسته
-- [X] `stocks`:
+- [X] `stocks`: لیست تمام سهام‌ها و صندوق‌ها و ...
 - [X] `stock_capital`: پایگاه داده افزایش سرمایه
   - باید دقت کنیم که بعضی از افزایش سرمایه‌‌های سایت tsetmc بروز نیست و باید برای محاسبه مقدار دقیق از صورت‌های مالی شرکت‌ها استفاده کرد.
-- [X] `stock_price`:
+- [X] `stock_price`: قیمت و حجم معاملات روزانه
 
 ### CODAL
 
