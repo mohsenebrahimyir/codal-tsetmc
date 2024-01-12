@@ -13,6 +13,15 @@ fill_companies_table()
 
 ### تعریف یک جستجو
 
+برای تنظیم یک جستجو یا
+(`query`)
+باید ابتدا یک شی یا
+(`object`)
+از کلاس جستجوی کدال
+(`CodalQuery`)
+ایجاد کنید بعد تنظیمات دلخواه را روی آن اعمال کنید
+
+#### یک مثال از نحوه استفاده از تنظیمات
 
 0. دانلود داده‌های مورد نیاز برای جستجو
 
@@ -36,7 +45,7 @@ query = CodalQuery()
 
 ```{python}
 #| eval: false
-query.set_symbol("فولاد")
+query.set_symbol("فخوز")
 ```
 
 3. از تاریخ
@@ -60,11 +69,12 @@ query.set_category('اطلاعات و صورت مالی سالانه')
 query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
 ```
 
-6. حذف حسابرسی نشده‌ها
+6.  حذف حسابرسی نشده‌ها یا حذف حسابرسی شده‌ها
 
 ```{python}
 #| eval: false
 query.set_not_audited(False)
+# query.set_audited(False)
 ```
 
 7. فقط زیر مجموعه‌ها
@@ -133,6 +143,112 @@ query.get_api_multi_page()
   'XbrlUrl': '',
   'TedanUrl': 'http://www.tedan.ir'}]
 ```
+
+
+- تنظیمات موجود در کلاس جستجوی کدال به همراه مقادیر پیشفرض
+
+```python
+# تنظیم نام نماد
+query.set_symbol(symbol: str = "")
+
+# تنظیم شماره ISIC
+query.set_isic(isic: str = "")
+
+# تنظیم وضعیت ناشز
+query.set_publisher_status(title: str = "")
+
+# تنظیم گروع اطلاعیه
+query.set_category(title: str = "")
+
+# تنظیم نوع شرکت
+query.set_company_type(title: str = "")
+
+# تنظیم نوع اطلاعیه
+query.set_letter_type(title: str = "")
+
+# تنظیم موضوع اطلاعیه
+query.set_subject(subject: str = "")
+
+# تنظیم شماره پیگیری
+query.set_tracing_no(no: str = "")
+
+# تنظیم کد اطلاعیه
+query.set_letter_code(code: str = "")
+
+# تنظیم طول دوره
+query.set_length_period(period=-1)
+
+# تنظیم از تاریخ
+query.set_from_date(date: str = "1300/01/01")
+
+# تنظیم تا تاریخ
+query.set_to_date(date: str = "1500/01/01")
+
+# تنظیم حسابرسی شده
+query.set_audited(status: bool = True)
+
+# تنظیم حسابرسی نشده
+query.set_not_audited(status: bool = True)
+
+# تنظیم اصلی
+query.set_consolidatable(status: bool = True)
+
+# تنظیم تلفیقی
+query.set_not_consolidatable(status: bool = True)
+
+# تنظیم فقط زیرمجموعه ها
+query.set_childs(status: bool = True)
+
+# تنظیم فقط شرکت اصلی
+query.set_mains(status: bool = True)
+
+# تنظیم موسسه حسابرسی شرکت
+query.set_auditor_ref(name: str = None)
+
+# سالی مالی منتهی به
+query.set_year_end_to_date(date: str = "1300/01/01")
+
+# تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
+query.set_publisher(status: bool = True)
+
+# حذف تنظیمات
+query.remove_none(dictionary)
+
+# تنظیم شماره صفحه
+query.set_page_number(number: int = 0)
+
+# گرفتن شماره صفحه
+query.get_page_number()
+
+"""################
+گرفتن لینک کوئری کدال
+################"""
+
+# گرفتن لینک
+query.get_query_url(api: bool = True)
+
+# گرفتن لیست گزارش
+query.get_report_list_url()
+
+# گرفتن کوئری جستوجو
+query.get_api_search_url()
+
+"""################
+گرفتن اطلاعات از کدال
+################"""
+
+# گرفتن اطلاعات کلی در یک صفحه
+query.get_api_sigle_page()
+
+# گرفتن اطلاعات کلی در همه صفحات
+query.get_api_multi_page(pages: int = 0)
+
+# گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
+query.get_letters(pages: int = 0, show = False)
+```
+
+
+
 
 ## ذخیره لیست تمام گزارشات مالی در دیتابیس
 
