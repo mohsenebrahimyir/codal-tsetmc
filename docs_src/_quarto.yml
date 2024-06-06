@@ -36,7 +36,6 @@ book:
     - codal.qmd
     - tsetmc.qmd
     - other.qmd
-    - financial-statement.qmd
     - treasury-bill.qmd
 
     - references.qmd
