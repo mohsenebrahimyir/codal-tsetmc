@@ -3,7 +3,8 @@ from codal_tsetmc.models.stocks import (
     Stocks,
     StocksPrices,
     StocksCapitals,
-    CommoditiesPrices, StocksGroups
+    CommoditiesPrices,
+    StocksGroups
 )
 from codal_tsetmc.models.companies import (
     Companies,
@@ -13,9 +14,7 @@ from codal_tsetmc.models.companies import (
     ReportTypes,
     LetterTypes,
     Auditors,
-    Letters,
-    FinancialStatementHeader,
-    FinancialStatementTableWithSingleItem
+    Letters
 )
 
 models = [
@@ -31,8 +30,6 @@ models = [
     LetterTypes,
     Auditors,
     Letters,
-    FinancialStatementHeader,
-    FinancialStatementTableWithSingleItem,
     CommoditiesPrices
 ]
 

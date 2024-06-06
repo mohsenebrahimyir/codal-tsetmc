@@ -1,4 +1,3 @@
-import os
 from sqlalchemy.sql import text
 
 from codal_tsetmc.config import engine as db
@@ -41,7 +40,7 @@ from codal_tsetmc.download.tsetmc.stock import (
     update_stock_table,
     update_stocks_table,
     fill_stocks_groups_table,
-    fill_stocks_table,
+    fill_stocks_table
 )
 
 from codal_tsetmc.download.tsetmc.price import (
@@ -52,7 +51,7 @@ from codal_tsetmc.download.tsetmc.price import (
     update_index_prices,
     update_stocks_prices,
     update_stocks_group_prices,
-    fill_stocks_prices_table,
+    fill_stocks_prices_table
 )
 
 from codal_tsetmc.download.tsetmc.capital import (
@@ -61,7 +60,7 @@ from codal_tsetmc.download.tsetmc.capital import (
     update_stock_capitals,
     update_stocks_capitals,
     update_stocks_group_capitals,
-    fill_stocks_capitals_table,
+    fill_stocks_capitals_table
 )
 
 from codal_tsetmc.initializer import (
@@ -70,7 +69,7 @@ from codal_tsetmc.initializer import (
     fill_db,
     fill_companies_table,
     fill_categories_table,
-    fill_commodities_prices_table,
+    fill_commodities_prices_table
 )
 
 

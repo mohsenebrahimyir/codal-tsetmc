@@ -1,7 +1,7 @@
 from sqlalchemy.orm import relationship
 
 from codal_tsetmc.config.engine import (
-    Column, Integer, String, Boolean, ForeignKey, Base
+    Column, Integer, String, ForeignKey, Base
 )
 
 
