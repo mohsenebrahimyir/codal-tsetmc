@@ -40,23 +40,6 @@ python3 -m twine upload --repository pypi dist/*
 - [X] `auditors`: حسابرس‌ها
 - [X] `financial_years`: سال مالی‌ها
 - [X] `letter`: گزارشات مالی
-- [X] `financial_statement_header`: سربرگ صورت‌های مالی
-- [X] `financial_statement_table_with_single_item`: جدول‌های صورت‌های مالی با مقادیر ساده (یعنی فقط یک مقدار برای هر گزینه در هر سال دارند)
-  - [X] Staff status: وضعیت کارکنان
-  - [X] Balance Sheet: صورت وضعيت مالي
-  - [X] Other operating income: سایر درآمدهای عملیاتی
-  - [X] Other operating expenses: سایر هزینه‌های عملیاتی
-  - [X] Non-operation income and expenses investment income: سایر درآمدها و هزینه‌های غیرعملیاتی - درآمد سرمایه‌گذاری‌ها
-  - [X] Non-operation income and expenses miscellaneous items: سایر درآمدها و هزینه‌های غیرعملیاتی - اقلام متفرقه
-  - [X] Income Statement: صورت سود و زيان
-  - [X] Cash Flow: صورت جريان‌هاي نقدي
-  - [X] Sales trend and cost over the last 5 years: روند فروش و بهای تمام شده در 5 سال اخیر
-  - [X] The cost of the sold goods: بهای تمام شده
-  - [X] Balance Sheet: صورت وضعیت مالی
-  - [X] Income Statement: صورت سود و زیان
-  - [X] Cash Flow: صورت جریان‌های نقدی
-  - [X] Balance Sheet: ترازنامه
-  - [X] Cash Flow: جریان وجوه نقد
 
 #### OTHER
 
