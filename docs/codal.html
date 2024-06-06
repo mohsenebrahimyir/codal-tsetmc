@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" dir="rtl"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.554">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>پکیجی برای ذخیره اطلاعات بنیادی و بازاری - کدال</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./tsetmc.html" rel="next">
+<link href="./guide.html" rel="prev">
+<link href="./img/favicon.ico" rel="icon">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "بدون نتیجه",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "کپی لینک در جستجو",
+    "search-hide-matches-text": "موارد دیگر را پنهان کنید",
+    "search-more-match-text": "مطابقت بیشتر در این سند",
+    "search-more-matches-text": "موارد منطبق بیشتر در این سند",
+    "search-clear-button-title": "پاک کردن",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "لغو",
+    "search-submit-button-title": "ارسال",
+    "search-label": "جستجو"
+  }
+}</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300&amp;display=swap">
+<link rel="stylesheet" href="css/rtl-style.css">
+<link rel="stylesheet" href="css/termynal.css">
+<link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./codal.html"><span class="chapter-title">کدال</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="button" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="ناوبری نوار کناری را تغییر دهید" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">پکیجی برای ذخیره اطلاعات بنیادی و بازاری</a> 
+        <div class="sidebar-tools-main tools-wide">
+    <a href="https://github.com/mohsenebrahimyir/codal-tsetmc/" title="منبع کد" class="quarto-navigation-tool px-1" aria-label="منبع کد"><i class="bi bi-github"></i></a>
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="حالت تاریک را تغییر دهید"><i class="bi"></i></a>
+  <a href="" class="quarto-reader-toggle quarto-navigation-tool px-1" onclick="window.quartoToggleReader(); return false;" title="حالت خواننده را تغییر دهید">
+  <div class="quarto-reader-toggle-btn">
+  <i class="bi"></i>
+  </div>
+</a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="جستجو"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">پیش گفتار</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">مقدمه</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./installation.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">نصب</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./guide.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">راهنمای بسته</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./codal.html" class="sidebar-item-text sidebar-link active"><span class="chapter-title">کدال</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tsetmc.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">بورس تهران</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./other.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">دیگر سایت‌ها</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./treasury-bill.html" class="sidebar-item-text sidebar-link"><span class="chapter-title">اسناد خزانه (اخزا)</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">منابع</span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">فهرست مطالب</h2>
+   
+  <ul>
+  <li><a href="#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" id="toc-گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" class="nav-link active" data-scroll-target="#گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال">گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال</a>
+  <ul class="collapse">
+  <li><a href="#تعریف-یک-جستجو" id="toc-تعریف-یک-جستجو" class="nav-link" data-scroll-target="#تعریف-یک-جستجو">تعریف یک جستجو</a></li>
+  <li><a href="#تنظیمات-برای-جستجو" id="toc-تنظیمات-برای-جستجو" class="nav-link" data-scroll-target="#تنظیمات-برای-جستجو">تنظیمات برای جستجو</a></li>
+  <li><a href="#یک-مثال-از-نحوه-استفاده" id="toc-یک-مثال-از-نحوه-استفاده" class="nav-link" data-scroll-target="#یک-مثال-از-نحوه-استفاده">یک مثال از نحوه استفاده</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-title">کدال</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    <div>
+    <div class="quarto-title-meta-heading">اصلاح شده</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date-modified">2024-06-06</p>
+    </div>
+  </div>
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="proof remark">
+<p><span class="proof-title"><em>نکته</em>. </span><strong>اگر از محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.</strong></p>
+<div id="9ae2131f" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nest_asyncio</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nest_asyncio.<span class="bu">apply</span>()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<section id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" class="level2">
+<h2 class="anchored" data-anchor-id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال">گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال</h2>
+<p>پر کردن جدول شرکت‌های لیست شده در کدال</p>
+<div id="26cd11fb" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_companies_table</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fill_companies_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>دانلود داده‌های مورد نیاز برای جستجو</p>
+<div id="b3e0c026" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_categories_table</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fill_categories_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="تعریف-یک-جستجو" class="level3">
+<h3 class="anchored" data-anchor-id="تعریف-یک-جستجو">تعریف یک جستجو</h3>
+<p>برای تنظیم یک جستجو یا (<code>query</code>) باید ابتدا یک شی یا (<code>object</code>) از کلاس جستجوی کدال (<code>CodalQuery</code>) ایجاد کنید بعد تنظیمات دلخواه را روی آن اعمال کنید</p>
+</section>
+<section id="تنظیمات-برای-جستجو" class="level3">
+<h3 class="anchored" data-anchor-id="تنظیمات-برای-جستجو">تنظیمات برای جستجو</h3>
+<p>تنظیمات موجود در کلاس جستجوی کدال به همراه مقادیر پیشفرض</p>
+<div class="center">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="./img/letter-query.png" class="img-fluid figure-img"></p>
+<figcaption>تصویر فیلتر جستجو در سایت کدال</figcaption>
+</figure>
+</div>
+</div>
+<div id="e2d2867e" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># وارد کردن یک شی جستجوی کدال</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> CodalQuery</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ساختن یک شی از شی جستجوی کدال</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> CodalQuery()</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">#1. تنظیم نام نماد</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>query.set_symbol(symbol: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">#2. تنظیم وضعیت ناشر</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>query.set_publisher_status(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">#3. تنظیم گروع اطلاعیه</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>query.set_category(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="co">#4. تنظیم نوع شرکت</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>query.set_company_type(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a><span class="co">#5. تنظیم نوع اطلاعیه</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>query.set_letter_type(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="co">#6. تنظیم موضوع اطلاعیه</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>query.set_subject(subject: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a><span class="co">#7. تنظیم شماره پیگیری</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>query.set_tracing_no(no: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="co">#8. تنظیم کد اطلاعیه</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>query.set_letter_code(code: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a><span class="co">#9. تنظیم طول دوره</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>query.set_length_period(period<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co">#10. تنظیم از تاریخ</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>query.set_from_date(date: <span class="bu">str</span> <span class="op">=</span> <span class="st">"1300/01/01"</span>)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a><span class="co">#11. تنظیم تا تاریخ</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>query.set_to_date(date: <span class="bu">str</span> <span class="op">=</span> <span class="st">"1500/01/01"</span>)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a><span class="co">#12. تنظیم حسابرسی شده</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>query.set_audited(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a><span class="co">#13. تنظیم حسابرسی نشده</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>query.set_not_audited(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="co">#14. تنظیم اصلی</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>query.set_consolidatable(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="co">#15. تنظیم تلفیقی</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>query.set_not_consolidatable(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a><span class="co">#16. تنظیم فقط زیرمجموعه ها</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>query.set_childs(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a><span class="co">#17. تنظیم فقط شرکت اصلی</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>query.set_mains(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a><span class="co">#18. تنظیم موسسه حسابرسی شرکت</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>query.set_auditor_ref(name: <span class="bu">str</span> <span class="op">=</span> <span class="va">None</span>)</span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a><span class="co">#19. سالی مالی منتهی به</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>query.set_year_end_to_date(date: <span class="bu">str</span> <span class="op">=</span> <span class="st">"1300/01/01"</span>)</span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a><span class="co">#20. تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>query.set_publisher(status: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="co">#21. حذف تنظیمات</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>query.remove_none(dictionary)</span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a><span class="co"># تنظیم شماره ISIC</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>query.set_isic(isic: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-73"><a href="#cb4-73" aria-hidden="true" tabindex="-1"></a><span class="co"># تنظیم شماره صفحه</span></span>
+<span id="cb4-74"><a href="#cb4-74" aria-hidden="true" tabindex="-1"></a>query.set_page_number(number: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb4-75"><a href="#cb4-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-76"><a href="#cb4-76" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن شماره صفحه</span></span>
+<span id="cb4-77"><a href="#cb4-77" aria-hidden="true" tabindex="-1"></a>query.get_page_number()</span>
+<span id="cb4-78"><a href="#cb4-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-79"><a href="#cb4-79" aria-hidden="true" tabindex="-1"></a><span class="co"># نمایش تعداد صفحات جستجو</span></span>
+<span id="cb4-80"><a href="#cb4-80" aria-hidden="true" tabindex="-1"></a>query.page</span>
+<span id="cb4-81"><a href="#cb4-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-82"><a href="#cb4-82" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن مواد تنظیم شده برای جستجو</span></span>
+<span id="cb4-83"><a href="#cb4-83" aria-hidden="true" tabindex="-1"></a>query.params</span>
+<span id="cb4-84"><a href="#cb4-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-85"><a href="#cb4-85" aria-hidden="true" tabindex="-1"></a><span class="co">"""################</span></span>
+<span id="cb4-86"><a href="#cb4-86" aria-hidden="true" tabindex="-1"></a><span class="co">گرفتن لینک کوئری کدال</span></span>
+<span id="cb4-87"><a href="#cb4-87" aria-hidden="true" tabindex="-1"></a><span class="co">################"""</span></span>
+<span id="cb4-88"><a href="#cb4-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-89"><a href="#cb4-89" aria-hidden="true" tabindex="-1"></a><span class="co">#22. گرفتن لینک</span></span>
+<span id="cb4-90"><a href="#cb4-90" aria-hidden="true" tabindex="-1"></a>query.get_query_url(api: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb4-91"><a href="#cb4-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-92"><a href="#cb4-92" aria-hidden="true" tabindex="-1"></a><span class="co">#22. گرفتن لیست گزارش</span></span>
+<span id="cb4-93"><a href="#cb4-93" aria-hidden="true" tabindex="-1"></a>query.get_report_list_url()</span>
+<span id="cb4-94"><a href="#cb4-94" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-95"><a href="#cb4-95" aria-hidden="true" tabindex="-1"></a><span class="co">#22. گرفتن کوئری جستوجو</span></span>
+<span id="cb4-96"><a href="#cb4-96" aria-hidden="true" tabindex="-1"></a>query.get_api_search_url()</span>
+<span id="cb4-97"><a href="#cb4-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-98"><a href="#cb4-98" aria-hidden="true" tabindex="-1"></a><span class="co">"""################</span></span>
+<span id="cb4-99"><a href="#cb4-99" aria-hidden="true" tabindex="-1"></a><span class="co">گرفتن اطلاعات از کدال</span></span>
+<span id="cb4-100"><a href="#cb4-100" aria-hidden="true" tabindex="-1"></a><span class="co">################"""</span></span>
+<span id="cb4-101"><a href="#cb4-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-102"><a href="#cb4-102" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن اطلاعات کلی در یک صفحه</span></span>
+<span id="cb4-103"><a href="#cb4-103" aria-hidden="true" tabindex="-1"></a>query.get_api_sigle_page()</span>
+<span id="cb4-104"><a href="#cb4-104" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-105"><a href="#cb4-105" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن اطلاعات کلی در همه صفحات</span></span>
+<span id="cb4-106"><a href="#cb4-106" aria-hidden="true" tabindex="-1"></a>query.get_api_multi_page(pages: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>)</span>
+<span id="cb4-107"><a href="#cb4-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-108"><a href="#cb4-108" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده</span></span>
+<span id="cb4-109"><a href="#cb4-109" aria-hidden="true" tabindex="-1"></a>query.get_letters(pages: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>, show <span class="op">=</span> <span class="va">False</span>)</span>
+<span id="cb4-110"><a href="#cb4-110" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-111"><a href="#cb4-111" aria-hidden="true" tabindex="-1"></a><span class="co"># نمایش اطلاعات نامه‌ها و صورت‌مالیهای جستجو شده</span></span>
+<span id="cb4-112"><a href="#cb4-112" aria-hidden="true" tabindex="-1"></a>query.letters</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="گرفتن-یک-جستجوی-خاص-برای-چند-نماد-با-سرعت-بالا-و-ذخیره-آن-در-دیتابیس" class="level4">
+<h4 class="anchored" data-anchor-id="گرفتن-یک-جستجوی-خاص-برای-چند-نماد-با-سرعت-بالا-و-ذخیره-آن-در-دیتابیس">گرفتن یک جستجوی خاص برای چند نماد با سرعت بالا و ذخیره آن در دیتابیس</h4>
+<div id="de5edb6f" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.download.codal.letters <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن و ذخیره لیست گزارشات با یک جستجوی مشابه برای لیستی از نمادها و ذخیره در دیتابیس</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>update_letters_table_by_query_and_symbols(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  query: CodalQuery,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  symbols: <span class="bu">list</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  msg: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="یک-مثال-از-نحوه-استفاده" class="level3">
+<h3 class="anchored" data-anchor-id="یک-مثال-از-نحوه-استفاده">یک مثال از نحوه استفاده</h3>
+<ol type="1">
+<li>تنظیم فیلترهای دلخواه</li>
+</ol>
+<div id="332d936e" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> CodalQuery</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> CodalQuery()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="2" type="1">
+<li>نام نماد</li>
+</ol>
+<div id="d6ea8cc0" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>query.set_symbol(<span class="st">"وبملت"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="3" type="1">
+<li>از تاریخ</li>
+</ol>
+<div id="c0811b6f" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>query.set_from_date(<span class="st">"1400/01/01"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="4" type="1">
+<li>گروه اطلاعیه</li>
+</ol>
+<div id="bbf78be9" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>query.set_category(<span class="st">'اطلاعات و صورت مالی سالانه'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="5" type="1">
+<li>نوع اطلاعیه</li>
+</ol>
+<div id="d648aef8" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>query.set_letter_type(<span class="st">'اطلاعات و صورتهای مالی میاندوره ای'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="6" type="1">
+<li>حذف حسابرسی نشده‌ها یا حذف حسابرسی شده‌ها</li>
+</ol>
+<div id="17b444e6" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>query.set_not_audited(<span class="va">False</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># query.set_audited(False)</span></span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="7" type="1">
+<li>فقط زیر مجموعه‌ها</li>
+</ol>
+<div id="f30db0c7" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>query.set_childs(<span class="va">False</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="8" type="1">
+<li>نمایش موارد تنظیم شده</li>
+</ol>
+<div id="8c739c0a" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>query.params</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="30">
+<pre><code>{'PageNumber': 1,
+ 'Symbol': 'وبملت',
+ 'PublisherStatus': -1,
+ 'Category': 1,
+ 'CompanyType': -1,
+ 'LetterType': 6,
+ 'Subject': -1,
+ 'TracingNo': -1,
+ 'LetterCode': -1,
+ 'Lenght': -1,
+ 'FromDate': '1400/01/01',
+ 'ToDate': -1,
+ 'Audited': 'true',
+ 'NotAudited': 'false',
+ 'Consolidatable': 'true',
+ 'NotConsolidatable': 'true',
+ 'Childs': 'false',
+ 'Mains': 'true',
+ 'AuditorRef': -1,
+ 'YearEndToDate': -1,
+ 'Publisher': 'false'}</code></pre>
+</div>
+</div>
+<ol start="9" type="1">
+<li>گرفتن لینک برای مرورگر</li>
+</ol>
+<div id="704b8826" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>query.get_report_list_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="31">
+<pre><code>'https://codal.ir/ReportList.aspx?search&amp;PageNumber=1&amp;Symbol=%D9%88%D8%A8%D9%85%D9%84%D8%AA&amp;Category=1&amp;LetterType=6&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false'</code></pre>
+</div>
+</div>
+<ol start="10" type="1">
+<li>گرفتن لینک برای api</li>
+</ol>
+<div id="e0970f6f" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>query.get_query_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="32">
+<pre><code>'https://search.codal.ir/api/search/v2/q?&amp;PageNumber=1&amp;Symbol=%D9%88%D8%A8%D9%85%D9%84%D8%AA&amp;Category=1&amp;LetterType=6&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false&amp;search=true'</code></pre>
+</div>
+</div>
+<ol start="11" type="1">
+<li>گرفتن لیست گزارشات</li>
+</ol>
+<div id="a0692037" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>query.get_api_multi_page()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="33">
+<pre><code>[{'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 1116260,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'اطلاعات و صورت\u200cهای مالی میاندوره\u200cای تلفیقی دوره ۶ ماهه منتهی به  ۱۴۰۲/۰۶/۳۱ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۲/۰۹/۱۵ ۲۰:۰۳:۳۵',
+  'PublishDateTime': '۱۴۰۲/۰۹/۱۵ ۲۰:۰۳:۳۵',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=OVLjMIHaAZsXZK6TitYWxQ%3d%3d&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=OVLjMIHaAZsXZK6TitYWxQ%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=OVLjMIHaAZsXZK6TitYWxQ%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/OVLjMIHaAZsXZK6TitYWxQ%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 1041366,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'صورت\u200cهای مالی تلفیقی سال مالی منتهی به ۱۴۰۱/۱۲/۲۹ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۲/۰۳/۲۸ ۲۰:۲۹:۵۴',
+  'PublishDateTime': '۱۴۰۲/۰۳/۲۸ ۲۰:۲۹:۵۴',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=5mk9zW2T9eTUWjPZUakQQQaQQQ8A%3d%3d&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=5mk9zW2T9eTUWjPZUakQQQaQQQ8A%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=5mk9zW2T9eTUWjPZUakQQQaQQQ8A%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/5mk9zW2T9eTUWjPZUakQQQaQQQ8A%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 966408,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'اطلاعات و صورت\u200cهای مالی میاندوره\u200cای تلفیقی دوره ۶ ماهه منتهی به  ۱۴۰۱/۰۶/۳۱ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۱/۰۹/۱۵ ۱۹:۵۶:۵۷',
+  'PublishDateTime': '۱۴۰۱/۰۹/۱۵ ۱۹:۵۶:۵۷',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=OrRG4vaz36UjbkVcznu8fA%3d%3d&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=OrRG4vaz36UjbkVcznu8fA%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=OrRG4vaz36UjbkVcznu8fA%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/OrRG4vaz36UjbkVcznu8fA%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 896865,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'صورت\u200cهای مالی تلفیقی سال مالی منتهی به ۱۴۰۰/۱۲/۲۹ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۱/۰۳/۲۹ ۰۰:۰۲:۰۱',
+  'PublishDateTime': '۱۴۰۱/۰۳/۲۹ ۰۰:۰۲:۰۱',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=YLhTbKc77KtnbMHocooRSQ%3d%3d&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=YLhTbKc77KtnbMHocooRSQ%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=YLhTbKc77KtnbMHocooRSQ%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/YLhTbKc77KtnbMHocooRSQ%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 825953,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'اطلاعات و صورت\u200cهای مالی میاندوره\u200cای تلفیقی دوره ۶ ماهه منتهی به ۱۴۰۰/۰۶/۳۱ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۰/۰۹/۱۵ ۲۲:۰۱:۳۲',
+  'PublishDateTime': '۱۴۰۰/۰۹/۱۵ ۲۲:۰۱:۳۲',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=TLOQ83KhULOFMQQQaQQQYZIZ5H5A%3D%3D&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=TLOQ83KhULOFMQQQaQQQYZIZ5H5A%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=TLOQ83KhULOFMQQQaQQQYZIZ5H5A%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/TLOQ83KhULOFMQQQaQQQYZIZ5H5A%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'},
+ {'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
+  'TracingNo': 768588,
+  'Symbol': 'وبملت',
+  'CompanyName': 'بانک ملت',
+  'UnderSupervision': 0,
+  'Title': 'صورت\u200cهای مالی تلفیقی سال مالی منتهی به ۱۳۹۹/۱۲/۳۰ (حسابرسی شده)',
+  'LetterCode': 'ن-۱۰',
+  'SentDateTime': '۱۴۰۰/۰۴/۲۰ ۱۱:۲۰:۳۶',
+  'PublishDateTime': '۱۴۰۰/۰۴/۲۰ ۱۱:۲۰:۳۶',
+  'HasHtml': True,
+  'IsEstimate': False,
+  'Url': '/Reports/Decision.aspx?LetterSerial=Qlz4uFzkkEGRvIQUhty5IQ%3D%3D&amp;rt=3&amp;let=6&amp;ct=0&amp;ft=-1',
+  'HasExcel': True,
+  'HasPdf': True,
+  'HasXbrl': False,
+  'HasAttachment': True,
+  'AttachmentUrl': '/Reports/Attachment.aspx?LetterSerial=Qlz4uFzkkEGRvIQUhty5IQ%3d%3d',
+  'PdfUrl': 'DownloadFile.aspx?hs=Qlz4uFzkkEGRvIQUhty5IQ%3d%3d&amp;ft=1005&amp;let=6',
+  'ExcelUrl': 'https://excel.codal.ir/service/Excel/GetAll/Qlz4uFzkkEGRvIQUhty5IQ%3d%3d/0',
+  'XbrlUrl': '',
+  'TedanUrl': 'http://www.tedan.ir'}]</code></pre>
+</div>
+</div>
+<ol start="12" type="1">
+<li>گرفتن تمام صفحات و ذخیره آن درون شی</li>
+</ol>
+<div id="d71f0eb3" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>query.get_letters()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ol start="13" type="1">
+<li>نمایش صفحات ذخیره شده</li>
+</ol>
+<div id="9463c0cf" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>query.letters</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="35">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">publish_date_time</th>
+<th data-quarto-table-cell-role="th">sent_date_time</th>
+<th data-quarto-table-cell-role="th">tracing_no</th>
+<th data-quarto-table-cell-role="th">letter_serial</th>
+<th data-quarto-table-cell-role="th">letter_code</th>
+<th data-quarto-table-cell-role="th">letter_types</th>
+<th data-quarto-table-cell-role="th">letter_title</th>
+<th data-quarto-table-cell-role="th">company_symbol</th>
+<th data-quarto-table-cell-role="th">company_name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>14020915200335</td>
+<td>14020915200335</td>
+<td>1116260</td>
+<td>OVLjMIHaAZsXZK6TitYWxQ%3d%3d</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>14020328202954</td>
+<td>14020328202954</td>
+<td>1041366</td>
+<td>5mk9zW2T9eTUWjPZUakQQQaQQQ8A%3d%3d</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1401/12...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>14010915195657</td>
+<td>14010915195657</td>
+<td>966408</td>
+<td>OrRG4vaz36UjbkVcznu8fA%3d%3d</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>14010329000201</td>
+<td>14010329000201</td>
+<td>896865</td>
+<td>YLhTbKc77KtnbMHocooRSQ%3d%3d</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1400/12...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>14000915220132</td>
+<td>14000915220132</td>
+<td>825953</td>
+<td>TLOQ83KhULOFMQQQaQQQYZIZ5H5A%3D%3D</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>14000420112036</td>
+<td>14000420112036</td>
+<td>768588</td>
+<td>Qlz4uFzkkEGRvIQUhty5IQ%3D%3D</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1399/12...</td>
+<td>وبملت</td>
+<td>بانک ملت</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<ol start="14" type="1">
+<li>گرفتن و ذخیره لیست گزارشات برای چند نماد با سرعت بالا در دیتابیس</li>
+</ol>
+<div id="fe5e8d47" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.download.codal.letters <span class="im">import</span> update_letters_table_by_query_and_symbols</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>update_letters_table_by_query_and_symbols(query, [<span class="st">"فولاد"</span>, <span class="st">"فملی"</span>, <span class="st">"شپنا"</span>])</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>update_letter_table_by_urls:  None</code></pre>
+</div>
+</div>
+<ol start="15" type="1">
+<li>گرفتن لیست گزارشات نماد خاص در دیتابیس</li>
+</ol>
+<div id="1d4984b0" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_conditions</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>read_table_by_conditions(table<span class="op">=</span><span class="st">"letters"</span>, variable<span class="op">=</span><span class="st">"symbol"</span>, value<span class="op">=</span><span class="st">"فولاد"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="37">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">publish_date_time</th>
+<th data-quarto-table-cell-role="th">sent_date_time</th>
+<th data-quarto-table-cell-role="th">tracing_no</th>
+<th data-quarto-table-cell-role="th">letter_serial</th>
+<th data-quarto-table-cell-role="th">letter_title</th>
+<th data-quarto-table-cell-role="th">letter_code</th>
+<th data-quarto-table-cell-role="th">letter_types</th>
+<th data-quarto-table-cell-role="th">symbol</th>
+<th data-quarto-table-cell-role="th">name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1</td>
+<td>14021107184454</td>
+<td>14021107184454</td>
+<td>1096229</td>
+<td>4aQQQaQQQJI3W6uTKLoHuoFjH7zA%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2</td>
+<td>14020426214952</td>
+<td>14020426214952</td>
+<td>1055774</td>
+<td>SS97V5jtRN0QQQaQQQscZebQQQaQQQvRwg%3d%3d</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1401/12...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>3</td>
+<td>14011029125540</td>
+<td>14011029125540</td>
+<td>982256</td>
+<td>QQQaQQQtdXtHxpzUX3vJk1C1JfUw%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>4</td>
+<td>14010509103042</td>
+<td>14010509103042</td>
+<td>912864</td>
+<td>AuFIYwI3LY424zd3p4ij5A%3d%3d</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1400/12...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>5</td>
+<td>14001124155735</td>
+<td>14001124155735</td>
+<td>852911</td>
+<td>cQd9yigizoTueJdP5SZofw%3D%3D</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">5</td>
+<td>6</td>
+<td>14000507165312</td>
+<td>14000507165312</td>
+<td>762282</td>
+<td>NDR8Dkp6Fm%2BEHtNIfHDW5A%3D%3D</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1399/12...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>فولاد</td>
+<td>فولاد مبارکه اصفهان</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+<ol type="1">
+<li>گرفتن لیست گزارشات از دیتابیس با کوئری</li>
+</ol>
+<div id="e3405132" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_sql_query</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> read_table_by_sql_query(</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"""</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT *</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM letters </span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE symbol IN (</span></span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a><span class="st">    'فولاد',</span></span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a><span class="st">    'فملی',</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a><span class="st">    'شپنا'</span></span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a><span class="st">  )</span></span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a><span class="st">  """</span></span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="38">
+<div>
+<div>
+
+
+<table class="dataframe table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">id</th>
+<th data-quarto-table-cell-role="th">publish_date_time</th>
+<th data-quarto-table-cell-role="th">sent_date_time</th>
+<th data-quarto-table-cell-role="th">tracing_no</th>
+<th data-quarto-table-cell-role="th">letter_serial</th>
+<th data-quarto-table-cell-role="th">letter_title</th>
+<th data-quarto-table-cell-role="th">letter_code</th>
+<th data-quarto-table-cell-role="th">letter_types</th>
+<th data-quarto-table-cell-role="th">symbol</th>
+<th data-quarto-table-cell-role="th">name</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>16</td>
+<td>14020922124729</td>
+<td>14020922124729</td>
+<td>1120801</td>
+<td>AgvhNnhNiGXe2UmNCBrKqw%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>شپنا</td>
+<td>پالایش نفت اصفهان</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>17</td>
+<td>14020919120833</td>
+<td>14020919120833</td>
+<td>1109265</td>
+<td>19XQTvK1YKoenz5KA7OLJA%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>شپنا</td>
+<td>پالایش نفت اصفهان</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>18</td>
+<td>14020428022316</td>
+<td>14020428022316</td>
+<td>1053031</td>
+<td>tIcycjOhpVjES8r6%2bs8xZA%3d%3d</td>
+<td>صورت‌های مالی تلفیقی سال مالی منتهی به 1401/12...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>شپنا</td>
+<td>پالایش نفت اصفهان</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>19</td>
+<td>14010923172831</td>
+<td>14010923172831</td>
+<td>971501</td>
+<td>F4tQ0MHPKC4UW38F8IgGkg%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>شپنا</td>
+<td>پالایش نفت اصفهان</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>20</td>
+<td>14010917193612</td>
+<td>14010917193612</td>
+<td>967431</td>
+<td>N2QQQaQQQzXY2wz157gszENY9QQQaQQQtw%3d%3d</td>
+<td>اطلاعات و صورت‌های مالی میاندوره‌ای تلفیقی دور...</td>
+<td>ن-10</td>
+<td>صورت های مالی میان دوره ای</td>
+<td>شپنا</td>
+<td>پالایش نفت اصفهان</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+</div>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "کپی شد!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "کپی شد!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/mohsenebrahimyir\.github\.io\/codal-tsetmc\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./guide.html" class="pagination-link" aria-label="راهنمای بسته">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-title">راهنمای بسته</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./tsetmc.html" class="pagination-link" aria-label="بورس تهران">
+        <span class="nav-page-text"><span class="chapter-title">بورس تهران</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p><a href="./index.html">codal-tsetmc</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><a href="https://mohsenebrahimy.ir/">محسن ابراهیمی</a></p>
+</div>
+  </div>
+</footer>
+<script src="js/termynal.js" data-termynal-container="#termy">
+</script>
+
+
+
+
+</body></html>
