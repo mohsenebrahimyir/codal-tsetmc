@@ -132,7 +132,9 @@ df_ytm
 
 ```{python}
 #| eval: true
-df_value = df[["jdate", "value"]].groupby("jdate").agg(["sum"])["value"]
+df_value = df[["jdate", "value"]].groupby("jdate").agg(
+    ["median", "sum", "mean"]
+)["value"]
 
 df_value["scale"] = df_value["sum"] / 1_000_000_000_000
 
@@ -220,12 +222,22 @@ fig.update_layout(
         tickformat='%Y-%m-%d'
     ),
     yaxis=dict(
-        title="بازده مرکب سالانه یا همان (درصد)\n",
-        range=[0, 40]
+        title="""
+        <br>
+        بازده مرکب سالانه یا همان (درصد)
+        <br>
+        """,
+        range=[0, 50]
     ),
     yaxis2=dict(
-        title="مجموع ارزش معاملات (هزار میلیارد ریال)",
-        range=[0, 15]
+        title="""
+        <br>
+        مجموع ارزش معاملات (هزار میلیارد ریال)
+        <br>
+        نمایش لوگاریتمی
+        """,
+        range=[0, 10],
+        type="log"
     ),
     hoverlabel=dict(align="right"),
     legend=dict(
