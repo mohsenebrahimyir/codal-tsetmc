@@ -44,7 +44,7 @@ python3 -m twine upload --repository pypi dist/*
 #### OTHER
 
 - [X] `commodities_price`: افزون قیمت‌های کامودیتی
-  - [X] price_dollar_rl: قیمت دلار آژاد به صورت پیش فرض
+  - [X] price_dollar_rl: قیمت دلار آزاد به صورت پیش فرض
 
 ## نصب پکیج
 
