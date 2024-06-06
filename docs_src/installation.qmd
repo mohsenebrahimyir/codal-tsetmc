@@ -1,0 +1,32 @@
+# نصب
+
+برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.
+
+```bash
+python -m venv .venv
+```
+
+فعال سازی محیط مجازی در لینوکس
+
+```bash
+source .venv/bin/activate
+```
+
+فعال سازی محیط مجازی در ویندوز
+
+```bash
+.\venv\Scripts\activate
+```
+
+نصب @codal-tsetmc:
+
+```bash
+pip install --upgrade codal-tsetmc
+```
+
+نصب در حال توسعه @codal-tsetmc.github:
+
+```bash
+pip install --upgrade git+https://github.com/mohsenebrahimyir/codal-tsetmc.git
+```
+

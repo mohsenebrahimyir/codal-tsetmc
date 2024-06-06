@@ -1,0 +1,9 @@
+requests~=2.32.2
+pandas~=2.2.2
+jdatetime~=3.8.2
+PyYAML~=6.0.1
+SQLAlchemy~=2.0.30
+numpy~=1.26.4
+aiohttp~=3.9.5
+beautifulsoup4~=4.12.3
+setuptools~=68.2.0

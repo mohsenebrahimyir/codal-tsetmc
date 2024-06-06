@@ -1,0 +1,87 @@
+project:
+  type: book
+  output-dir: ../docs
+
+jupyter: python3
+
+book:
+  title: "پکیجی برای ذخیره اطلاعات بنیادی و بازاری"
+  subtitle: "تحلیل و بررسی داده‌های مالی شرکت‌های بورسی"
+  author: "محسن ابراهیمی"
+  date: "2022"
+
+  cover-image: img/cover.png
+  favicon: img/favicon.ico
+
+  page-footer:
+    left:  |
+      <a href="./index.html">codal-tsetmc</a>
+    right: |
+      <a href="https://mohsenebrahimy.ir/">محسن ابراهیمی</a>
+
+  reader-mode: true
+  site-url: https://mohsenebrahimyir.github.io/codal-tsetmc/
+  repo-url: https://github.com/mohsenebrahimyir/codal-tsetmc/
+  repo-branch: master
+  repo-actions: none
+
+  output-file: "codal-tsetmc"
+
+  chapters:
+    - index.qmd
+    - intro.qmd
+    
+    - installation.qmd
+    - guide.qmd
+    - codal.qmd
+    - tsetmc.qmd
+    - other.qmd
+    - financial-statement.qmd
+    - treasury-bill.qmd
+
+    - references.qmd
+
+bibliography:
+  - bib/references.bib
+
+language: yml/_fa.yml
+
+number-sections: false
+crossref:
+  labels: arabic
+  subref-labels: arabic
+
+execute:
+  echo: true
+  warning: false
+
+format:
+  html:
+    theme:
+      light: cosmo
+      dark: darkly
+
+    search: true
+    code-copy: true
+    css:
+      - https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300&display=swap
+      - css/rtl-style.css
+      - css/termynal.css
+      - css/custom.css
+
+    code-link: true
+    dir: rtl
+    csl: csl/ieee.csl
+    fig-align: center
+    fig-format: svg
+    date-modified: today
+    date-format: iso
+    mainfont: Vazirmatn
+    include-in-header: html/header.html
+    include-after-body:
+      text: |
+        <script src="js/termynal.js" data-termynal-container="#termy">
+        </script>
+
+editor: source
+

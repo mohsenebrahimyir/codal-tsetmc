@@ -1,0 +1,513 @@
+# بورس تهران
+
+برای چاپ کردن خواناتر مقادیر دیکشنری از پکیج زیر استفاده کردم
+
+```{python}
+#| eval: true
+import pprint
+
+pp = pprint.PrettyPrinter(depth=4)
+```
+
+## اطلاعات سهام
+
+### اطلاعات نماد
+
+همانطور که می‌دانید در سایت بورس ایران سهام‌ها به همراه نمادشان یک کد یکتا هم دارند که برای هر نماد در هر وضعیت بورسی یک کد خاص اختصاص دارد برای مثال برای نماد `دي` در بازار دوم فرابورس کد `44818950263583523` و در بازار پایه زرد فرابورس کد `66416853783916493` در نظر گرفته شده است.
+
+```{python}
+#| eval: true
+# نماد دي در بازار دوم فرابورس
+dey_scnd_code = "44818950263583523"
+# نماد دي در بازار پایه فرابورس
+dey_paye_code = "66416853783916493"
+# نماد فولاد در بازار اول بورس
+folad_code = "46348559193224090"
+# نماد فملي در بازار اول بورس
+fameli_code = "35425587644337450"
+
+# گروه استخراج زغال سنگ
+coal_group = "10"
+```
+
+
+برای گرفتن اطلاعات نماد به صورت لحظه‌ای می‌توان از کد زیر استفاده کرد
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stock_detail
+
+pp.pprint(get_stock_detail(dey_scnd_code))
+
+print("="*50)
+
+pp.pprint(get_stock_detail(dey_paye_code))
+```
+
+در دیتابیس جدولی به اسم 
+`stocks`
+تعبیه شده که می‌توانید اطلاعات نمادها را در آن ذخیره کنید.
+
+
+برای گرفتن و ذخیره اطلاعات یک نماد در دیتابیس از کد زیر استفاده میکنیم
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stock_table
+
+update_stock_table(dey_paye_code)
+```
+
+
+برای گرفتن و ذخیره اطلاعات چند نماد در دیتابیس از کد زیر استفاده میکنیم
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stocks_table
+
+update_stocks_table([dey_paye_code, dey_scnd_code])
+```
+
+اگر جدول
+`stocks`
+در دیتابیس را مشاهده کنید اطلاعات باید به صورت زیر نمایش داده شود.
+
+![اطلاعات ذخیره شده بانک دی در دیتابیس](img/database-stocks-dey-bank.png)
+
+می‌توانید با کد زیر به شیوه‌های مختلف به اطلاعات دسترسی داشته باشید.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import read_table_by_conditions
+
+read_table_by_conditions(
+    table="stocks",
+    variable="name",
+    value="بانك دي"
+)
+```
+
+```{python}
+#| eval: true
+from codal_tsetmc import read_table_by_sql_query
+
+read_table_by_sql_query(
+    f"""
+    SELECT *
+    FROM stocks
+    WHERE name = 'بانك دي'
+    """
+)
+```
+
+::: {.callout-warning}
+
+همانطور که می‌بینید استفاده از نماد یا نام آن برای دسترسی به اطلاعات لزوما روش مناسبی نیست و بهتر است برای دقت بیشتر از کد مربوط به آن نماد استفاده شود.
+
+:::
+
+برای افزودن اطلاعات تمام نماد‌های می‌توان از کد زیر استفاده کرد.
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_stocks_table
+
+fill_stocks_table()
+```
+```
+stock with code 19101865588701374 exist
+stock with code 24455170564393447 exist
+stock with code 67327029014085707 exist
+...
+...
+stock with code 65157472039220905 exist
+stock with code 6858820559759769 exist
+stock with code 69171897374421261 exist
+```
+
+### اطلاعات گروه
+
+برای گرفتن گروه‌های نماد‌ها می‌توان از کد زیر استفاده کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stocks_groups
+
+get_stocks_groups()
+```
+
+
+از کد زیر برای ذخیره سازی آن‌ها در جدول 
+`stocks_groups`
+در دیتابیس می‌توان استفاده کرد.
+
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_stocks_groups_table
+
+fill_stocks_groups_table()
+```
+
+## قیمت سهام
+
+قیمت هر سهم رو می‌توان از کد زیر دریافت کرد.
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stock_price_daily
+
+date = "14030201"
+
+get_stock_price_daily(folad_code, date)
+```
+
+
+برای هر سهم می‌توان داده‌های تاریخی قیمتی آن را با استفاده از کد زیر دریافت کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stock_prices_history
+
+get_stock_prices_history(folad_code)
+```
+
+برای شاخص کل می‌توان داده‌های تاریخی قیمت آن را با استفاده از کد زیر دریافت کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_index_prices_history
+
+get_index_prices_history()
+```
+
+برای ذخیره سازی داده‌های تاریخی قیمت هر سهم در دیتابیس می‌توان از کد زیر استفاده کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stock_prices
+
+update_stock_prices(folad_code)
+```
+
+برای ذخیره سازی داده‌های تاریخی قیمت شاخص کل در دیتابیس می‌توان از کد زیر استفاده کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_index_prices
+
+update_index_prices()
+```
+
+برای ذخیره سازی چند سهام می‌توان از کد زیر استفاده کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stocks_prices
+
+update_stocks_prices([folad_code, fameli_code])
+```
+
+با استفاده از کد زیر می‌توان داده‌های قیمتی گروه خاصی از سهام‌ها را بروز کرد.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stocks_group_prices
+
+update_stocks_group_prices(group_code=coal_group)
+```
+
+می‌توانید با کد زیر به شیوه‌های مختلف به اطلاعات قیمتی دسترسی داشته باشید.
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import read_table_by_conditions
+
+read_table_by_conditions(
+    table="stocks_prices",
+    variable="code",
+    value=folad_code
+)
+```
+
+```{python}
+#| eval: true
+from codal_tsetmc import read_table_by_sql_query
+
+read_table_by_sql_query(
+    f"""
+    SELECT *
+    FROM stocks_prices
+    WHERE code = {folad_code}
+    """
+)
+```
+
+
+پر کردن جدول قیمت کل شرکت‌ها
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_stocks_prices_table
+
+fill_stocks_prices_table()
+```
+```
+stock: 51810394260474149  group: 69 total progress: 1.89%
+...
+Price Download Finished.
+```
+
+## افزایش سرمایه شرکت
+
+گرفتن افزایش سرمایه سهم به صورت روزانه 
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stock_capital_daily
+
+get_stock_capital_daily(folad_code)
+```
+
+گرفتن افزایش سرمایه تاریخی سهم
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import get_stock_capitals_history
+
+get_stock_capitals_history(folad_code)
+```
+
+بروزرسانی جدول افزایش سرمایه در دیتابیس برای یک سهم
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stock_capitals
+
+update_stock_capitals(folad_code)
+```
+
+بروزرسانی جدول افزایش سرمایه در دیتابیس برای چند سهم
+
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stocks_capitals
+
+update_stocks_capitals([folad_code, fameli_code])
+```
+
+بروزرسانی جدول افزایش سرمایه در دیتابیس برای گروهی از سهام‌ها
+
+```{python}
+#| eval: true
+from codal_tsetmc import update_stocks_group_capitals
+
+update_stocks_group_capitals(coal_group)
+```
+
+```{python}
+#| eval: false
+import time 
+
+for i in range(1001):
+    time.sleep(1)    
+    print("hi", " "*100, end="\r", flush=True)
+    print(i,  " "*100, end="\r", flush=True)
+
+```
+
+
+پر کردن جدول افزایش سرمایه‌ها
+
+```{python}
+#| eval: false
+from codal_tsetmc import fill_stocks_capitals_table
+
+fill_stocks_capitals_table()
+```
+```
+stock: 51810394260474149  group: 69 total progress: 1.89%
+...
+Capital Download Finished.
+```
+
+
+## ساختن یک شی سهام
+
+```{python}
+#| eval: true
+from codal_tsetmc import Stocks
+
+stock = Stocks.query.filter_by(code=folad_code).first()
+stock
+```
+
+مشاهده مشخصات سهم
+
+```{python}
+#| eval: true
+print(f"""
+symbol: {stock.symbol}
+name: {stock.name}
+name_en: {stock.name_en}
+isin: {stock.isin}
+code: {stock.code}
+instrument_code: {stock.instrument_code}
+instrument_id: {stock.instrument_id}
+group_code: {stock.group_code}
+group_name: {stock.group_name}
+group_type: {stock.group_type}
+market_code: {stock.market_code}
+market_name: {stock.market_name}
+market_type: {stock.market_type}
+price: {stock.price}
+capital: {stock.capital}
+cap: {stock.cap}
+""")
+```
+
+گرفتن اطلاعات قیمت تاریخی سهم
+
+```{python}
+#| eval: true
+stock.prices
+```
+
+گرفتن اطلاعات افزایش سرمایه تاریخی سهم
+
+```{python}
+#| eval: true
+stock.capitals
+```
+
+گرفتن اطلاعات ارزش بازار تاریخی سهم
+
+```{python}
+#| eval: true
+stock.market
+```
+
+گرفتن اطلاعات ارزش بازار موازی با شاخص تاریخی سهم
+
+```{python}
+#| eval: true
+stock.index
+```
+
+ضریب بتای سهم
+
+```{python}
+#| eval: true
+stock.beta(during=3650)
+```
+
+
+## رسم نمودار
+
+برای رسم نمودار می‌توان از کد زیر استفاده کرد که توضیح آن از بحث ما خارج است.
+
+```{python}
+#| eval: true
+import plotly.express as px 
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+fig = make_subplots(
+    rows=2, row_heights=[0.8, 0.2],
+    cols=1, column_widths=[1],
+    shared_xaxes=True,
+    specs=[[{"secondary_y": True}], [{"secondary_y": True}]]
+)
+
+fig.add_trace(
+    go.Scatter(
+        name="ارزش معاملات",
+        x=stock.prices["jdate"].jalali.parse_jalali("%Y%m%d"),
+        y=stock.prices["value"]/1e7,
+        stackgroup='one',
+        marker_size=1,
+        mode="lines",
+        line_color='blue',
+        hovertemplate='<b>ارزش معاملات %{y:,.2f} هزار میلیون ریال</b><br><extra></extra>'
+    ),
+    secondary_y=False,
+    row=2, col=1
+)
+
+fig.add_trace(
+    go.Scatter(
+        name="شاخص کل",
+        x=stock.index["jdate"].jalali.parse_jalali("%Y%m%d"),
+        y=stock.index["index"],
+        line_color='black',
+        mode="lines",
+        marker_size=2,
+        hovertemplate='<b>مقدار %{y:,.2f} هزار واحد</b><br><extra></extra>'
+    ),
+    secondary_y=True,
+    row=1, col=1
+)
+
+fig.add_trace(
+    go.Scatter(
+        name="ارزش بازار فولاد",
+        x=stock.index["jdate"].jalali.parse_jalali("%Y%m%d"),
+        y=stock.index["market"]/1e7,
+        line_color='orange',
+        mode="lines",
+        marker_size=2,
+        hovertemplate='<b>ارزش بازار %{y:,.2f} هزار میلیون ریال</b><br><extra></extra>'
+    ),
+    secondary_y=False,
+    row=1, col=1
+)
+
+fig.update_layout(
+    font=dict(
+        family="Vazirmatn",
+        size=12,
+        color="black"
+    ),
+    xaxis=dict(
+        title="تاریخ",
+        tickformat='%Y-%m-%d',
+        # rangeslider_visible=True,
+        # rangeslider_thickness=0.04
+    ),
+    yaxis=dict(
+        title="ارزش بازار (هزار میلیون تومان)",
+        # range=[0, 1000],
+        # type='log'
+    ),
+    yaxis2=dict(
+        title="شاخص کل (واحد)",
+        # range=[0, 3000]
+    ),
+    hoverlabel=dict(align="right"),
+    legend=dict(
+        x=.1,
+        y=.9,
+        traceorder="normal",
+        font=dict(
+            family="Vazirmatn",
+            size=12,
+            color="black"
+        ),
+    )
+)
+
+fig.show()
+```
+

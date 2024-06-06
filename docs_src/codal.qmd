@@ -1,0 +1,323 @@
+# کدال
+
+::: {.remark}
+
+**اگر از محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.**
+
+```{python}
+#| eval: true
+import nest_asyncio
+nest_asyncio.apply()
+```
+
+:::
+
+## گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال
+
+پر کردن جدول شرکت‌های لیست شده در کدال
+
+```{python}
+#| eval: true
+from codal_tsetmc import fill_companies_table
+
+fill_companies_table()
+```
+
+دانلود داده‌های مورد نیاز برای جستجو
+
+```{python}
+#| eval: true
+from codal_tsetmc import fill_categories_table
+
+fill_categories_table()
+```
+
+### تعریف یک جستجو
+
+برای تنظیم یک جستجو یا
+(`query`)
+باید ابتدا یک شی یا
+(`object`)
+از کلاس جستجوی کدال
+(`CodalQuery`)
+ایجاد کنید بعد تنظیمات دلخواه را روی آن اعمال کنید
+
+### تنظیمات برای جستجو
+
+تنظیمات موجود در کلاس جستجوی کدال به همراه مقادیر پیشفرض
+
+::: {.center} :::
+![تصویر فیلتر جستجو در سایت کدال](./img/letter-query.png)
+:::
+
+```{python}
+#| eval: false
+# وارد کردن یک شی جستجوی کدال
+from codal_tsetmc import CodalQuery
+
+# ساختن یک شی از شی جستجوی کدال
+query = CodalQuery()
+
+#1. تنظیم نام نماد
+query.set_symbol(symbol: str = "")
+
+#2. تنظیم وضعیت ناشر
+query.set_publisher_status(title: str = "")
+
+#3. تنظیم گروع اطلاعیه
+query.set_category(title: str = "")
+
+#4. تنظیم نوع شرکت
+query.set_company_type(title: str = "")
+
+#5. تنظیم نوع اطلاعیه
+query.set_letter_type(title: str = "")
+
+#6. تنظیم موضوع اطلاعیه
+query.set_subject(subject: str = "")
+
+#7. تنظیم شماره پیگیری
+query.set_tracing_no(no: str = "")
+
+#8. تنظیم کد اطلاعیه
+query.set_letter_code(code: str = "")
+
+#9. تنظیم طول دوره
+query.set_length_period(period=-1)
+
+#10. تنظیم از تاریخ
+query.set_from_date(date: str = "1300/01/01")
+
+#11. تنظیم تا تاریخ
+query.set_to_date(date: str = "1500/01/01")
+
+#12. تنظیم حسابرسی شده
+query.set_audited(status: bool = True)
+
+#13. تنظیم حسابرسی نشده
+query.set_not_audited(status: bool = True)
+
+#14. تنظیم اصلی
+query.set_consolidatable(status: bool = True)
+
+#15. تنظیم تلفیقی
+query.set_not_consolidatable(status: bool = True)
+
+#16. تنظیم فقط زیرمجموعه ها
+query.set_childs(status: bool = True)
+
+#17. تنظیم فقط شرکت اصلی
+query.set_mains(status: bool = True)
+
+#18. تنظیم موسسه حسابرسی شرکت
+query.set_auditor_ref(name: str = None)
+
+#19. سالی مالی منتهی به
+query.set_year_end_to_date(date: str = "1300/01/01")
+
+#20. تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
+query.set_publisher(status: bool = True)
+
+#21. حذف تنظیمات
+query.remove_none(dictionary)
+
+# تنظیم شماره ISIC
+query.set_isic(isic: str = "")
+
+# تنظیم شماره صفحه
+query.set_page_number(number: int = 0)
+
+# گرفتن شماره صفحه
+query.get_page_number()
+
+# نمایش تعداد صفحات جستجو
+query.page
+
+# گرفتن مواد تنظیم شده برای جستجو
+query.params
+
+"""################
+گرفتن لینک کوئری کدال
+################"""
+
+#22. گرفتن لینک
+query.get_query_url(api: bool = True)
+
+#22. گرفتن لیست گزارش
+query.get_report_list_url()
+
+#22. گرفتن کوئری جستوجو
+query.get_api_search_url()
+
+"""################
+گرفتن اطلاعات از کدال
+################"""
+
+# گرفتن اطلاعات کلی در یک صفحه
+query.get_api_sigle_page()
+
+# گرفتن اطلاعات کلی در همه صفحات
+query.get_api_multi_page(pages: int = 0)
+
+# گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
+query.get_letters(pages: int = 0, show = False)
+
+# نمایش اطلاعات نامه‌ها و صورت‌مالیهای جستجو شده
+query.letters
+```
+
+#### گرفتن یک جستجوی خاص برای چند نماد با سرعت بالا و ذخیره آن در دیتابیس
+
+```{python}
+#| eval: false
+from codal_tsetmc.download.codal.letters import *
+
+# گرفتن و ذخیره لیست گزارشات با یک جستجوی مشابه برای لیستی از نمادها و ذخیره در دیتابیس
+update_letters_table_by_query_and_symbols(
+  query: CodalQuery,
+  symbols: list,
+  msg: str = ""
+)
+```
+
+
+### یک مثال از نحوه استفاده
+
+
+1. تنظیم فیلترهای دلخواه
+
+```{python}
+#| eval: true
+from codal_tsetmc import CodalQuery
+
+query = CodalQuery()
+```
+
+2. نام نماد
+
+```{python}
+#| eval: true
+query.set_symbol("وبملت")
+```
+
+3. از تاریخ
+
+```{python}
+#| eval: true
+query.set_from_date("1400/01/01")
+```
+
+4. گروه اطلاعیه
+
+```{python}
+#| eval: true
+query.set_category('اطلاعات و صورت مالی سالانه')
+```
+
+5. نوع اطلاعیه
+
+```{python}
+#| eval: true
+query.set_letter_type('اطلاعات و صورتهای مالی میاندوره ای')
+```
+
+6.  حذف حسابرسی نشده‌ها یا حذف حسابرسی شده‌ها
+
+```{python}
+#| eval: true
+query.set_not_audited(False)
+# query.set_audited(False)
+```
+
+7. فقط زیر مجموعه‌ها
+
+```{python}
+#| eval: true
+query.set_childs(False)
+```
+
+8. نمایش موارد تنظیم شده
+
+```{python}
+#| eval: true
+query.params
+```
+
+9.  گرفتن لینک برای مرورگر
+
+```{python}
+#| eval: true
+query.get_report_list_url()
+```
+
+10. گرفتن لینک برای api
+
+```{python}
+#| eval: true
+query.get_query_url()
+```
+
+11. گرفتن لیست گزارشات
+
+```{python}
+#| eval: true
+query.get_api_multi_page()
+```
+
+12. گرفتن تمام صفحات و ذخیره آن درون شی
+
+```{python}
+#| eval: true
+query.get_letters()
+```
+
+13. نمایش صفحات ذخیره شده
+
+```{python}
+#| eval: true
+
+query.letters
+```
+
+14. گرفتن و ذخیره لیست گزارشات برای چند نماد با سرعت بالا در دیتابیس
+
+
+```{python}
+#| eval: true
+from codal_tsetmc.download.codal.letters import update_letters_table_by_query_and_symbols
+
+update_letters_table_by_query_and_symbols(query, ["فولاد", "فملی", "شپنا"])
+```
+
+
+15. گرفتن لیست گزارشات نماد خاص در دیتابیس
+
+
+```{python}
+#| eval: true
+from codal_tsetmc.tools.database import read_table_by_conditions
+
+read_table_by_conditions(table="letters", variable="symbol", value="فولاد")
+```
+
+1.  گرفتن لیست گزارشات از دیتابیس با کوئری
+
+
+```{python}
+#| eval: true
+from codal_tsetmc.tools.database import read_table_by_sql_query
+
+df = read_table_by_sql_query(
+  """
+  SELECT *
+  FROM letters 
+  WHERE symbol IN (
+    'فولاد',
+    'فملی',
+    'شپنا'
+  )
+  """
+)
+
+df.head()
+```

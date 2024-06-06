@@ -1,0 +1,246 @@
+# اسناد خزانه (اخزا)
+
+در این بخش می‌خواهیم نمودار از سود مرکب سالانه از اسناد خزانه دولتی یا همان اخزا را به صورت سری زمانی روزانه رسم کنیم.
+
+## آماده سازی داده
+
+::: {.remark}
+
+**اگر از محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.**
+
+```{python}
+import nest_asyncio
+nest_asyncio.apply()
+```
+
+:::
+
+
+ابتدا بسته را به آخرین ورژن بروز رسانی می‌کنیم.
+
+```{python}
+#| eval: false
+%pip install --upgrade codal_tsetmc
+```
+
+پکیج های مورد نیاز را در محیط فراخوانی می‌کنیم.
+
+```{python}
+#| eval: true
+import pandas as pd
+import numpy as np
+import jalali_pandas
+
+import codal_tsetmc as ct
+```
+
+داده‌های مورد نیاز برای محاسبه سود سالانه هر اوراق را در دیتابیس بروز می‌کنیم. که کمی زمان بر است.
+
+```{python}
+#| eval: false
+
+ct.fill_stocks_table()
+ct.fill_stocks_prices_table()
+```
+
+
+اطلاعات هر اوراق اخزا را از دیتابیس گرفته و در متغیر ذخیره میکنیم.
+
+```{python}
+#| eval: true
+df_info = ct.read_table_by_sql_query(
+    """
+    SELECT symbol, code, capital, name
+    FROM stocks
+    WHERE group_type IN ('I1', 'I2', 'I3', 'I4')
+    """
+)
+
+df_info.head()
+```
+
+قیمت هر اوراق را نیز از دیتابیس گرفته و در متغیر ذخیره میکنیم.
+
+```{python}
+#| eval: true
+codes = ",".join(f"'{code}'" for code in df_info.code)
+
+df_price = ct.read_table_by_sql_query(
+    f"""
+    SELECT code, symbol, date, volume, value, price
+    FROM stocks_prices
+    WHERE code IN ({codes})
+    """
+)
+
+df_price.head()
+```
+
+دو داده را باهم ادغام میکنیم.
+
+```{python}
+#| eval: true
+df = pd.merge(df_info, df_price, on=["symbol", "code"])
+df.head()
+```
+
+ستون‌های مورد نیاز برای محاسبه سود مرکب سالانه را می‌سازیم.
+
+```{python}
+#| eval: true
+df["date"] = df["date"].str.removesuffix("000000")
+df["due_date"] = [("14" if due_date < '900000' else "13")+due_date for due_date in df.name.str.extract(r'(\d{6})$')[0]]
+
+df["jdate"] = df["date"].jalali.parse_jalali("%Y%m%d")
+df["days"] = ((df["due_date"].jalali.parse_jalali("%Y%m%d") - df.jdate)/np.timedelta64(1, 'D')).astype(int)
+
+
+df[["date", "jdate", "due_date", "days", "price"]].head()
+```
+
+
+فرمول محاسبه سود مرکب سالانه:
+$YTM=(\cfrac{1,000,000}{Price})^{\cfrac{365}{days}}-1$
+
+```{python}
+#| eval: true
+df["ytm"] = ((1000000/df.price)**(365/df.days)-1)
+df[["jdate", "days", "ytm"]].sort_values("ytm", ascending=False).head()
+```
+
+
+برای اینکه سودهای کذایی که به دلیل نزدیکی اوراق‌ها به سررسید ایجاد می‌شود را حذف کنیم از کد زیر استفاده میکنیم.
+
+```{python}
+#| eval: true
+df = df[df.days > 15]
+df[["jdate", "days", "ytm"]].sort_values("ytm", ascending=False).head()
+```
+
+
+می‌توانیم برای درک بهتر داده‌ها از روش‌های آماری استفاده کنیم که ساده ترین‌ آنها محاسبه میانه و تعداد اوراق‌ها در هر روز است.
+
+```{python}
+#| eval: true
+df_ytm = df[["jdate", "ytm"]].groupby("jdate").agg(["median", "count"])["ytm"]
+
+df_ytm
+```
+
+
+برای اینکه تخمینی از ارزش معاملات داشته باشیم از مجموع ارزش معاملات روزانه اوراق استفاده میکنیم. برای اینکه در نمودار بتوانیم نمایش دهیم بر حسب هزار میلیارد ریال بیان می‌کنیم..
+
+```{python}
+#| eval: true
+df_value = df[["jdate", "value"]].groupby("jdate").agg(["sum"])["value"]
+
+df_value["scale"] = df_value["sum"] / 1_000_000_000_000
+
+df_value
+```
+
+## رسم نمودار
+
+برای رسم نمودار می‌توان از کد زیر استفاده کرد که توضیح آن از بحث ما خارج است.
+
+```{python}
+#| eval: true
+import plotly.express as px 
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+
+
+fig.add_trace(
+    go.Scatter(
+        name="ارزش معاملات روزانه",
+        x=df_value.index, y=df_value["scale"],
+        stackgroup='one', 
+        marker_size=1, 
+        mode="lines",
+        line_color='blue',
+        hovertemplate='<b>ارزش معاملات (هزار میلیارد ریال)</b>: %{y:,.2f}<br><extra></extra>'
+    ),
+    secondary_y=True
+)
+
+fig.add_trace(
+    go.Scatter(
+        name="بازده سالانه (YTM)",
+        x=df["jdate"], y=df["ytm"]*100,
+        mode='markers',
+        marker_color='orange', 
+        marker_size=3, 
+        customdata=np.stack((
+                df["symbol"],
+                df["date"], df["due_date"],
+                df["days"], df["price"]
+            ),
+            axis=-1
+        ),
+        hovertemplate=("<br>".join(
+            [
+                s.replace(" ", " ")
+                for s in [
+                    '<b>نماد اوراق</b>: %{customdata[0]}',
+                    '<b>تاریخ روز</b>: %{customdata[1]}',
+                    '<b>سر رسید</b>: %{customdata[2]}',
+                    '<b>روز باقیمانده</b>: %{customdata[3]}',
+                    '<b>بازده (درصد)</b>: %{y:,.2f}',
+                    '<extra></extra>'
+                ]
+            ]
+        ))
+    ),
+    secondary_y=False
+)
+
+fig.add_trace(
+    go.Scatter(
+        name="میانه کل اوراق‌ها",
+        x=df_ytm.index, y=df_ytm["median"]*100,
+        line_color='black',
+        mode='markers',
+        marker_size=6, 
+        hovertemplate='<b>میانه بازده (درصد)</b>: %{y:,.2f}<br><extra></extra>'
+    ),
+    secondary_y=False
+)
+
+
+fig.update_layout(
+    font=dict(
+        family="Vazirmatn",
+        size=12,
+        color="black"
+    ),
+    xaxis=dict(
+        title="تاریخ",
+        tickformat='%Y-%m-%d'
+    ),
+    yaxis=dict(
+        title="بازده مرکب سالانه یا همان (درصد)\n",
+        range=[0, 40]
+    ),
+    yaxis2=dict(
+        title="مجموع ارزش معاملات (هزار میلیارد ریال)",
+        range=[0, 15]
+    ),
+    hoverlabel=dict(align="right"),
+    legend=dict(
+        x=.1,
+        y=.9,
+        traceorder="normal",
+        font=dict(
+            family="Vazirmatn",
+            size=12,
+            color="black"
+        ),
+    )
+)
+
+fig.show()
+```
+
+

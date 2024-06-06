@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+import os
+import pprint
+import sys
+
+import codal_tsetmc as ct
+from codal_tsetmc.config import db
+
+args = sys.argv
+if len(args) == 1:
+    print("you have to pass an option:")
+    print(" init\n update \n upgrade \n group group_code(int) \n get_groups")
+    sys.exit()
+if args[1] == "init":
+    if not os.path.isfile(db.db_path):
+        print("No database founded.")
+        ct.create_db()
+    else:
+        print("Your database was initialized before ")
+
+    """
+    #ct-get update(Suggested names:"ct-get update_price"):
+    - update price only for available stocks in database
+    """
+elif args[1] == "update":
+    ct.init_db()
+    """
+    #ct-get upgrade(Suggested:"ct-get update_stocks_price"):
+    1-Re-download groups and symbols for symbols that have been recently added in tsetmc
+    2-Solving the update price problem (see: issues #31)
+    """
+elif args[1] == "upgrade":
+    ct.fill_db()
+elif args[1] == "group":
+    try:
+        code = int(args[2])
+        ct.update_stocks_group_prices(code)
+        print("Done")
+    except Exception as e:
+        print("please enter group code")
+        print(e.__context__)
+
+elif args[1] == "get_groups":
+    pprint.pprint(ct.Stocks.get_group())
