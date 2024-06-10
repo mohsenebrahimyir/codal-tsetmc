@@ -1,5 +1,8 @@
 import pandas as pd
 
+from codal_tsetmc import CompanyStatuses, CompanyTypes, LetterTypes
+from codal_tsetmc.config.engine import engine
+from codal_tsetmc.models.companies import ReportTypes, Auditors, FinancialYears
 from codal_tsetmc.tools.api import get_dict_from_xml_api
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
 
@@ -80,6 +83,17 @@ class Categories:
 
     def fill_categories_table(self):
         self.get_data()
+
+        try:
+            CompanyStatuses.__table__.create(engine)
+            CompanyTypes.__table__.create(engine)
+            LetterTypes.__table__.create(engine)
+            ReportTypes.__table__.create(engine)
+            Auditors.__table__.create(engine)
+            FinancialYears.__table__.create(engine)
+        except Exception as e:
+            print(e.__context__, end="\r", flush=True)
+
         fill_table_of_db_with_df(self.company_statuses, "company_statuses", "code")
         fill_table_of_db_with_df(self.report_types, "report_types", "code")
         fill_table_of_db_with_df(self.company_types, "company_types", "code")

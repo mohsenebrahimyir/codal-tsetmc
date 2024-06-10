@@ -6,8 +6,8 @@ import nest_asyncio
 import pandas as pd
 import io
 import requests
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.config.engine import session, engine
+from codal_tsetmc.models.stocks import Stocks, StocksPrices
 from codal_tsetmc.tools.database import (
     fill_table_of_db_with_df,
     read_table_by_conditions
@@ -43,6 +43,12 @@ def get_index_prices_history():
 def update_index_prices():
     df = get_index_prices_history()
     df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+
+    try:
+        StocksPrices.__table__.create(engine)
+    except Exception as e:
+        print(e.__context__, end="\r", flush=True)
+
     fill_table_of_db_with_df(
         df[["date", "symbol", "code", "price", "volume", "value", "up_date"]],
         columns="date",
@@ -151,6 +157,11 @@ async def update_stock_prices_async(code: str):
         stock = Stocks.query.filter_by(code=code).first()
         df["symbol"] = stock.symbol
         df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+
+        try:
+            StocksPrices.__table__.create(engine)
+        except Exception as e:
+            print(e.__context__, end="\r", flush=True)
 
         fill_table_of_db_with_df(
             df,

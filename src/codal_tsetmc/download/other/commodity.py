@@ -5,6 +5,7 @@ import jalali_pandas
 import pandas as pd
 import requests
 
+from codal_tsetmc import CommoditiesPrices
 from codal_tsetmc.config.engine import engine
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
 from codal_tsetmc.tools.api import (
@@ -83,6 +84,11 @@ async def update_commodity_prices(symbol: str):
         df["symbol"] = symbol
         df["up_date"] = now.strftime("%Y%m%d000000")
 
+        try:
+            CommoditiesPrices.__table__.create(engine)
+        except Exception as e:
+            print(e.__context__, end="\r", flush=True)
+
         fill_table_of_db_with_df(
             df,
             columns="date",
@@ -116,6 +122,11 @@ def fill_commodities_prices_table():
                 df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
                 df["symbol"] = symbol
                 df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+
+                try:
+                    CommoditiesPrices.__table__.create(engine)
+                except Exception as e:
+                    print(e.__context__, end="\r", flush=True)
 
                 fill_table_of_db_with_df(
                     df,

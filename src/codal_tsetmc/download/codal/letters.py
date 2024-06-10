@@ -4,6 +4,7 @@ import aiohttp
 import nest_asyncio
 import pandas as pd
 
+from codal_tsetmc import Letters
 from codal_tsetmc.config.engine import session, engine
 from codal_tsetmc.models.stocks import Stocks
 from codal_tsetmc.tools.string import (
@@ -106,6 +107,12 @@ async def update_letters_for_each_url_async(ses, url: str):
             data = await response.json()
 
             df = convert_letter_list_to_df(data["Letters"])
+
+            try:
+                Letters.__table__.create(engine)
+            except Exception as e:
+                print(e.__context__, end="\r", flush=True)
+
             fill_table_of_db_with_df(df, "letters", "tracing_no")
 
     except Exception as e:

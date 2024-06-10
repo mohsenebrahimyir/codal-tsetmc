@@ -2,12 +2,12 @@ import requests
 import re
 import aiohttp
 import pandas as pd
-from codal_tsetmc.config.engine import session
+from codal_tsetmc.config.engine import session, engine
 from codal_tsetmc.tools.api import (
     get_csv_from_github,
     get_results_by_asyncio_loop
 )
-from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.models.stocks import Stocks, StocksGroups
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
 
 INDEX_CODE = "32097828799138957"
@@ -127,6 +127,12 @@ def get_stocks_groups(timeout=10):
 
 def fill_stocks_groups_table():
     df = get_stocks_groups()
+
+    try:
+        StocksGroups.__table__.create(engine)
+    except Exception as e:
+        print(e.__context__, end="\r", flush=True)
+
     fill_table_of_db_with_df(
         df,
         table="stocks_groups",

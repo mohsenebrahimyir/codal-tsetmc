@@ -5,8 +5,8 @@ import nest_asyncio
 import pandas as pd
 import requests
 import io
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.config.engine import session, engine
+from codal_tsetmc.models.stocks import Stocks, StocksCapitals
 from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_conditions
 from codal_tsetmc.tools.api import (
     get_data_from_cdn_tsetmec_api,
@@ -92,6 +92,11 @@ async def update_stock_capitals_async(code: str):
             stock = Stocks.query.filter_by(code=code).first()
             df["symbol"] = stock.symbol
             df["up_date"] = jnow
+
+            try:
+                StocksCapitals.__table__.create(engine)
+            except Exception as e:
+                print(e.__context__, end="\r", flush=True)
 
             fill_table_of_db_with_df(
                 df,
