@@ -10,8 +10,8 @@ book:
   author: "محسن ابراهیمی"
   date: "2022"
 
-  cover-image: img/cover.png
-  favicon: img/favicon.ico
+  cover-image: assets/img/cover.png
+  favicon: assets/img/favicon.ico
 
   page-footer:
     left:  |
@@ -41,9 +41,9 @@ book:
     - references.qmd
 
 bibliography:
-  - bib/references.bib
+  - assets/bib/references.bib
 
-language: yml/_fa.yml
+language: assets/yml/_fa.yml
 
 number-sections: false
 crossref:
@@ -64,22 +64,22 @@ format:
     code-copy: true
     css:
       - https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300&display=swap
-      - css/rtl-style.css
-      - css/termynal.css
-      - css/custom.css
+      - assets/css/rtl-style.css
+      - assets/css/termynal.css
+      - assets/css/custom.css
 
     code-link: true
     dir: rtl
-    csl: csl/ieee.csl
+    csl: assets/csl/ieee.csl
     fig-align: center
     fig-format: svg
     date-modified: today
     date-format: iso
     mainfont: Vazirmatn
-    include-in-header: html/header.html
+    include-in-header: assets/html/header.html
     include-after-body:
       text: |
-        <script src="js/termynal.js" data-termynal-container="#termy">
+        <script src="assets/js/termynal.js" data-termynal-container="#termy">
         </script>
 
 editor: source

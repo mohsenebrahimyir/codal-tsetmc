@@ -2,7 +2,7 @@
 
 ```{python}
 #| echo: false
-from py.string_tools import digit_en_to_fa
+from assets.py.string_tools import digit_en_to_fa
 
 from jdatetime import datetime as jdt
 

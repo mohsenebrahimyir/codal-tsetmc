@@ -4,7 +4,7 @@ import pprint
 import sys
 
 import codal_tsetmc as ct
-from codal_tsetmc.config import db
+from codal_tsetmc import db
 
 args = sys.argv
 if len(args) == 1:

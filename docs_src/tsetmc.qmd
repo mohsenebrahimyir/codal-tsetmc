@@ -17,6 +17,8 @@ pp = pprint.PrettyPrinter(depth=4)
 
 ```{python}
 #| eval: true
+# نماد شاخص کل
+shakhes_code = "32097828799138957"
 # نماد دي در بازار دوم فرابورس
 dey_scnd_code = "44818950263583523"
 # نماد دي در بازار پایه فرابورس
@@ -65,14 +67,14 @@ update_stock_table(dey_paye_code)
 #| eval: true
 from codal_tsetmc import update_stocks_table
 
-update_stocks_table([dey_paye_code, dey_scnd_code])
+update_stocks_table([dey_paye_code, dey_scnd_code, shakhes_code])
 ```
 
 اگر جدول
 `stocks`
 در دیتابیس را مشاهده کنید اطلاعات باید به صورت زیر نمایش داده شود.
 
-![اطلاعات ذخیره شده بانک دی در دیتابیس](img/database-stocks-dey-bank.png)
+![اطلاعات ذخیره شده بانک دی در دیتابیس](assets/img/database-stocks-dey-bank.png)
 
 می‌توانید با کد زیر به شیوه‌های مختلف به اطلاعات دسترسی داشته باشید.
 
@@ -247,7 +249,7 @@ read_table_by_sql_query(
     f"""
     SELECT *
     FROM stocks_prices
-    WHERE code = {folad_code}
+    WHERE code = '{folad_code}'
     """
 )
 ```
@@ -316,18 +318,6 @@ from codal_tsetmc import update_stocks_group_capitals
 
 update_stocks_group_capitals(coal_group)
 ```
-
-```{python}
-#| eval: false
-import time 
-
-for i in range(1001):
-    time.sleep(1)    
-    print("hi", " "*100, end="\r", flush=True)
-    print(i,  " "*100, end="\r", flush=True)
-
-```
-
 
 پر کردن جدول افزایش سرمایه‌ها
 

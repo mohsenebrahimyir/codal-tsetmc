@@ -84,7 +84,7 @@ class FinancialYears(Base):
     __tablename__ = "financial_years"
 
     id = Column(Integer, primary_key=True)
-    date = Column(Integer, unique=True)
+    date = Column(String, unique=True)
 
     def __repr__(self):
         return f"({self.date})"

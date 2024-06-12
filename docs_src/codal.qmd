@@ -47,10 +47,10 @@ fill_categories_table()
 تنظیمات موجود در کلاس جستجوی کدال به همراه مقادیر پیشفرض
 
 ::: {.center} :::
-![تصویر فیلتر جستجو در سایت کدال](./img/letter-query.png)
+![تصویر فیلتر جستجو در سایت کدال](assets/img/letter-query.png)
 :::
 
-```{python}
+```python
 #| eval: false
 # وارد کردن یک شی جستجوی کدال
 from codal_tsetmc import CodalQuery
@@ -168,12 +168,12 @@ query.letters
 
 #### گرفتن یک جستجوی خاص برای چند نماد با سرعت بالا و ذخیره آن در دیتابیس
 
-```{python}
+```python
 #| eval: false
 from codal_tsetmc.download.codal.letters import *
 
 # گرفتن و ذخیره لیست گزارشات با یک جستجوی مشابه برای لیستی از نمادها و ذخیره در دیتابیس
-update_letters_table_by_query_and_symbols(
+update_letters_table(
   query: CodalQuery,
   symbols: list,
   msg: str = ""
@@ -284,9 +284,9 @@ query.letters
 
 ```{python}
 #| eval: true
-from codal_tsetmc.download.codal.letters import update_letters_table_by_query_and_symbols
+from codal_tsetmc.download.codal.letters import update_letters_table
 
-update_letters_table_by_query_and_symbols(query, ["فولاد", "فملی", "شپنا"])
+update_letters_table(query, ["فولاد", "فملی", "شپنا"])
 ```
 
 
