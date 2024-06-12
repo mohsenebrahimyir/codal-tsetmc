@@ -1,0 +1,435 @@
+body {
+	font-family: 'Vazirmatn', Roboto !important;
+	font-weight: 300;
+	text-align: justify;
+}
+h1, h2, h3, h4, h5, h6,input, textarea {
+	font-family:  'Vazirmatn', Roboto !important;
+}
+h1 {
+	font-weight: bold;
+}
+.wrapper {
+	max-width: 900px;
+	margin: 0 auto;
+}
+.ltr {
+	direction: ltr;
+}
+.text-right {
+	text-align: right;
+}
+.text-center {
+	text-align: center;
+}
+.text-left {
+	text-align: left;
+}
+.text-small {
+	font-size: 0.8em;
+}
+.text-xsmall {
+	font-size: 0.6em;
+}
+.text-large {
+	font-size: 1.2em;
+}
+.text-xlarge {
+	font-size: 1.4em;
+}
+.text-underline {
+	text-decoration:underline;
+}
+.text-ultralight {
+	font-weight: 200;
+}
+.text-light {
+	font-weight: 300;
+}
+.text-regular {
+	font-weight: normal;
+}
+.text-medium {
+	font-weight: 500;
+}
+.text-bold {
+	font-weight: bold;
+}
+.text-black {
+	font-weight: 900;
+}
+blockquote {
+	font-weight: 500;
+	padding: 10px;
+	border: 1px dashed #666666;
+}
+
+.mainbox {
+	width: 100%;
+	background-color: #EFEFEF;
+	display: table;
+	margin-bottom: 30px;
+	border-right: 8px solid #FFFF33;
+}
+
+.mainboxnegativ {
+	width: 100%;
+	background-color: #000000;
+	display: table;
+	margin-bottom: 30px;
+	border-right: 8px solid #FFFF33;
+	color: #F9F9F9;
+}
+
+.mainbox2 {
+	font-size: 1em;
+	width: 90%;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.mainbox3 {
+	width: 100%;
+	background-color: #b8b8b8;
+	display: table;
+	margin-bottom: 30px;
+	border-right: 8px solid #bd70ff;
+}
+
+.mainbox2negativ {
+	font-size: 1em;
+	color: #F9F9F9;
+	background-color: #000000;
+	padding-right: 20px;
+}
+
+.farsiparagraph {
+	font-size: 1em;
+	width: 47%;
+	float:right;
+	padding-right: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+}
+.englishparagraph {
+	font-size: 1em;
+	width: 47%;
+	float: left;
+	direction:ltr;
+	padding-left: 20px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+
+
+}
+.rightbox {
+	width: 60%;
+	padding-right: 20px;
+	padding-left: 5px;
+	float: right;
+	margin-left: 10px;
+	margin-bottom: 0px;
+	min-width: 0px;
+	background-color: #F7F7F7;
+
+}
+
+.titelbox {
+	width: 60%;
+	padding-right: 25px;
+	padding-left: 0px;
+	float: right;
+	margin-left: 10px;
+	margin-bottom: 0px;
+	min-width: 0px;
+	background-color: #F2F2F2;
+	color: #4B4B4B;
+}
+
+
+.lefttbox {
+	
+	padding-right: 20px;
+	padding-left: 4px;
+	float: right;
+	margin-bottom: 10px;
+	min-width: 0px;
+}
+
+.alphabet {
+	width: 35%;
+	float: left;
+	font-size: 21em;
+	text-align: center;
+	font-weight: 500;
+	color: #999999;
+}
+
+.alphabet2 {
+	width: 35%;
+	float: left;
+	direction: ltr;
+	font-size: 1.6em;
+	text-align: left;
+	font-weight: 500;
+	color: #333333;
+	margin-top: 100px;
+}
+
+.footer {
+	font-weight: 300;
+	font-size: 0.7em;
+	text-align: center;
+	direction: ltr;
+	margin-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+
+caption, p.caption, .table-caption, .figure-caption {
+    text-align: justify;
+}
+
+/* header -------------------------------------------------------*/
+.pull-left {
+    float: right !important;
+}
+
+.pull-right {
+    float: left !important;
+}
+
+.pull-right>.dropdown-menu {
+    right: auto;
+    left: 0;
+}
+
+.dropdown-menu.dropdown-left .dropdown-caret {
+    right: auto;
+    left: 14px;
+}
+
+.dropdown-menu {
+    right: 0;
+    left: auto;
+    float: right;
+    text-align: right;
+}
+
+.dropdown-menu .dropdown-caret {
+    right: 14px;
+    left: auto;
+    float: right;
+}
+
+
+
+/* footer --------------------------------------------------------*/
+.book .book-body .navigation {
+    max-width: 45%;
+}
+
+.book .book-body .navigation.navigation-prev {
+    left: 0;
+    margin-left: 15px;
+}
+
+.nav-footer-left {
+    flex: 1 1 0px;
+    text-align: right;
+}
+
+.nav-footer-right {
+    flex: 1 1 0px;
+    text-align: right;
+}
+/* .book summary ------------------------------------------------*/
+.book .book-header, .book .book-summary {
+    font-family: 'Vazirmatn', Roboto !important;
+    direction: rtl;
+}
+
+.book.with-summary .book-summary {
+    right: 0;
+}
+
+.book.font-family-1 {
+    font-family: 'Vazirmatn', Roboto !important;
+    direction: rtl;
+}
+
+.book.font-family-2 {
+    font-family: 'Vazirmatn', Roboto !important;
+    direction: rtl;
+}
+
+.lightable-classic caption {
+    font-family: 'Vazirmatn', Roboto !important;
+    
+}
+
+.book .book-summary {
+    transition: right 250ms ease;
+    right: -300%;
+    left: 0;
+}
+
+.book.with-summary .book-body {
+    left: 0;
+    right: 300px;
+}
+
+.book.with-summary .book-header.fixed {
+    right: 300px;
+    left: 0;
+}
+
+@media (max-width: 600px) {
+  .book .book-summary {
+    width: calc(100% - 300px);
+  }
+  
+  .book.with-summary .book-header.fixed {
+    right: calc(100% - 300px);
+  }
+}
+
+/* footnote ------------------------------------------------------*/
+
+.book .book-body .page-wrapper .page-inner section.normal ol, .book .book-body .page-wrapper .page-inner section.normal ul {
+    padding: 0 2em 0 0;
+    margin: 0 0 .85em;
+}
+
+/* crossreference ---------------------------------- */
+.panel-caption, .figure-caption, figcaption {
+    color: #373a3c;
+}
+
+/* block --------------------------------------------*/
+
+div.Theorem, div.lemma, div.definition, div.equation, div.exercise, div.example, div.remark, div.solution {
+    padding: 1em 1em 0 1em;
+    margin: 1em 0;
+    background-size: 70px;
+    background-repeat: no-repeat;
+    background-position: 15px center;
+    min-height: 2em;
+    background-color: #fcfcfc;
+}
+
+div.Theorem, div.lemma, div.definition, div.equation {
+    border: 4px #6bbf5d63;
+    border-style: dashed solid;
+    color: #0a632a;
+}
+
+div.exercise {
+    border: 4px #e2720d63;
+    border-style: dashed solid;
+    color: #5f3b0e;
+}
+
+div.example {
+    border: 4px #FF8800;
+    border-style: dashed solid;
+    color: #FF5800;
+}
+
+div.remark {
+    border: 4px #b3040063;
+    border-style: dashed solid;
+    color: #e01010;
+}
+
+div.solution {
+    border: 4px #85E6C5;
+    border-style: dashed solid;
+    color: #445069;
+}
+/* button -------------------------------------------------------*/
+
+button {
+    color: #0068D9;
+    border-color: #0068D9;
+    border-radius: 0.5rem;
+    background-color: #fcfcfc;
+}
+
+/* pre, code ----------------------------------------------------*/
+
+pre code {
+    text-align: left;
+    direction: ltr;
+}
+
+/* Popup --------------------------------------------------------*/
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* The actual popup */
+.popup .popuptext {
+    visibility: hidden;
+    min-width: 50px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px  5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+}
+
+/* Popup arrow */
+.popup .popuptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  right: 10px;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #555 transparent transparent transparent;
+}
+
+/* Toggle this class - hide and show the popup */
+.popup .show {
+  visibility: visible;
+  -webkit-animation: fadeIn 1s;
+  animation: fadeIn 1s;
+}
+
+/* Add animation (fade in the popup) */
+@-webkit-keyframes fadeIn {
+  from {opacity: 0;} 
+  to {opacity: 1;}
+}
+
+@keyframes fadeIn {
+  from {opacity: 0;}
+  to {opacity:1 ;}
+}
+
+/* csl ---------------------------------------- */
+div.csl-left-margin {
+	min-width: 2em;
+    float: right;
+}
+
+div.csl-right-inline {
+    margin-right: 2em;
+    padding-right: 1em;
+    margin-left: 0;
+    padding-left: 0;
+}
