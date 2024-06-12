@@ -16,13 +16,13 @@ CONFIG_PATH = f"{os.path.join(HOME_PATH, CDL_TSE_FOLDER)}/config.yml"
 def create_config():
     # create config.yml from config.default.yml
     if not os.path.exists(CONFIG_PATH):
-        with open(os.path.join(os.path.dirname(__file__), "config.default.yml"), "r") as f:
-            config = yaml.full_load(f)
+        with open(os.path.join(os.path.dirname(__file__), "config.default.yml"), "r") as file:
+            cfg = yaml.full_load(file)
         with contextlib.suppress(FileExistsError):
             path = os.path.join(HOME_PATH, CDL_TSE_FOLDER)
             os.mkdir(path)
-        with open(CONFIG_PATH, "w") as f:
-            yaml.dump(config, f)
+        with open(CONFIG_PATH, "w") as file:
+            yaml.dump(cfg, file)
 
 
 create_config()
@@ -73,7 +73,7 @@ class ClassProperty(object):
 
 class QueryMixin:
     @ClassProperty
-    def query(cls):
+    def query(self, cls):
         return session.query(cls)
 
     def display(self):
@@ -82,8 +82,6 @@ class QueryMixin:
             del data["_sa_instance_state"]
         except Exception as e:
             print(e)
-        finally:
-            pass
 
         return data
 
