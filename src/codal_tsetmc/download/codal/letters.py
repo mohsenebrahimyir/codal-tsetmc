@@ -82,20 +82,23 @@ def get_letter_urls_parallel(urls: list):
         print("get_letter_urls_parallel: ", e.__context__, end="\r", flush=True)
 
 
-def get_letters_urls_by_symbols(query: CodalQuery, symbols: list):
+def get_letters_urls(query: CodalQuery, symbols: list = None):
     query.set_page_number(100000)
     urls = []
 
-    for symbol in symbols:
-        query.set_symbol(symbol)
-        urls += [query.get_query_url()]
+    if symbols is not None:
+        for symbol in symbols:
+            query.set_symbol(symbol)
+            urls += [query.get_query_url()]
+    else:
+        urls = [query.get_query_url()]
 
     results = get_letter_urls_parallel(urls)
 
     return results
 
 
-async def update_letters_for_each_url_async(ses, url: str):
+async def update_letters_by_url_async(ses, url: str):
     nest_asyncio.apply()
 
     try:
@@ -119,13 +122,13 @@ async def update_letters_for_each_url_async(ses, url: str):
         print("update_letters_for_each_url_async: ", e.__context__, end="\r", flush=True)
 
 
-async def update_letters_for_urls_async(urls: list):
+async def update_letters_by_urls_async(urls: list):
     nest_asyncio.apply()
 
     tasks = []
     async with aiohttp.ClientSession() as ses:
         for url in urls:
-            tasks.append(update_letters_for_each_url_async(ses, url))
+            tasks.append(update_letters_by_url_async(ses, url))
         await asyncio.gather(*tasks)
 
 
@@ -157,14 +160,14 @@ def update_letter_table_by_urls(urls: list):
     loop = asyncio.get_event_loop()
 
     try:
-        loop.run_until_complete(update_letters_for_urls_async(urls))
+        loop.run_until_complete(update_letters_by_urls_async(urls))
         loop.close()
     except Exception as e:
         print("update_letter_table_by_urls: ", e.__context__, end="\r", flush=True)
 
 
-def update_letters_table_by_query_and_symbols(query: CodalQuery, symbols: list):
-    urls_list = get_letters_urls_by_symbols(query, symbols)
+def update_letters_table(query: CodalQuery, symbols: list = None):
+    urls_list = get_letters_urls(query, symbols)
 
     letter_urls = []
     for urls in urls_list:
@@ -180,7 +183,7 @@ def update_companies_group_letters(query: CodalQuery, group_code: str):
     stocks = session.query(Stocks.symbol).filter_by(group_code=group_code).all()
     print(f"{' ' * 25} group: {group_code}", end="\r")
     symbols = [stock[0] for stock in stocks]
-    update_letters_table_by_query_and_symbols(query, symbols)
+    update_letters_table(query, symbols)
     print(f"letters group: {group_code} Finished.", " " * 50)
 
 

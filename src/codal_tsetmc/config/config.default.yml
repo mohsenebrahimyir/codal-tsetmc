@@ -5,3 +5,11 @@ database:
   user: None
   password: None
   database: None
+
+# database:
+#  database: postgres
+#  engine: postgresql
+#  host: localhost
+#  password: postgres
+#  port: 5433
+#  user: postgres

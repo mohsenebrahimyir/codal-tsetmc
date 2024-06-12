@@ -16,6 +16,7 @@ packages = [
 python = "^3.7.1"
 requests = "^2.32.2"
 SQLAlchemy = "^2.0.30"
+psycopg2 = "^2.9.5"
 jalali-pandas = "^0.2.2"
 pandas = "^2.2.2"
 lxml = "^5.2.2"

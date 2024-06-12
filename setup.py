@@ -30,6 +30,7 @@ setup(
         "wheel",
         "pandas",
         "sqlalchemy",
+        "psycopg2",
         "requests",
         "jdatetime",
         "nest-asyncio"
