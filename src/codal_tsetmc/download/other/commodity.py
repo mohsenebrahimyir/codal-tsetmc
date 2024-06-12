@@ -1,3 +1,5 @@
+from time import time
+
 from jdatetime import datetime as jdt
 import aiohttp
 import nest_asyncio
@@ -7,7 +9,7 @@ import requests
 
 from codal_tsetmc import CommoditiesPrices
 from codal_tsetmc.config.engine import engine
-from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_sql_query, is_table_exist_in_db
 from codal_tsetmc.tools.api import (
     get_csv_from_github,
     get_results_by_asyncio_loop
@@ -35,7 +37,7 @@ def cleanup_commodity_price_records(response) -> pd.DataFrame:
 def get_commodity_price_history(symbol: str) -> pd.DataFrame:
     df = None
     url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}"
-    response = requests.get(url, params=[], headers={})  # ('length', '100'),
+    response = requests.get(url, params=[], headers={})
     new = cleanup_commodity_price_records(response)
     if symbol == "price_dollar_rl":
         old = get_csv_from_github(symbol)
@@ -53,28 +55,27 @@ def get_commodity_price_history(symbol: str) -> pd.DataFrame:
 async def update_commodity_prices(symbol: str):
     nest_asyncio.apply()
 
+    if not is_table_exist_in_db(CommoditiesPrices.__tablename__):
+        CommoditiesPrices.__table__.create(engine)
+
     days = None
-    url = ""
     try:
         now = jdt.now()
-        try:
-            query = f"select max(date) as date from commodity_price where symbol = '{symbol}'"
-            max_date = pd.read_sql(query, engine)
+        query = f"SELECT max(date) AS date FROM {CommoditiesPrices.__tablename__} WHERE symbol = '{symbol}'"
+        max_date = read_table_by_sql_query(query)
+        if not max_date.empty or max_date.date.iat[0] is not None:
             last_date = max_date.date.iat[0]
             days = now - jdt.strptime(last_date, "%Y%m%d%H%M%S")
-
-        except Exception as e:
-            print(e)
+        else:
             last_date = None
-        try:
-            if last_date is None:
-                url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}"
-            elif days.days > 0:
-                url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}?length={days.days}"
-            else:  # The price data for this symbol is updated
-                return
-        except Exception as e:
-            print(f"Error on formatting price:{str(e)}")
+
+        if last_date is None:
+            url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}"
+        elif days.days > 0:
+            url = f"https://api.tgju.org/v1/market/indicator/summary-table-data/{symbol}?length={days.days}"
+        else:
+            print(f"Commodity prices already updated. (symbol: {symbol})")
+            return True
 
         async with aiohttp.ClientSession() as session:
             async with session.get(url) as resp:
@@ -84,38 +85,39 @@ async def update_commodity_prices(symbol: str):
         df["symbol"] = symbol
         df["up_date"] = now.strftime("%Y%m%d000000")
 
-        try:
-            CommoditiesPrices.__table__.create(engine)
-        except Exception as e:
-            print(e.__context__, end="\r", flush=True)
-
         fill_table_of_db_with_df(
             df,
             columns="date",
-            table="commodities_prices",
+            table=CommoditiesPrices.__tablename__,
             conditions=f"where symbol = '{symbol}'"
         )
 
-        return True, symbol
+        print(f"Commodity prices updated. (symbol: {symbol})")
+        return True
 
     except Exception as e:
-        return e, symbol
+        print(f"Commodity prices update failed. (symbol: {symbol})", e.__context__)
+        return False
 
 
 def update_commodities_prices(symbols):
-    print(f"{' ' * 25} update Commodities ", end="\r")
+    print("Update Commodities")
     tasks = [update_commodity_prices(symbol) for symbol in symbols]
     get_results_by_asyncio_loop(tasks)
 
 
 def fill_commodities_prices_table():
+    start_time = time()
     symbols = ["price_dollar_rl"]
+    if not is_table_exist_in_db(CommoditiesPrices.__tablename__):
+        CommoditiesPrices.__table__.create(engine)
+
     for i, symbol in enumerate(symbols):
-        print(f"{' ' * 35} total progress: {100 * (i + 1) / len(symbols):.2f}%", end="\r")
+        print(f"Total progress: {100 * (i + 1) / len(symbols):.2f}%")
         if symbol == "price_dollar_rl":
 
-            query = f"select min(date) as date from commodity_price where symbol = '{symbol}'"
-            min_date = pd.read_sql(query, engine)
+            query = f"SELECT min(date) AS date FROM {CommoditiesPrices.__tablename__} WHERE symbol = '{symbol}'"
+            min_date = read_table_by_sql_query(query)
             first_date = min_date.date.iat[0]
             if first_date != "13600707000000":
                 df = get_csv_from_github(symbol)
@@ -123,17 +125,13 @@ def fill_commodities_prices_table():
                 df["symbol"] = symbol
                 df["up_date"] = jdt.now().strftime("%Y%m%d000000")
 
-                try:
-                    CommoditiesPrices.__table__.create(engine)
-                except Exception as e:
-                    print(e.__context__, end="\r", flush=True)
-
                 fill_table_of_db_with_df(
                     df,
                     columns="date",
-                    table="commodities_prices",
+                    table=CommoditiesPrices.__tablename__,
                     conditions=f"where symbol = '{symbol}'"
                 )
 
         update_commodities_prices([symbol])
-    print("Price Download Finished.", " " * 50)
+    print("Price Download Finished.")
+    print(f"Total time: {time() - start_time:.2f}s")

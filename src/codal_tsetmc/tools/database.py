@@ -4,28 +4,30 @@ from sqlalchemy import inspect
 from codal_tsetmc.config.engine import engine
 
 
+def is_table_exist_in_db(table: str) -> bool:
+    inspector = inspect(engine)
+    tables = inspector.get_table_names()
+    return table in tables
+
+
 def fill_table_of_db_with_df(
-    df: pd.DataFrame,
-    table: str,
-    columns: str = "",
-    conditions: str = ""
+        df: pd.DataFrame,
+        table: str,
+        columns: str = "",
+        conditions: str = ""
 ):
     try:
-        inspector = inspect(engine)
-        tables = inspector.get_table_names()
-        if table not in tables:
-            from codal_tsetmc.models.create import create_table, models
-            for model in models:
-                if model.__tablename__ == table:
-                    create_table(model)
-
         q = f"SELECT {columns} FROM {table} {conditions}"
         temp = pd.read_sql(q, engine)
         df = df[~df[columns].isin(temp[columns])]
-    except Exception as e:
-        print("fill_table_of_db_with_df: ", e.__context__, end="\r", flush=True)
+        df.to_sql(table, engine, if_exists="append", index=False)
 
-    df.to_sql(table, engine, if_exists="append", index=False)
+        print(f"Table {table} updated.")
+        return True
+
+    except Exception as e:
+        print(f"Missing in {table} table with conditions: {conditions}", e.__context__)
+        return False
 
 
 def read_table_by_conditions(table, variable="", value="", columns="*", conditions=""):

@@ -1,23 +1,25 @@
 import pandas as pd
 
-from codal_tsetmc import CompanyStatuses, CompanyTypes, LetterTypes
 from codal_tsetmc.config.engine import engine
-from codal_tsetmc.models.companies import ReportTypes, Auditors, FinancialYears
+from codal_tsetmc.models.companies import (
+    CompanyStatuses, CompanyTypes, LetterTypes, ReportTypes, Auditors, FinancialYears
+)
 from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, is_table_exist_in_db
+from codal_tsetmc.tools.string import datetime_to_num
+
+models = [
+    CompanyStatuses, CompanyTypes,
+    LetterTypes, ReportTypes,
+    Auditors, FinancialYears,
+]
 
 
 class Categories:
 
     def __init__(self) -> None:
-        self.financial_years = None
-        self.auditors = None
-        self.company_statuses = None
-        self.categories = None
-        self.letter_types = None
-        self.company_types = None
-        self.report_types = None
         self.url = 'https://search.codal.ir/api/search/v1/'
+        self.result = {}
 
     def get_data(self):
         api = get_dict_from_xml_api(self.url + "categories")
@@ -51,15 +53,15 @@ class Categories:
 
             report_types += [{"code": item["Code"], "title": item["Name"]}]
 
-        self.report_types = pd.DataFrame(report_types) \
+        self.result["report_types"] = pd.DataFrame(report_types) \
             .sort_values("code").reset_index(drop=True)
-        self.company_types = pd.DataFrame(company_types) \
+        self.result["company_types"] = pd.DataFrame(company_types) \
             .sort_values("code").reset_index(drop=True)
-        self.letter_types = pd.DataFrame(letter_types) \
+        self.result["letter_types"] = pd.DataFrame(letter_types) \
             .drop_duplicates().sort_values("code").reset_index(drop=True)
-        self.categories = pd.DataFrame(categories) \
+        self.result["categories"] = pd.DataFrame(categories) \
             .drop_duplicates().reset_index(drop=True)
-        self.company_statuses = pd.DataFrame({
+        self.result["company_statuses"] = pd.DataFrame({
             "code": [-1, 0, 1, 2, 3, 4, 5],
             "title": [
                 'همه موارد',
@@ -73,33 +75,23 @@ class Categories:
         }).sort_values("code").reset_index(drop=True)
 
         api = get_dict_from_xml_api(self.url + "auditors")
-        self.auditors = pd.DataFrame(api)
-        self.auditors.columns = ["name", "code"]
-        self.auditors.sort_values("code").reset_index(drop=True, inplace=True)
+        self.result["auditors"] = pd.DataFrame(api)
+        self.result["auditors"].columns = ["name", "code"]
+        self.result["auditors"].sort_values("code").reset_index(drop=True, inplace=True)
 
         api = get_dict_from_xml_api(self.url + "financialYears")
-        self.financial_years = pd.DataFrame(api)
-        self.financial_years.columns = ["date"]
+        self.result["financial_years"] = pd.DataFrame(api)
+        self.result["financial_years"].columns = ["date"]
+        self.result["financial_years"]["code"] = self.result["financial_years"]["date"].apply(datetime_to_num)
 
     def fill_categories_table(self):
         self.get_data()
+        for model in models:
+            tablename = model.__tablename__
+            if not is_table_exist_in_db(tablename):
+                model.__table__.create(engine)
 
-        try:
-            CompanyStatuses.__table__.create(engine)
-            CompanyTypes.__table__.create(engine)
-            LetterTypes.__table__.create(engine)
-            ReportTypes.__table__.create(engine)
-            Auditors.__table__.create(engine)
-            FinancialYears.__table__.create(engine)
-        except Exception as e:
-            print(e.__context__, end="\r", flush=True)
-
-        fill_table_of_db_with_df(self.company_statuses, "company_statuses", "code")
-        fill_table_of_db_with_df(self.report_types, "report_types", "code")
-        fill_table_of_db_with_df(self.company_types, "company_types", "code")
-        fill_table_of_db_with_df(self.letter_types, "letter_types", "code")
-        fill_table_of_db_with_df(self.auditors, "auditors", "code")
-        fill_table_of_db_with_df(self.financial_years, "financial_years", "date")
+            fill_table_of_db_with_df(self.result[tablename], tablename, "code")
 
 
 def fill_categories_table():

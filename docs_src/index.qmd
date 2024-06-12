@@ -8,7 +8,6 @@ from jdatetime import datetime as jdt
 
 now = jdt.now().strftime("%Y-%m-%d")
 now = digit_en_to_fa(now)
-
 ```
 
 

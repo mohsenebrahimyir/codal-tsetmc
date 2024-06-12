@@ -28,14 +28,14 @@ def replace_all(text, dic):
 
 def datetime_to_num(dt):
     if dt == "":
-        print("datetime_to_num is None", end="\r", flush=True)
         return None
     try:
         dt = replace_all(dt, {"[^0-9]": ""})
         return int(dt) * 10 ** (14 - len(dt))
     except Exception as e:
-        print("datetime_to_num: ", e.__context__, end="\r", flush=True)
-        return dt
+        print(e.__context__)
+
+    return dt
 
 
 def num_to_datetime(num, datetime=True, d="/", t=":", sep=" "):

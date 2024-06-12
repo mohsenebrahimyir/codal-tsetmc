@@ -1,4 +1,7 @@
+from time import time
+
 from jdatetime import datetime as jdt
+# noinspection PyUnresolvedReferences
 import jalali_pandas
 import aiohttp
 import nest_asyncio
@@ -7,7 +10,8 @@ import requests
 import io
 from codal_tsetmc.config.engine import session, engine
 from codal_tsetmc.models.stocks import Stocks, StocksCapitals
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_conditions
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_conditions, is_table_exist_in_db, \
+    read_table_by_sql_query
 from codal_tsetmc.tools.api import (
     get_data_from_cdn_tsetmec_api,
     get_results_by_asyncio_loop
@@ -52,63 +56,58 @@ def get_stock_capitals_history(code: str) -> pd.DataFrame:
 
 
 async def update_stock_capitals_async(code: str):
-    nest_asyncio.apply()
 
+    if not is_stock_in_bourse_or_fara_or_paye(code):
+        return True
+
+    if not is_table_exist_in_db(StocksCapitals.__tablename__):
+        StocksCapitals.__table__.create(engine)
+
+    stock = Stocks.query.filter_by(code=code).first()
     try:
-        if is_stock_in_bourse_or_fara_or_paye(code):
-            try:
-                def get_max_date():
-                    return read_table_by_conditions(
-                        table="stocks_capitals",
-                        variable="code",
-                        value=code,
-                        columns="max(date) AS date"
-                    )
+        query = f"SELECT max(up_date) AS up_date FROM {StocksCapitals.__tablename__} WHERE code = '{code}'"
+        max_date = read_table_by_sql_query(query)
+        if not max_date.empty or max_date.up_date.iat[0] is not None:
+            last_up_date = max_date.up_date.iat[0]
+        else:
+            last_up_date = "0"
 
-                last_up_date = get_max_date().up_date.iat[0]
+        jnow = jdt.now().strftime("%Y%m%d000000")
+        if last_up_date is None or last_up_date < jnow:
+            url = f"http://old.tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
+        elif last_up_date > jnow:
+            print(f"Stock Capital already updated. (code: {stock.code}, symbol: {stock.symbol})")
+            return True
+        else:
+            return False
 
-            except Exception as e:
-                print(' ' * 25, "\r", e.__context__, flush=True, end='\r')
-                last_up_date = "0"
+        nest_asyncio.apply()
+        async with aiohttp.ClientSession() as ses:
+            async with ses.get(url) as resp:
+                response = await resp.text()
 
-            jnow = jdt.now().strftime("%Y%m%d000000")
-            url = ""
-            try:
-                # need to update new capital data
-                if last_up_date is None or last_up_date < jnow:
-                    url = f"http://old.tsetmc.com/Loader.aspx?ParTree=15131H&i={code}"
-                else:  # The capital data for this code is updated
-                    return
-            except Exception as e:
-                print(f"Error on formatting capital:{str(e)}")
+        df = cleanup_stock_capitals_records(response)
+        if df.empty:
+            print(f"Stock Capital is empty. (code: {stock.code}, symbol: {stock.symbol})")
+            return True
 
-            async with aiohttp.ClientSession() as ses:
-                async with ses.get(url) as resp:
-                    response = await resp.text()
+        df["code"] = code
+        df["symbol"] = stock.symbol
+        df["up_date"] = jnow
 
-            df = cleanup_stock_capitals_records(response)
+        fill_table_of_db_with_df(
+            df,
+            columns="date",
+            table=StocksCapitals.__tablename__,
+            conditions=f"where code = '{code}'"
+        )
 
-            df["code"] = code
-            stock = Stocks.query.filter_by(code=code).first()
-            df["symbol"] = stock.symbol
-            df["up_date"] = jnow
-
-            try:
-                StocksCapitals.__table__.create(engine)
-            except Exception as e:
-                print(e.__context__, end="\r", flush=True)
-
-            fill_table_of_db_with_df(
-                df,
-                columns="date",
-                table="stocks_capitals",
-                conditions=f"where code = '{code}'"
-            )
-
-        print(' ' * 25, "\r", code, flush=True, end='\r')
+        print(f"Stock Capital updated. (code: {stock.code}, symbol: {stock.symbol})")
+        return True
 
     except Exception as e:
-        print(' ' * 25, "\r", e.__context__, flush=True, end='\r')
+        print(f"Stock Capital Failed. (code: {stock.code}, symbol: {stock.symbol})", e.__context__)
+        return False
 
 
 def update_stocks_capitals(codes):
@@ -122,18 +121,18 @@ def update_stock_capitals(code):
 
 def update_stocks_group_capitals(group_code):
     stocks = session.query(Stocks.code).filter_by(group_code=group_code).all()
-    print(f"{' ' * 25} group: {group_code}", flush=True, end='\r')
+    print(f"Stocks group: {group_code} Started.")
     codes = [stock[0] for stock in stocks]
     update_stocks_capitals(codes)
+    print("Stocks group:", group_code, "Finished.")
 
 
 def fill_stocks_capitals_table():
+    start_time = time()
     codes = session.query(Stocks.group_code).distinct().all()
     for i, code in enumerate(codes):
-        print(
-            f"{' ' * 35} total progress: {100 * (i + 1) / len(codes):.2f}%",
-            flush=True, end='\r',
-        )
+        print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")
         update_stocks_group_capitals(code[0])
 
-    print("Capital Download Finished.", " " * 50)
+    print("Stocks Capitals Download is Finished.")
+    print(f"Total time: {time() - start_time:.2f} seconds")

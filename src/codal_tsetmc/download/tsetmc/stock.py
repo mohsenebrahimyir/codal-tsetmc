@@ -1,3 +1,5 @@
+from time import sleep, time
+
 import requests
 import re
 import aiohttp
@@ -5,10 +7,10 @@ import pandas as pd
 from codal_tsetmc.config.engine import session, engine
 from codal_tsetmc.tools.api import (
     get_csv_from_github,
-    get_results_by_asyncio_loop
+    get_results_by_asyncio_loop, GET_HEADERS_REQUEST
 )
 from codal_tsetmc.models.stocks import Stocks, StocksGroups
-from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, is_table_exist_in_db
 
 INDEX_CODE = "32097828799138957"
 
@@ -48,55 +50,44 @@ def extract_instrumentInfo(data):
 
 
 def get_stock_detail(code: str, timeout=3):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 '
-                      'Safari/537.36',
-    }
     url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{code}"
-    r = requests.get(url, headers=headers, timeout=timeout)# verify=False,
+    r = requests.get(url, headers=GET_HEADERS_REQUEST, timeout=timeout)
     return extract_instrumentInfo(r.json())
 
 
 def create_or_update_stock_from_dict(stock):
-    print(f"creating stock with code {stock['code']}")
+    print(f"Stock create (code: {stock['code']}, symbol: {stock['symbol']}).")
     session.add(Stocks(**stock))
-
     try:
         session.commit()
     except Exception as e:
-        print(f"stock {stock['code']} exist", end="\r", flush=True)
         print(e.__context__)
         session.rollback()
 
 
-async def update_stock_table_async(code: str) -> tuple[bool, str] | tuple[Exception, str]:
+async def update_stock_table_async(code: str) -> bool:
     try:
         stock = Stocks.query.filter_by(code=code).first()
-        try:
-            if stock.code is not None:
-                if stock.code == code:
-                    print(f"stock with code {code} exist")
-                    return True, code
-        except Exception as e:
-            print(e.__context__)
-            pass
+        if stock is not None:
+            if stock.code == code:
+                print(f"Stock exist: (code: {stock.code}, symbol: {stock.symbol}).")
+                return True
 
         url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{code}"
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 '
-                          'Safari/537.36'
-        }
         async with aiohttp.ClientSession() as ses:
-            async with ses.get(url, headers=headers) as resp:
+            async with ses.get(url, headers=GET_HEADERS_REQUEST) as resp:
                 data = await resp.json()
 
         stock = extract_instrumentInfo(data)
-        create_or_update_stock_from_dict(stock)
+        if not is_table_exist_in_db(Stocks.__tablename__):
+            Stocks.__table__.create(engine)
 
-        return True, code
+        create_or_update_stock_from_dict(stock)
+        return True
 
     except Exception as e:
-        return e, code
+        print(e.__context__)
+        return False
 
 
 def update_stocks_table(codes):
@@ -116,36 +107,33 @@ def get_stock_ids(timeout=10):
 
 
 def get_stocks_groups(timeout=10):
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 '
-                      'Safari/537.36',
-    }
     url = f"https://cdn.tsetmc.com/api/StaticData/GetStaticData"
-    r = requests.get(url, headers=headers, timeout=timeout)
+    r = requests.get(url, headers=GET_HEADERS_REQUEST, timeout=timeout)
     return pd.DataFrame(r.json()["staticData"])
 
 
 def fill_stocks_groups_table():
     df = get_stocks_groups()
 
-    try:
+    if not is_table_exist_in_db(StocksGroups.__tablename__):
         StocksGroups.__table__.create(engine)
-    except Exception as e:
-        print(e.__context__, end="\r", flush=True)
 
-    fill_table_of_db_with_df(
-        df,
-        table="stocks_groups",
-        columns="id"
-    )
+    fill_table_of_db_with_df(df, StocksGroups.__tablename__, "id")
 
 
-def fill_stocks_table(timeout=10, repeat=10):
+def fill_stocks_table(timeout=10, repeat=2):
     print("This may take several minutes")
+    start_time = time()
     index = ["32097828799138957"]
     bonds = get_csv_from_github("treasury_bill")
     update_stocks_table(index + list(bonds.code))
+    sleep(3)
     for i in range(repeat):
-        print(f"Downloading group ids... series: {i + 1}")
+        print(f"Stock info with codes in series: {i + 1}")
         ids = get_stock_ids(timeout=timeout)
         update_stocks_table(ids + index)
+        sleep(3)
+
+    print("Stocks Download is Finished.")
+    end_time = time()
+    print(f"Total time: {end_time - start_time:.2f} seconds")

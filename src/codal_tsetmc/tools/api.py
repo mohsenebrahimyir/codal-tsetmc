@@ -1,10 +1,20 @@
 import sys
 import json
 from urllib.request import urlopen
+
 import requests
 import pandas as pd
 import asyncio
 import nest_asyncio
+
+
+GET_HEADERS_REQUEST = {
+    'User-Agent':
+        'Mozilla/5.0 (X11; Linux x86_64) '
+        'AppleWebKit/537.36 (KHTML, like Gecko) '
+        'Chrome/111.0.0.0 '
+        'Safari/537.36'
+}
 
 
 def get_dict_from_xml_api(url: str):
@@ -17,17 +27,13 @@ def get_dict_from_xml_api(url: str):
         print("fall back to manual mode")
         pass
     except Exception as e:
-        print("get_dict_from_xml_api: ", e.__context__, end='\r', flush=True)
+        print(e.__context__)
         pass
 
 
 def get_data_from_cdn_tsetmec_api(data: str, code: str, date: str):
     url = f'http://cdn.tsetmc.com/api/{data}/{code}/{date}'
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 '
-                      'Safari/537.36'
-    }
-    response = requests.get(url=url, cookies={}, headers=headers) # , verify=False
+    response = requests.get(url=url, cookies={}, headers=GET_HEADERS_REQUEST)
 
     return response.json()
 
@@ -52,4 +58,4 @@ def get_results_by_asyncio_loop(tasks):
         loop.run_until_complete(asyncio.gather(*tasks))
 
     except Exception as e:
-        print("get_results_by_asyncio_loop: ",  e.__context__, end='\r', flush=True)
+        print(e.__context__)

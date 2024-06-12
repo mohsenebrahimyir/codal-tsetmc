@@ -7,9 +7,10 @@ import pandas as pd
 from codal_tsetmc import Letters
 from codal_tsetmc.config.engine import session, engine
 from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.tools.api import GET_HEADERS_REQUEST
 from codal_tsetmc.tools.string import (
     FA_TO_EN_DIGITS, LETTERS_CODE_TO_TITLE,
-    datetime_to_num, df_col_to_snake_case, num_to_datetime,
+    datetime_to_num, df_col_to_snake_case,
 )
 
 from codal_tsetmc.tools.database import fill_table_of_db_with_df
@@ -44,11 +45,7 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
 async def get_letters_urls_from_page_100000_async(ses, url: str):
     nest_asyncio.apply()
 
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 '
-                      'Safari/537.36',
-    }
-    async with ses.get(url, cookies={}, headers=headers, data="") as response:
+    async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
         data = await response.json()
 
     u = url.split("100000")
@@ -79,10 +76,10 @@ def get_letter_urls_parallel(urls: list):
         return results
 
     except Exception as e:
-        print("get_letter_urls_parallel: ", e.__context__, end="\r", flush=True)
+        print(e.__context__)
 
 
-def get_letters_urls(query: CodalQuery, symbols: list = None):
+def get_letters_urls(query: CodalQuery, symbols=None):
     query.set_page_number(100000)
     urls = []
 
@@ -102,11 +99,7 @@ async def update_letters_by_url_async(ses, url: str):
     nest_asyncio.apply()
 
     try:
-        headers = {
-            'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/113.0.0.0 '
-                          'Safari/537.36',
-        }
-        async with ses.get(url, cookies={}, headers=headers, data="") as response:
+        async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
             data = await response.json()
 
             df = convert_letter_list_to_df(data["Letters"])
@@ -114,12 +107,12 @@ async def update_letters_by_url_async(ses, url: str):
             try:
                 Letters.__table__.create(engine)
             except Exception as e:
-                print(e.__context__, end="\r", flush=True)
+                print(e.__context__)
 
             fill_table_of_db_with_df(df, "letters", "tracing_no")
 
     except Exception as e:
-        print("update_letters_for_each_url_async: ", e.__context__, end="\r", flush=True)
+        print(e.__context__)
 
 
 async def update_letters_by_urls_async(urls: list):
@@ -146,8 +139,8 @@ def update_letter_table_by_urls(urls: list):
             def wrapper(self, *args, **kwargs):
                 try:
                     return func(self, *args, **kwargs)
-                except RuntimeError as e:
-                    if str(e) != 'Event loop is closed':
+                except RuntimeError as ru:
+                    if str(ru) != 'Event loop is closed':
                         raise
 
             return wrapper
@@ -163,7 +156,7 @@ def update_letter_table_by_urls(urls: list):
         loop.run_until_complete(update_letters_by_urls_async(urls))
         loop.close()
     except Exception as e:
-        print("update_letter_table_by_urls: ", e.__context__, end="\r", flush=True)
+        print(e.__context__)
 
 
 def update_letters_table(query: CodalQuery, symbols: list = None):
@@ -181,10 +174,10 @@ def update_companies_group_letters(query: CodalQuery, group_code: str):
     print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
     print("Note: If database is not updated, You can run the fill_stocks_table function first!")
     stocks = session.query(Stocks.symbol).filter_by(group_code=group_code).all()
-    print(f"{' ' * 25} group: {group_code}", end="\r")
+    print(f"Letters group: {group_code} Started.")
     symbols = [stock[0] for stock in stocks]
     update_letters_table(query, symbols)
-    print(f"letters group: {group_code} Finished.", " " * 50)
+    print(f"Letters group: {group_code} Finished.")
 
 
 def fill_letters_table(query: CodalQuery):
@@ -192,8 +185,7 @@ def fill_letters_table(query: CodalQuery):
     print("Note: If database is not updated, You can run the fill_stocks_table function first!")
     codes = session.query(Stocks.group_code).distinct().all()
     for i, code in enumerate(codes):
-        print(f"{' ' * 35} total progress: {100 * (i + 1) / len(codes):.2f}%", end="\r")
+        print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")
         update_companies_group_letters(query, code[0])
 
     print("All letters Finished.", " " * 50)
-

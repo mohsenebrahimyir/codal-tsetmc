@@ -244,7 +244,7 @@ class CodalQuery:
         reversed_range = list(range(2, pages + 1))
         reversed_range.sort(reverse=True)
         for page in reversed_range:
-            print(f"get page {page} of {pages}", end="\r", flush=True)
+            print(f"get page {page} of {pages}")
             self.set_page_number(page)
             letters += self.get_api_single_page()
         

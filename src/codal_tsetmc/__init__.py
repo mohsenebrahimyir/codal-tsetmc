@@ -11,7 +11,7 @@ from codal_tsetmc.config.engine import (
 from codal_tsetmc.tools.database import (
     read_table_by_conditions,
     read_table_by_sql_query,
-    fill_table_of_db_with_df
+    fill_table_of_db_with_df, is_table_exist_in_db
 )
 
 from codal_tsetmc.models.stocks import (
@@ -28,7 +28,7 @@ from codal_tsetmc.models.companies import (
     CompanyStatuses,
     LetterTypes,
     Letters,
-    FinancialYears
+    FinancialYears, ReportTypes, Auditors
 )
 
 from codal_tsetmc.download.codal.query import CodalQuery
@@ -49,6 +49,7 @@ from codal_tsetmc.download.tsetmc.price import (
     get_index_prices_history,
     update_stock_prices,
     update_index_prices,
+    update_indexes_prices,
     update_stocks_prices,
     update_stocks_group_prices,
     fill_stocks_prices_table
@@ -74,17 +75,22 @@ from codal_tsetmc.initializer import (
 
 
 def db_is_empty():
+    models = [
+        Companies, CompanyStatuses, CompanyTypes,
+        LetterTypes, ReportTypes, Auditors, FinancialYears,
+        StocksGroups, Stocks
+    ]
+
     try:
-        for table in [
-            "companies", "company_types", "company_statuses",
-            "report_types", "letter_types", "auditors",
-            "financial_years", "stocks_groups", "stocks"
-        ]:
-            db.session.execute(text(f"select * from {table} limit 1;"))
+        for model in models:
+            table = model.__tablename__
+            df = read_table_by_sql_query(f"SELECT * FROM {table} LIMIT 1;")
+            if df.empty:
+                return True
 
         return False
     except Exception as e:
-        print("db_is_empty: ", e.__context__, end="\r", flush=True)
+        print(e.__context__)
         return True
 
 
