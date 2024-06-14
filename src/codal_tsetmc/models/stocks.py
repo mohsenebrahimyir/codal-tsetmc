@@ -1,14 +1,13 @@
 import numpy as np
 import pandas as pd
+# noinspection PyUnresolvedReferences
 import jalali_pandas
 
-from sqlalchemy.orm import relationship
-
 from codal_tsetmc.config.engine import (
-    Column, Integer, String, BIGINT, Float, ForeignKey,
-    Base, session
+    Column, Integer, String, Float, Base, session
 )
 from codal_tsetmc.tools.database import read_table_by_conditions
+from sqlalchemy import BigInteger
 
 
 def add_event(df, event, ratio):
@@ -30,9 +29,9 @@ class Stocks(Base):
     name = Column(String)
     name_en = Column(String)
     isin = Column(String)
-    code = Column(String, unique=True)
-    capital = Column(BIGINT)
-    instrument_code = Column(String)
+    code = Column(BigInteger, unique=True)
+    capital = Column(BigInteger)
+    instrument_code = Column(BigInteger)
     instrument_id = Column(String)
     group_name = Column(String)
     group_code = Column(String)
@@ -40,9 +39,6 @@ class Stocks(Base):
     market_name = Column(String)
     market_code = Column(String)
     market_type = Column(String)
-    companies = relationship('Companies', backref='stock')
-    stocks_prices = relationship("StocksPrices", backref="stock")
-    stocks_capitals = relationship("StocksCapitals", backref="stock")
     _price_cached = False
     _price_counter = 0
     _prices_cached = False
@@ -158,7 +154,11 @@ class Stocks(Base):
             self._market = df
             return self._market
 
-        capitals = read_table_by_conditions("stocks_capitals", "code", self.code).rename(columns={"new": "capital"})
+        capitals = read_table_by_conditions(
+            "stocks_capitals",
+            "code",
+            self.code
+        ).rename(columns={"new": "capital"})
         capitals["date"] = capitals["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
         capitals.set_index("date", inplace=True)
 
@@ -188,7 +188,11 @@ class Stocks(Base):
             self._index = df
             return self._index
 
-        index = read_table_by_conditions("stocks_prices", "code", "32097828799138957").rename(columns={"price": "index"})
+        index = read_table_by_conditions(
+            "stocks_prices",
+            "code",
+            "32097828799138957"
+        ).rename(columns={"price": "index"})
         index["date"] = index["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
         index.set_index("date", inplace=True)
         df = df.join(index[["index"]], how="outer")
@@ -223,10 +227,16 @@ class Stocks(Base):
             return False
 
     def __repr__(self):
-        return f"symbol: {self.symbol}, code: {self.code}, name: {self.name}, group: {self.group_name}"
+        return f"symbol: {self.symbol}, "\
+               f"code: {self.code}, "\
+               f"name: {self.name}, "\
+               f"group: {self.group_name}"
 
     def __str__(self):
-        return f"symbol: {self.symbol}, code: {self.code}, name: {self.name}, group: {self.group_name}"
+        return f"symbol: {self.symbol}, "\
+               f"code: {self.code}, "\
+               f"name: {self.name}, "\
+               f"group: {self.group_name}"
 
     @staticmethod
     def get_group():
@@ -241,57 +251,44 @@ class StocksPrices(Base):
     __tablename__ = "stocks_prices"
 
     id = Column(Integer, primary_key=True)
-    code = Column(String, ForeignKey("stocks.code"), index=True)
+    code = Column(BigInteger)
     symbol = Column(String)
     date = Column(String)
-    volume = Column(BIGINT)
-    value = Column(BIGINT)
+    volume = Column(BigInteger)
+    value = Column(BigInteger)
     price = Column(Float)
-    up_date = Column(String)
+    up_date = Column(BigInteger)
 
     def __repr__(self):
-        return f"(symbol: {self.symbol}, instrument: {self.stock.name}, code: {self.code})"
+        return f"(symbol: {self.symbol}, code: {self.code})"
 
 
 class StocksCapitals(Base):
     __tablename__ = "stocks_capitals"
 
     id = Column(Integer, primary_key=True)
-    code = Column(String, ForeignKey("stocks.code"), index=True)
+    code = Column(BigInteger)
     symbol = Column(String)
     date = Column(String)
-    old = Column(BIGINT)
-    new = Column(BIGINT)
-    up_date = Column(String)
+    old = Column(BigInteger)
+    new = Column(BigInteger)
+    up_date = Column(BigInteger)
 
     def __repr__(self):
-        return f"name: {self.stock.name}"
+        return f"name: {self.symbol}"
 
 
 class StocksGroups(Base):
     __tablename__ = "stocks_groups"
 
     id = Column(Integer, primary_key=True)
-    code = Column(String, index=True)
+    code = Column(String)
     name = Column(String)
     type = Column(String)
     description = Column(String)
 
     def __repr__(self):
         return f"(group: {self.name}, code: {self.code}), type: {self.type}"
-
-
-class CommoditiesPrices(Base):
-    __tablename__ = "commodities_prices"
-
-    id = Column(Integer, primary_key=True)
-    symbol = Column(String)
-    date = Column(String, index=True)
-    price = Column(Float)
-    up_date = Column(String)
-
-    def __repr__(self):
-        return f"Prices of {self.symbol}"
 
 
 def get_asset(name):

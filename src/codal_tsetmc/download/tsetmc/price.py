@@ -1,18 +1,21 @@
 from time import time
+import io
 
 from jdatetime import datetime as jdt
 from datetime import datetime
+# noinspection PyUnresolvedReferences
 import jalali_pandas
 import aiohttp
 import nest_asyncio
 import pandas as pd
-import io
 import requests
-from codal_tsetmc.config.engine import session, engine
+
+from codal_tsetmc.tools.string import datetime_to_num
+from codal_tsetmc.config.engine import session
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 from codal_tsetmc.models.stocks import Stocks, StocksPrices
 from codal_tsetmc.tools.database import (
-    fill_table_of_db_with_df, read_table_by_conditions, is_table_exist_in_db
+    fill_table_of_db_with_df, read_table_by_conditions, create_table_if_not_exist
 )
 from codal_tsetmc.tools.api import (
     get_data_from_cdn_tsetmec_api, get_results_by_asyncio_loop, GET_HEADERS_REQUEST
@@ -25,12 +28,12 @@ def edit_index_prices(data, code, symbol):
     df = pd.DataFrame(data["indexB2"])[["dEven", "xNivInuClMresIbs"]]
     df.columns = ["date", "price"]
     df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
-    df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
+    df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000')).apply(datetime_to_num)
     df["code"] = code
     df["symbol"] = symbol
     df["value"] = pd.NA
     df["volume"] = pd.NA
-    df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+    df["up_date"] = jdt.now().strftime("%Y%m%d000000").apply(datetime_to_num)
     df = df.sort_values("date")
 
     return df
@@ -45,38 +48,33 @@ def get_index_prices_history(code: str = INDEX_CODE, symbol: str = "شاخص ك�
 
 
 async def update_index_prices_async(code):
-    nest_asyncio.apply()
+    create_table_if_not_exist(StocksPrices)
     url = f'http://cdn.tsetmc.com/api/Index/GetIndexB2History/{code}'
     try:
+        nest_asyncio.apply()
         async with aiohttp.ClientSession() as ses:
             async with ses.get(url, headers=GET_HEADERS_REQUEST) as resp:
                 data = await resp.json()
 
         stock = Stocks.query.filter_by(code=code).first()
-        df = edit_index_prices(data, code, stock.symbol)
-
-        if not is_table_exist_in_db(StocksPrices.__tablename__):
-            StocksPrices.__table__.create(engine)
+        df = edit_index_prices(data, code, stock.symbol)[StocksPrices.__table__.columns.keys()[1:]]
 
         fill_table_of_db_with_df(
-            df[["date", "symbol", "code", "price", "volume", "value", "up_date"]],
-            columns="date",
-            table=StocksPrices.__tablename__,
-            conditions=f"where code = '{code}'"
+            df, columns="date", table=StocksPrices.__tablename__, conditions=f"where code = '{code}'"
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
+        return True
     except Exception as e:
         print(e.__context__)
         return False
 
-    return True
 
-
-def update_indexes_prices(codes=None):
+def update_indexes_prices(codes: list = None):
     if codes is None:
         codes = [INDEX_CODE]
     tasks = [update_index_prices_async(code) for code in codes]
-    get_results_by_asyncio_loop(tasks)
+    results = get_results_by_asyncio_loop(tasks)
+    return results
 
 
 def update_index_prices(code=None):
@@ -98,8 +96,13 @@ def get_stock_price_daily(code: str, date: str = None):
 def cleanup_stock_prices_records(data):
     df = pd.read_csv(io.StringIO(data), delimiter="@", lineterminator=";", engine="c", header=None)
     df.columns = "date high low price close open yesterday value volume count".split()
-    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
-    df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000'))
+    df["date"] = (
+        df["date"]
+        .apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
+        .jalali.to_jalali()
+        .apply(lambda x: x.strftime('%Y%m%d000000'))
+        .apply(datetime_to_num)
+    )
     df = df.sort_values("date")
 
     return df[["date", "volume", "value", "price"]]
@@ -110,7 +113,7 @@ def get_stock_prices_history(code: str) -> pd.DataFrame:
     data = requests.get(url).text
     df = pd.read_csv(io.StringIO(data), delimiter="@", lineterminator=";", engine="c", header=None)
     df.columns = "date high low price close open yesterday value volume count".split()
-    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
+    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d")).apply(datetime_to_num)
     df["code"] = code
 
     return df
@@ -120,9 +123,7 @@ async def update_stock_prices_async(code: str):
     if not is_stock_in_bourse_or_fara_or_paye(code):
         return True
 
-    if not is_table_exist_in_db(StocksPrices.__tablename__):
-        StocksPrices.__table__.create(engine)
-
+    create_table_if_not_exist(StocksPrices)
     stock = Stocks.query.filter_by(code=code).first()
     try:
         try:
@@ -180,7 +181,7 @@ async def update_stock_prices_async(code: str):
         df = cleanup_stock_prices_records(data)
         df["code"] = code
         df["symbol"] = stock.symbol
-        df["up_date"] = jdt.now().strftime("%Y%m%d000000")
+        df["up_date"] = jdt.now().strftime("%Y%m%d000000").apply(datetime_to_num)
 
         fill_table_of_db_with_df(
             df,

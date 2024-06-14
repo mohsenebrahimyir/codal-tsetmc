@@ -8,15 +8,14 @@ import nest_asyncio
 import pandas as pd
 import requests
 import io
-from codal_tsetmc.config.engine import session, engine
+from codal_tsetmc.config.engine import session
 from codal_tsetmc.models.stocks import Stocks, StocksCapitals
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_conditions, is_table_exist_in_db, \
-    read_table_by_sql_query
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_sql_query, create_table_if_not_exist
 from codal_tsetmc.tools.api import (
     get_data_from_cdn_tsetmec_api,
     get_results_by_asyncio_loop
 )
-from codal_tsetmc.tools.string import value_to_float
+from codal_tsetmc.tools.string import value_to_float, datetime_to_num
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 
@@ -29,7 +28,12 @@ def get_stock_capital_daily(code: str):
 def cleanup_stock_capitals_records(response):
     df = pd.read_html(io.StringIO(response))[0]
     df.columns = ["date", "new", "old"]
-    df["date"] = df["date"].jalali.parse_jalali("%Y/%m/%d").apply(lambda x: x.strftime('%Y%m%d000000'))
+    df["date"] = (
+        df["date"]
+        .jalali.parse_jalali("%Y/%m/%d")
+        .apply(lambda x: x.strftime('%Y%m%d000000'))
+        .apply(datetime_to_num)
+    )
     df = df.sort_index(ascending=False)
     df["old"] = df["old"].apply(value_to_float)
     df["new"] = df["new"].apply(value_to_float)
@@ -37,7 +41,11 @@ def cleanup_stock_capitals_records(response):
         (df.new > df.new.shift(fill_value=0)) &
         (df.old > df.old.shift(fill_value=0))
     ]
-    df = df[(df.old == df.new.shift(fill_value=0)) | (df.old == min(df.old)) | (df.new == max(df.new))]
+    df = df[
+        (df.old == df.new.shift(fill_value=0)) |
+        (df.old == min(df.old)) |
+        (df.new == max(df.new))
+    ]
 
     df = df.sort_values("date")
 
@@ -59,9 +67,7 @@ async def update_stock_capitals_async(code: str):
 
     if not is_stock_in_bourse_or_fara_or_paye(code):
         return True
-
-    if not is_table_exist_in_db(StocksCapitals.__tablename__):
-        StocksCapitals.__table__.create(engine)
+    create_table_if_not_exist(StocksCapitals)
 
     stock = Stocks.query.filter_by(code=code).first()
     try:
@@ -93,7 +99,7 @@ async def update_stock_capitals_async(code: str):
 
         df["code"] = code
         df["symbol"] = stock.symbol
-        df["up_date"] = jnow
+        df["up_date"] = jnow.apply(datetime_to_num)
 
         fill_table_of_db_with_df(
             df,

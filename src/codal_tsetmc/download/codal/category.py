@@ -1,11 +1,10 @@
 import pandas as pd
 
-from codal_tsetmc.config.engine import engine
 from codal_tsetmc.models.companies import (
     CompanyStatuses, CompanyTypes, LetterTypes, ReportTypes, Auditors, FinancialYears
 )
 from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, is_table_exist_in_db
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
 from codal_tsetmc.tools.string import datetime_to_num
 
 models = [
@@ -88,9 +87,7 @@ class Categories:
         self.get_data()
         for model in models:
             tablename = model.__tablename__
-            if not is_table_exist_in_db(tablename):
-                model.__table__.create(engine)
-
+            create_table_if_not_exist(model)
             fill_table_of_db_with_df(self.result[tablename], tablename, "code")
 
 

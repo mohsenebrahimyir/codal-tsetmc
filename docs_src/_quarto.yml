@@ -35,7 +35,6 @@ book:
     - guide.qmd
     - codal.qmd
     - tsetmc.qmd
-    - other.qmd
     - treasury-bill.qmd
 
     - references.qmd

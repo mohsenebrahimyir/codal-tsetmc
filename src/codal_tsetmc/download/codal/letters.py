@@ -1,5 +1,7 @@
 import sys
 import asyncio
+from time import time
+
 import aiohttp
 import nest_asyncio
 import pandas as pd
@@ -13,7 +15,7 @@ from codal_tsetmc.tools.string import (
     datetime_to_num, df_col_to_snake_case,
 )
 
-from codal_tsetmc.tools.database import fill_table_of_db_with_df
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
 from codal_tsetmc.download.codal.query import CodalQuery
 
 """################
@@ -77,6 +79,7 @@ def get_letter_urls_parallel(urls: list):
 
     except Exception as e:
         print(e.__context__)
+        return False
 
 
 def get_letters_urls(query: CodalQuery, symbols=None):
@@ -87,6 +90,7 @@ def get_letters_urls(query: CodalQuery, symbols=None):
         for symbol in symbols:
             query.set_symbol(symbol)
             urls += [query.get_query_url()]
+            print(f"Set letter url for: {symbol}")
     else:
         urls = [query.get_query_url()]
 
@@ -102,17 +106,15 @@ async def update_letters_by_url_async(ses, url: str):
         async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
             data = await response.json()
 
-            df = convert_letter_list_to_df(data["Letters"])
+        model = Letters
+        create_table_if_not_exist(model)
+        df = convert_letter_list_to_df(data["Letters"])
 
-            try:
-                Letters.__table__.create(engine)
-            except Exception as e:
-                print(e.__context__)
-
-            fill_table_of_db_with_df(df, "letters", "tracing_no")
-
+        fill_table_of_db_with_df(df, model.__tablename__, "tracing_no")
+        return True
     except Exception as e:
         print(e.__context__)
+        return False
 
 
 async def update_letters_by_urls_async(urls: list):
@@ -155,8 +157,10 @@ def update_letter_table_by_urls(urls: list):
     try:
         loop.run_until_complete(update_letters_by_urls_async(urls))
         loop.close()
+        return True
     except Exception as e:
         print(e.__context__)
+        return False
 
 
 def update_letters_table(query: CodalQuery, symbols: list = None):
@@ -181,6 +185,7 @@ def update_companies_group_letters(query: CodalQuery, group_code: str):
 
 
 def fill_letters_table(query: CodalQuery):
+    start_time = time()
     print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
     print("Note: If database is not updated, You can run the fill_stocks_table function first!")
     codes = session.query(Stocks.group_code).distinct().all()
@@ -189,3 +194,4 @@ def fill_letters_table(query: CodalQuery):
         update_companies_group_letters(query, code[0])
 
     print("All letters Finished.", " " * 50)
+    print(f"Time: {time() - start_time:.f} s")

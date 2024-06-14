@@ -3,7 +3,6 @@ from codal_tsetmc.models.stocks import (
     Stocks,
     StocksPrices,
     StocksCapitals,
-    CommoditiesPrices,
     StocksGroups
 )
 from codal_tsetmc.models.companies import (
@@ -29,18 +28,18 @@ models = [
     ReportTypes,
     LetterTypes,
     Auditors,
-    Letters,
-    CommoditiesPrices
+    Letters
 ]
 
 
 def create_table(model):
     try:
         model.__table__.create(engine)
+        return True
+
     except Exception as e:
         print(e.__context__)
-    finally:
-        pass
+        return False
 
 
 def create():

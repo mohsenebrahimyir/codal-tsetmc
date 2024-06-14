@@ -4,13 +4,13 @@ import requests
 import re
 import aiohttp
 import pandas as pd
-from codal_tsetmc.config.engine import session, engine
+from codal_tsetmc.config.engine import session
 from codal_tsetmc.tools.api import (
     get_csv_from_github,
     get_results_by_asyncio_loop, GET_HEADERS_REQUEST
 )
 from codal_tsetmc.models.stocks import Stocks, StocksGroups
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, is_table_exist_in_db
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
 
 INDEX_CODE = "32097828799138957"
 
@@ -36,9 +36,11 @@ def extract_instrumentInfo(data):
         "name": data["instrumentInfo"]["lVal30"],
         "name_en": data["instrumentInfo"]["lVal18"],
         "isin": data["instrumentInfo"]["cIsin"],
-        "code": data["instrumentInfo"]["insCode"],
-        "capital": data["instrumentInfo"]["zTitad"] if data["instrumentInfo"]["insCode"] != INDEX_CODE else 1,
-        "instrument_code": data["instrumentInfo"]["insCode"],
+        "code": int(data["instrumentInfo"]["insCode"]),
+        "capital": int(
+            data["instrumentInfo"]["zTitad"] if data["instrumentInfo"]["insCode"] != INDEX_CODE else 1
+        ),
+        "instrument_code": int(data["instrumentInfo"]["insCode"]),
         "instrument_id": data["instrumentInfo"]["instrumentID"],
         "group_name": data["instrumentInfo"]["sector"]["lSecVal"],
         "group_code": data["instrumentInfo"]["sector"]["cSecVal"].replace(" ", ""),
@@ -66,6 +68,8 @@ def create_or_update_stock_from_dict(stock):
 
 
 async def update_stock_table_async(code: str) -> bool:
+    code = int(code)
+    create_table_if_not_exist(Stocks)
     try:
         stock = Stocks.query.filter_by(code=code).first()
         if stock is not None:
@@ -79,9 +83,6 @@ async def update_stock_table_async(code: str) -> bool:
                 data = await resp.json()
 
         stock = extract_instrumentInfo(data)
-        if not is_table_exist_in_db(Stocks.__tablename__):
-            Stocks.__table__.create(engine)
-
         create_or_update_stock_from_dict(stock)
         return True
 
@@ -113,11 +114,8 @@ def get_stocks_groups(timeout=10):
 
 
 def fill_stocks_groups_table():
+    create_table_if_not_exist(StocksGroups)
     df = get_stocks_groups()
-
-    if not is_table_exist_in_db(StocksGroups.__tablename__):
-        StocksGroups.__table__.create(engine)
-
     fill_table_of_db_with_df(df, StocksGroups.__tablename__, "id")
 
 

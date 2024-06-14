@@ -1,13 +1,7 @@
 import pandas as pd
 from sqlalchemy import inspect
 
-from codal_tsetmc.config.engine import engine
-
-
-def is_table_exist_in_db(table: str) -> bool:
-    inspector = inspect(engine)
-    tables = inspector.get_table_names()
-    return table in tables
+from codal_tsetmc.config.engine import engine, Base
 
 
 def fill_table_of_db_with_df(
@@ -43,3 +37,38 @@ def read_table_by_conditions(table, variable="", value="", columns="*", conditio
 
 def read_table_by_sql_query(query: str):
     return pd.read_sql(query, engine)
+
+
+def is_table_exist_in_db(table: str) -> bool:
+    return table in get_tables_name_in_db()
+
+
+def create_table_if_not_exist(model: Base):
+    if not is_table_exist_in_db(model.__tablename__):
+        model.__table__.create(engine)
+
+
+def get_tables_name_in_db() -> list:
+    inspector = inspect(engine)
+    return inspector.get_table_names()
+
+
+def delete_table_in_db(table: str) -> bool:
+    try:
+        q = f"DROP TABLE {table}"
+        read_table_by_sql_query(q)
+        print(f"Table {table} deleted.")
+        return True
+    except Exception as e:
+        print(e.__context__)
+        return False
+
+
+def delete_all_tables_in_db() -> bool:
+    try:
+        for table in get_tables_name_in_db():
+            delete_table_in_db(table)
+        return True
+    except Exception as e:
+        print(e.__context__)
+        return False

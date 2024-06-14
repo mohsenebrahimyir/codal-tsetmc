@@ -4,11 +4,20 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy import *
 from pathlib import Path
 import os
+import sys
 import logging
 import yaml
 
 
-HOME_PATH = str(Path.home())
+def in_venv():
+    return sys.prefix != sys.base_prefix
+
+
+if in_venv():
+    HOME_PATH = str(os.environ["VIRTUAL_ENV"])+"/.."
+else:
+    HOME_PATH = str(Path.home())
+
 CDL_TSE_FOLDER = ".cdl_tse"
 CONFIG_PATH = f"{os.path.join(HOME_PATH, CDL_TSE_FOLDER)}/config.yml"
 
@@ -26,7 +35,6 @@ def create_config():
 
 
 create_config()
-
 
 with open(CONFIG_PATH, "r") as f:
     config = yaml.full_load(f)
@@ -50,10 +58,8 @@ else:
     password = config.get("database").get("password")
     engine_URI = f"{engine}://{user}:{password}@{host}:{port}/{database}"
 
-
 logging.info(engine_URI)
 engine = create_engine(engine_URI)
-
 
 Session = sessionmaker()
 Session.configure(bind=engine)

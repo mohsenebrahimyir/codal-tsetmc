@@ -1,9 +1,8 @@
 import pandas as pd
 
 from codal_tsetmc import Companies
-from codal_tsetmc.config.engine import engine
 from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, is_table_exist_in_db
+from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
 
 
 def get_companies():
@@ -16,10 +15,7 @@ def get_companies():
 
 def fill_companies_table():
     df = get_companies()
-
-    if not is_table_exist_in_db(Companies.__tablename__):
-        Companies.__table__.create(engine)
-
+    create_table_if_not_exist(Companies)
     fill_table_of_db_with_df(df, "companies", "symbol")
 
 

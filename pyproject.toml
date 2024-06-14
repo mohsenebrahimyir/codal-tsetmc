@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codal-tsetmc"
-version = "1.5.0"
+version = "1.5.1"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = ["Mohsen Ebrahimi <mohsenebrahimy.ir@gmail.com>"]
 license = "MIT"
@@ -11,6 +11,8 @@ packages = [
     { include = "codal_tsetmc", from = 'src' }
 ]
 
+[tool.setuptools.packages.find]
+where = ["src"]
 
 [tool.poetry.dependencies]
 python = "^3.7.1"
