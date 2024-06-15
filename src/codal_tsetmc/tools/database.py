@@ -1,4 +1,5 @@
 import pandas as pd
+from codal_tsetmc.tools.string import AR_TO_FA_LETTER
 from sqlalchemy import inspect
 
 from codal_tsetmc.config.engine import engine, Base
@@ -13,7 +14,7 @@ def fill_table_of_db_with_df(
     try:
         q = f"SELECT {columns} FROM {table} {conditions}"
         temp = pd.read_sql(q, engine)
-        df = df[~df[columns].isin(temp[columns])]
+        df = df[~df[columns].isin(temp[columns])].replace(regex=AR_TO_FA_LETTER)
         df.to_sql(table, engine, if_exists="append", index=False)
 
         print(f"Table {table} updated.")

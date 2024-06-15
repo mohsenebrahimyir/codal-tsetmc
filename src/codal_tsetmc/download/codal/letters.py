@@ -6,9 +6,8 @@ import aiohttp
 import nest_asyncio
 import pandas as pd
 
-from codal_tsetmc import Letters
-from codal_tsetmc.config.engine import session, engine
-from codal_tsetmc.models.stocks import Stocks
+from codal_tsetmc.config.engine import session
+from codal_tsetmc.models import Stock, Letter
 from codal_tsetmc.tools.api import GET_HEADERS_REQUEST
 from codal_tsetmc.tools.string import (
     FA_TO_EN_DIGITS, LETTERS_CODE_TO_TITLE,
@@ -106,7 +105,7 @@ async def update_letters_by_url_async(ses, url: str):
         async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
             data = await response.json()
 
-        model = Letters
+        model = Letter
         create_table_if_not_exist(model)
         df = convert_letter_list_to_df(data["Letters"])
 
@@ -177,7 +176,7 @@ def update_letters_table(query: CodalQuery, symbols: list = None):
 def update_companies_group_letters(query: CodalQuery, group_code: str):
     print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
     print("Note: If database is not updated, You can run the fill_stocks_table function first!")
-    stocks = session.query(Stocks.symbol).filter_by(group_code=group_code).all()
+    stocks = session.query(Stock.symbol).filter_by(group_code=group_code).all()
     print(f"Letters group: {group_code} Started.")
     symbols = [stock[0] for stock in stocks]
     update_letters_table(query, symbols)
@@ -188,7 +187,7 @@ def fill_letters_table(query: CodalQuery):
     start_time = time()
     print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
     print("Note: If database is not updated, You can run the fill_stocks_table function first!")
-    codes = session.query(Stocks.group_code).distinct().all()
+    codes = session.query(Stock.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")
         update_companies_group_letters(query, code[0])

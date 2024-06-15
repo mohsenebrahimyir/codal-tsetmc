@@ -10,9 +10,9 @@ from codal_tsetmc.tools.string import (
     df_col_to_snake_case, datetime_to_num
 )
 from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.models.companies import (
-    CompanyStatuses, CompanyTypes, 
-    ReportTypes, LetterTypes, Auditors,
+from codal_tsetmc.models import (
+    CompanyState, CompanyType,
+    ReportType, LetterType, Auditor,
 )
 
 
@@ -41,11 +41,12 @@ class CodalQuery:
             "PublisherStatus": -1,
             "Category": -1,
             "CompanyType": -1,
+            "CompanyState": -1,
             "LetterType": -1,
             "Subject": -1,
             "TracingNo": -1,
             "LetterCode": -1,
-            "Lenght": -1,
+            "Length": -1,
             "FromDate": -1,
             "ToDate": -1,
             "Audited": "true",
@@ -76,25 +77,25 @@ class CodalQuery:
     # تنظیم وضعیت ناشز
     def set_publisher_status(self, title: str = "") -> None:
         BadValueInput(title).string_type()
-        code = CompanyStatuses.query.filter_by(title=title).first()
-        self.params['PublisherStatus'] = code.code if bool(code) else -1
+        code = CompanyState.query.filter_by(title=title).first()
+        self.params['CompanyState'] = code.code if bool(code) else -1
 
     # تنظیم گروع اطلاعیه
     def set_category(self, title: str = "") -> None:
         BadValueInput(title).string_type()
-        code = ReportTypes.query.filter_by(title=title).first()
+        code = ReportType.query.filter_by(title=title).first()
         self.params["Category"] = code.code if bool(code) else -1
 
     # تنظیم نوع شرکت
     def set_company_type(self, title: str = "") -> None:
         BadValueInput(title).string_type()
-        code = CompanyTypes.query.filter_by(title=title).first()
+        code = CompanyType.query.filter_by(title=title).first()
         self.params["CompanyType"] = code.code if bool(code) else -1
 
     # تنظیم نوع اطلاعیه
     def set_letter_type(self, title: str = "") -> None:
         BadValueInput(title).string_type()
-        code = LetterTypes.query.filter_by(title=title).first()
+        code = LetterType.query.filter_by(title=title).first()
         self.params["LetterType"] = code.code if bool(code) else -1
 
     # تنظیم موضوع اطلاعیه
@@ -168,7 +169,7 @@ class CodalQuery:
     # تنظیم موسسه حسابرسی شرکت
     def set_auditor_ref(self, name: str = None) -> None:
         BadValueInput(name).string_type()
-        code = Auditors.query.filter_by(name=name).first()
+        code = Auditor.query.filter_by(name=name).first()
         self.params["AuditorRef"] = code.code if bool(code) else -1
 
     # سالی مالی منتهی به

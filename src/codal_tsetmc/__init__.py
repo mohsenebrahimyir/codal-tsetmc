@@ -13,22 +13,19 @@ from codal_tsetmc.tools.database import (
     is_table_exist_in_db,
 )
 # noinspection PyUnresolvedReferences
-from codal_tsetmc.models.stocks import (
-    Stocks,
-    StocksPrices,
-    StocksCapitals,
-    StocksGroups,
-)
-# noinspection PyUnresolvedReferences
-from codal_tsetmc.models.companies import (
-    Companies,
-    CompanyTypes,
-    CompanyStatuses,
-    LetterTypes,
-    Letters,
-    FinancialYears,
-    ReportTypes,
-    Auditors,
+from codal_tsetmc.models import (
+    Stock,
+    StockPrice,
+    StockCapital,
+    StockGroup,
+    Company,
+    CompanyType,
+    CompanyState,
+    LetterType,
+    Letter,
+    FinancialYear,
+    ReportType,
+    Auditor,
 )
 # noinspection PyUnresolvedReferences
 from codal_tsetmc.download.codal.query import CodalQuery
@@ -74,14 +71,14 @@ from codal_tsetmc.initializer import (
 
 
 def db_is_empty():
-    models = [
-        Companies, CompanyStatuses, CompanyTypes,
-        LetterTypes, ReportTypes, Auditors, FinancialYears,
-        StocksGroups, Stocks,
+    init_models = [
+        Company, CompanyState, CompanyType,
+        LetterType, ReportType, Auditor, FinancialYear,
+        StockGroup, Stock,
     ]
 
     try:
-        for model in models:
+        for model in init_models:
             table = model.__tablename__
             df = read_table_by_sql_query(f"SELECT * FROM {table} LIMIT 1;")
             if df.empty:

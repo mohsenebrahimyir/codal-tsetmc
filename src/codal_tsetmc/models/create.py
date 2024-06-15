@@ -1,34 +1,32 @@
 from codal_tsetmc.config.engine import engine
-from codal_tsetmc.models.stocks import (
-    Stocks,
-    StocksPrices,
-    StocksCapitals,
-    StocksGroups
-)
-from codal_tsetmc.models.companies import (
-    Companies,
-    CompanyTypes,
-    CompanyStatuses,
-    FinancialYears,
-    ReportTypes,
-    LetterTypes,
-    Auditors,
-    Letters
+from . import (
+    Stock,
+    StockPrice,
+    StockCapital,
+    StockGroup,
+    Company,
+    CompanyType,
+    CompanyState,
+    FinancialYear,
+    ReportType,
+    LetterType,
+    Auditor,
+    Letter
 )
 
 models = [
-    Stocks,
-    StocksPrices,
-    StocksCapitals,
-    StocksGroups,
-    Companies,
-    CompanyTypes,
-    CompanyStatuses,
-    FinancialYears,
-    ReportTypes,
-    LetterTypes,
-    Auditors,
-    Letters
+    Auditor,
+    FinancialYear,
+    ReportType,
+    LetterType,
+    CompanyType,
+    CompanyState,
+    Company,
+    Letter,
+    StockGroup,
+    Stock,
+    StockPrice,
+    StockCapital,
 ]
 
 

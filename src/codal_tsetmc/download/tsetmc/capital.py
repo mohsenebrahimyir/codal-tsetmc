@@ -9,7 +9,7 @@ import pandas as pd
 import requests
 import io
 from codal_tsetmc.config.engine import session
-from codal_tsetmc.models.stocks import Stocks, StocksCapitals
+from codal_tsetmc.models import Stock, StockCapital
 from codal_tsetmc.tools.database import fill_table_of_db_with_df, read_table_by_sql_query, create_table_if_not_exist
 from codal_tsetmc.tools.api import (
     get_data_from_cdn_tsetmec_api,
@@ -57,7 +57,7 @@ def get_stock_capitals_history(code: str) -> pd.DataFrame:
     response = requests.get(url).text
     df = cleanup_stock_capitals_records(response)
     df["code"] = code
-    stock = Stocks.query.filter_by(code=code).first()
+    stock = Stock.query.filter_by(code=code).first()
     df["symbol"] = stock.symbol
 
     return df
@@ -67,11 +67,11 @@ async def update_stock_capitals_async(code: str):
 
     if not is_stock_in_bourse_or_fara_or_paye(code):
         return True
-    create_table_if_not_exist(StocksCapitals)
+    create_table_if_not_exist(StockCapital)
 
-    stock = Stocks.query.filter_by(code=code).first()
+    stock = Stock.query.filter_by(code=code).first()
     try:
-        query = f"SELECT max(up_date) AS up_date FROM {StocksCapitals.__tablename__} WHERE code = '{code}'"
+        query = f"SELECT max(up_date) AS up_date FROM {StockCapital.__tablename__} WHERE code = '{code}'"
         max_date = read_table_by_sql_query(query)
         if not max_date.empty or max_date.up_date.iat[0] is not None:
             last_up_date = max_date.up_date.iat[0]
@@ -104,7 +104,7 @@ async def update_stock_capitals_async(code: str):
         fill_table_of_db_with_df(
             df,
             columns="date",
-            table=StocksCapitals.__tablename__,
+            table=StockCapital.__tablename__,
             conditions=f"where code = '{code}'"
         )
 
@@ -126,7 +126,7 @@ def update_stock_capitals(code):
 
 
 def update_stocks_group_capitals(group_code):
-    stocks = session.query(Stocks.code).filter_by(group_code=group_code).all()
+    stocks = session.query(Stock.code).filter_by(group_code=group_code).all()
     print(f"Stocks group: {group_code} Started.")
     codes = [stock[0] for stock in stocks]
     update_stocks_capitals(codes)
@@ -135,7 +135,7 @@ def update_stocks_group_capitals(group_code):
 
 def fill_stocks_capitals_table():
     start_time = time()
-    codes = session.query(Stocks.group_code).distinct().all()
+    codes = session.query(Stock.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")
         update_stocks_group_capitals(code[0])

@@ -2,12 +2,12 @@ import numpy as np
 import pandas as pd
 # noinspection PyUnresolvedReferences
 import jalali_pandas
-
 from codal_tsetmc.config.engine import (
-    Column, Integer, String, Float, Base, session
+    Column, Integer, String, Base, session
 )
 from codal_tsetmc.tools.database import read_table_by_conditions
-from sqlalchemy import BigInteger
+from sqlalchemy import BigInteger, ForeignKey
+from sqlalchemy.orm import relationship
 
 
 def add_event(df, event, ratio):
@@ -21,8 +21,8 @@ def add_event(df, event, ratio):
     return df.drop('cumulative', axis=1)
 
 
-class Stocks(Base):
-    __tablename__ = "stocks"
+class Stock(Base):
+    __tablename__ = "stock"
 
     id = Column(Integer, primary_key=True)
     symbol = Column(String)
@@ -34,11 +34,15 @@ class Stocks(Base):
     instrument_code = Column(BigInteger)
     instrument_id = Column(String)
     group_name = Column(String)
-    group_code = Column(String)
+    group_code = Column(Integer, ForeignKey("stock_group.code"))
     group_type = Column(String)
     market_name = Column(String)
     market_code = Column(String)
     market_type = Column(String)
+
+    linked_prices = relationship("StockPrice", backref="stock")
+    linked_capitals = relationship("StockCapital", backref="stock")
+
     _price_cached = False
     _price_counter = 0
     _prices_cached = False
@@ -70,7 +74,8 @@ class Stocks(Base):
         if self._price_cached:
             return self._price
 
-        df = read_table_by_conditions("stocks_prices", "code", self.code)
+        from codal_tsetmc import StockPrice
+        df = read_table_by_conditions(StockPrice.__tablename__, "code", self.code)
         if df.empty:
             self._price_cached = True
             self._price = df
@@ -87,7 +92,8 @@ class Stocks(Base):
         if self._prices_cached:
             return self._prices
 
-        df = read_table_by_conditions("stocks_prices", "code", self.code)
+        from codal_tsetmc import StockPrice
+        df = read_table_by_conditions(StockPrice.__tablename__, "code", self.code)
         if df.empty:
             self._prices_cached = True
             self._prices = df
@@ -109,7 +115,8 @@ class Stocks(Base):
         if self._capital_cached:
             return self._capital
 
-        df = read_table_by_conditions("stocks_capitals", "code", self.code)
+        from codal_tsetmc import StockCapital
+        df = read_table_by_conditions(StockCapital.__tablename__, "code", self.code)
         if df.empty:
             self._capital_cached = True
             self._capital = df
@@ -126,7 +133,8 @@ class Stocks(Base):
         if self._capitals_cached:
             return self._prices
 
-        df = read_table_by_conditions("stocks_capitals", "code", self.code)
+        from codal_tsetmc import StockCapital
+        df = read_table_by_conditions(StockCapital.__tablename__, "code", self.code)
         if df.empty:
             self._capitals_cached = True
             self._prices = df
@@ -154,8 +162,9 @@ class Stocks(Base):
             self._market = df
             return self._market
 
+        from codal_tsetmc import StockCapital
         capitals = read_table_by_conditions(
-            "stocks_capitals",
+            StockCapital.__tablename__,
             "code",
             self.code
         ).rename(columns={"new": "capital"})
@@ -188,8 +197,9 @@ class Stocks(Base):
             self._index = df
             return self._index
 
+        from codal_tsetmc import StockPrice
         index = read_table_by_conditions(
-            "stocks_prices",
+            StockPrice.__tablename__,
             "code",
             "32097828799138957"
         ).rename(columns={"price": "index"})
@@ -241,56 +251,12 @@ class Stocks(Base):
     @staticmethod
     def get_group():
         return (
-            session.query(Stocks.group_code, Stocks.group_name)
-            .group_by(Stocks.group_code)
+            session.query(Stock.group_code, Stock.group_name)
+            .group_by(Stock.group_code)
             .all()
         )
 
 
-class StocksPrices(Base):
-    __tablename__ = "stocks_prices"
-
-    id = Column(Integer, primary_key=True)
-    code = Column(BigInteger)
-    symbol = Column(String)
-    date = Column(String)
-    volume = Column(BigInteger)
-    value = Column(BigInteger)
-    price = Column(Float)
-    up_date = Column(BigInteger)
-
-    def __repr__(self):
-        return f"(symbol: {self.symbol}, code: {self.code})"
-
-
-class StocksCapitals(Base):
-    __tablename__ = "stocks_capitals"
-
-    id = Column(Integer, primary_key=True)
-    code = Column(BigInteger)
-    symbol = Column(String)
-    date = Column(String)
-    old = Column(BigInteger)
-    new = Column(BigInteger)
-    up_date = Column(BigInteger)
-
-    def __repr__(self):
-        return f"name: {self.symbol}"
-
-
-class StocksGroups(Base):
-    __tablename__ = "stocks_groups"
-
-    id = Column(Integer, primary_key=True)
-    code = Column(String)
-    name = Column(String)
-    type = Column(String)
-    description = Column(String)
-
-    def __repr__(self):
-        return f"(group: {self.name}, code: {self.code}), type: {self.type}"
-
-
 def get_asset(name):
     name = name.replace("ی", "ي").replace("ک", "ك")
-    return Stocks.query.filter_by(name=name).first()
+    return Stock.query.filter_by(name=name).first()

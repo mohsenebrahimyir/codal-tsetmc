@@ -1,13 +1,12 @@
 import os
 
-from codal_tsetmc.models.stocks import Stocks, StocksGroups
-
-from codal_tsetmc.models.companies import (
-    CompanyStatuses, Companies, LetterTypes, ReportTypes, Auditors, FinancialYears, CompanyTypes
+from codal_tsetmc.models import (
+    Stock, StockGroup, StockCapital, StockPrice,
+    CompanyState, Company, LetterType, ReportType,
+    Auditor, FinancialYear, CompanyType
 )
 
-from codal_tsetmc.tools.database import read_table_by_sql_query
-
+from codal_tsetmc.tools.database import read_table_by_sql_query, create_table_if_not_exist
 from codal_tsetmc.config.engine import CDL_TSE_FOLDER, HOME_PATH
 from codal_tsetmc.models.create import create
 from codal_tsetmc.download.codal.company import fill_companies_table
@@ -33,23 +32,27 @@ def create_db():
 
 def init_db():
     print("downloading company and stock info from CODAL and TSETMC")
-    df = read_table_by_sql_query(f"SELECT * FROM {Companies.__tablename__} LIMIT 1;")
-    if df.empty:
-        fill_companies_table()
-
     models = [
-        FinancialYears, Auditors, LetterTypes, ReportTypes, CompanyStatuses, CompanyTypes,
+        FinancialYear, Auditor, LetterType, ReportType, CompanyState, CompanyType,
+        Company, StockGroup, Stock, StockPrice, StockCapital
     ]
+    for model in models:
+        create_table_if_not_exist(model)
+
     for model in models:
         df = read_table_by_sql_query(f"SELECT * FROM {model.__tablename__} LIMIT 1;")
         if df.empty:
             fill_categories_table()
 
-    df = read_table_by_sql_query(f"SELECT * FROM {StocksGroups.__tablename__} LIMIT 1;")
+    df = read_table_by_sql_query(f"SELECT * FROM {Company.__tablename__} LIMIT 1;")
+    if df.empty:
+        fill_companies_table()
+
+    df = read_table_by_sql_query(f"SELECT * FROM {StockGroup.__tablename__} LIMIT 1;")
     if df.empty:
         fill_stocks_groups_table()
 
-    df = read_table_by_sql_query(f"SELECT * FROM {Stocks.__tablename__} LIMIT 1;")
+    df = read_table_by_sql_query(f"SELECT * FROM {Stock.__tablename__} LIMIT 1;")
     if df.empty:
         fill_stocks_table()
 

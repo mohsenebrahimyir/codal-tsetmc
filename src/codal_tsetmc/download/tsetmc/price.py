@@ -13,7 +13,7 @@ import requests
 from codal_tsetmc.tools.string import datetime_to_num
 from codal_tsetmc.config.engine import session
 from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
-from codal_tsetmc.models.stocks import Stocks, StocksPrices
+from codal_tsetmc.models import Stock, StockPrice
 from codal_tsetmc.tools.database import (
     fill_table_of_db_with_df, read_table_by_conditions, create_table_if_not_exist
 )
@@ -48,7 +48,7 @@ def get_index_prices_history(code: str = INDEX_CODE, symbol: str = "شاخص ك�
 
 
 async def update_index_prices_async(code):
-    create_table_if_not_exist(StocksPrices)
+    create_table_if_not_exist(StockPrice)
     url = f'http://cdn.tsetmc.com/api/Index/GetIndexB2History/{code}'
     try:
         nest_asyncio.apply()
@@ -56,11 +56,11 @@ async def update_index_prices_async(code):
             async with ses.get(url, headers=GET_HEADERS_REQUEST) as resp:
                 data = await resp.json()
 
-        stock = Stocks.query.filter_by(code=code).first()
-        df = edit_index_prices(data, code, stock.symbol)[StocksPrices.__table__.columns.keys()[1:]]
+        stock = Stock.query.filter_by(code=code).first()
+        df = edit_index_prices(data, code, stock.symbol)[StockPrice.__table__.columns.keys()[1:]]
 
         fill_table_of_db_with_df(
-            df, columns="date", table=StocksPrices.__tablename__, conditions=f"where code = '{code}'"
+            df, columns="date", table=StockPrice.__tablename__, conditions=f"where code = '{code}'"
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
         return True
@@ -123,13 +123,13 @@ async def update_stock_prices_async(code: str):
     if not is_stock_in_bourse_or_fara_or_paye(code):
         return True
 
-    create_table_if_not_exist(StocksPrices)
-    stock = Stocks.query.filter_by(code=code).first()
+    create_table_if_not_exist(StockPrice)
+    stock = Stock.query.filter_by(code=code).first()
     try:
         try:
             def get_max_date_stock():
                 return read_table_by_conditions(
-                    table=StocksPrices.__tablename__,
+                    table=StockPrice.__tablename__,
                     variable="code",
                     value=code,
                     columns="max(date) AS date"
@@ -137,7 +137,7 @@ async def update_stock_prices_async(code: str):
 
             def get_max_date_index():
                 return read_table_by_conditions(
-                    table=StocksPrices.__tablename__,
+                    table=StockPrice.__tablename__,
                     variable="code",
                     value=INDEX_CODE,
                     columns="max(date) AS date"
@@ -186,7 +186,7 @@ async def update_stock_prices_async(code: str):
         fill_table_of_db_with_df(
             df,
             columns="date",
-            table=StocksPrices.__tablename__,
+            table=StockPrice.__tablename__,
             conditions=f"where code = '{code}'"
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
@@ -207,7 +207,7 @@ def update_stock_prices(code):
 
 
 def update_stocks_group_prices(group_code):
-    stocks = session.query(Stocks.code).filter_by(group_code=group_code).all()
+    stocks = session.query(Stock.code).filter_by(group_code=group_code).all()
     print(f"Started group: {group_code}")
     codes = [stock[0] for stock in stocks]
     update_stocks_prices(codes)
@@ -217,7 +217,7 @@ def update_stocks_group_prices(group_code):
 def fill_stocks_prices_table():
     start_time = time()
     update_indexes_prices()
-    codes = session.query(Stocks.group_code).distinct().all()
+    codes = session.query(Stock.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")
         update_stocks_group_prices(code[0])

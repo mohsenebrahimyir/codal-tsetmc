@@ -9,7 +9,7 @@ from codal_tsetmc.tools.api import (
     get_csv_from_github,
     get_results_by_asyncio_loop, GET_HEADERS_REQUEST
 )
-from codal_tsetmc.models.stocks import Stocks, StocksGroups
+from codal_tsetmc.models import Stock, StockGroup
 from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
 
 INDEX_CODE = "32097828799138957"
@@ -17,16 +17,16 @@ INDEX_CODE = "32097828799138957"
 
 def is_stock_in_bourse_or_fara_or_paye(code):
     group_type = ["1Z", "91", "C1", "G1", "L1", "N1", "N2", "P1", "V1", "Z1"]
-    return Stocks.query.filter_by(code=code).first().group_type in group_type
+    return Stock.query.filter_by(code=code).first().group_type in group_type
 
 
 def is_stock_in_akhza_bond(code):
     group_type = ["I1", "I2", "I4"]
-    return Stocks.query.filter_by(code=code).first().group_type in group_type
+    return Stock.query.filter_by(code=code).first().group_type in group_type
 
 
 def is_stock_in_gam_bond(code):
-    stock = Stocks.query.filter_by(code=code).first()
+    stock = Stock.query.filter_by(code=code).first()
     return stock.group_type in ["N4"] and stock.group_name in ["اوراق تامين مالي"]
 
 
@@ -59,7 +59,7 @@ def get_stock_detail(code: str, timeout=3):
 
 def create_or_update_stock_from_dict(stock):
     print(f"Stock create (code: {stock['code']}, symbol: {stock['symbol']}).")
-    session.add(Stocks(**stock))
+    session.add(Stock(**stock))
     try:
         session.commit()
     except Exception as e:
@@ -69,9 +69,9 @@ def create_or_update_stock_from_dict(stock):
 
 async def update_stock_table_async(code: str) -> bool:
     code = int(code)
-    create_table_if_not_exist(Stocks)
+    create_table_if_not_exist(Stock)
     try:
-        stock = Stocks.query.filter_by(code=code).first()
+        stock = Stock.query.filter_by(code=code).first()
         if stock is not None:
             if stock.code == code:
                 print(f"Stock exist: (code: {stock.code}, symbol: {stock.symbol}).")
@@ -110,13 +110,16 @@ def get_stock_ids(timeout=10):
 def get_stocks_groups(timeout=10):
     url = f"https://cdn.tsetmc.com/api/StaticData/GetStaticData"
     r = requests.get(url, headers=GET_HEADERS_REQUEST, timeout=timeout)
-    return pd.DataFrame(r.json()["staticData"])
+    df = pd.DataFrame(r.json()["staticData"])
+    df = df[df["type"] != "PaperType"]
+    df["code"] = pd.to_numeric(df["code"])
+    return df[["code", "name", "type", "description"]]
 
 
 def fill_stocks_groups_table():
-    create_table_if_not_exist(StocksGroups)
+    create_table_if_not_exist(StockGroup)
     df = get_stocks_groups()
-    fill_table_of_db_with_df(df, StocksGroups.__tablename__, "id")
+    fill_table_of_db_with_df(df, StockGroup.__tablename__, "code")
 
 
 def fill_stocks_table(timeout=10, repeat=2):

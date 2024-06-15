@@ -25,26 +25,21 @@ python3 -m twine upload --repository pypi dist/*
 ### TSETMC
 
 - [X] `tehran_stocks`: الهام از بسته
-- [X] `stocks`: لیست تمام سهام‌ها و صندوق‌ها و ...
+- [X] `stock`: لیست تمام سهام‌ها و صندوق‌ها و ...
 - [X] `stock_capital`: پایگاه داده افزایش سرمایه
   - باید دقت کنیم که بعضی از افزایش سرمایه‌‌های سایت tsetmc بروز نیست و باید برای محاسبه مقدار دقیق از صورت‌های مالی شرکت‌ها استفاده کرد.
 - [X] `stock_price`: قیمت و حجم معاملات روزانه
-
+- [X] `stock_group`:
 ### CODAL
 
-- [X] `companies`: لیست تمام شرکت‌ها
-- [X] `company_statuses`: وضعیت شرکت‌ها
-- [X] `company_types`: نوع شرکت‌ها
-- [X] `report_types`: گروه اطلاعیه‌ها
-- [X] `letter_types`: نوع گزارش
-- [X] `auditors`: حسابرس‌ها
-- [X] `financial_years`: سال مالی‌ها
+- [X] `company`: لیست تمام شرکت‌ها
+- [X] `company_state`: وضعیت شرکت‌ها
+- [X] `company_type`: نوع شرکت‌ها
+- [X] `report_type`: گروه اطلاعیه‌ها
+- [X] `letter_type`: نوع گزارش
+- [X] `auditor`: حسابرس‌ها
+- [X] `financial_year`: سال مالی‌ها
 - [X] `letter`: گزارشات مالی
-
-#### OTHER
-
-- [X] `commodities_price`: افزون قیمت‌های کامودیتی
-  - [X] price_dollar_rl: قیمت دلار آزاد به صورت پیش فرض
 
 ## نصب پکیج
 
