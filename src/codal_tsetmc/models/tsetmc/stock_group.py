@@ -1,7 +1,6 @@
 from codal_tsetmc.config.engine import (
     Column, Integer, String, Base
 )
-from sqlalchemy.orm import relationship
 
 
 class StockGroup(Base):
@@ -12,8 +11,6 @@ class StockGroup(Base):
     name = Column(String)
     type = Column(String)
     description = Column(String)
-
-    linked_stocks = relationship("Stock", backref="group")
 
     def __repr__(self):
         return f"(group: {self.name}, code: {self.code}), type: {self.type}"

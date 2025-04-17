@@ -1,5 +1,6 @@
 *.ipynb
 
+.cdl_tse
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

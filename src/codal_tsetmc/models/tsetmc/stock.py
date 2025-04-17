@@ -6,8 +6,7 @@ from codal_tsetmc.config.engine import (
     Column, Integer, String, Base, session
 )
 from codal_tsetmc.tools.database import read_table_by_conditions
-from sqlalchemy import BigInteger, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy import BigInteger
 
 
 def add_event(df, event, ratio):
@@ -34,14 +33,11 @@ class Stock(Base):
     instrument_code = Column(BigInteger)
     instrument_id = Column(String)
     group_name = Column(String)
-    group_code = Column(Integer, ForeignKey("stock_group.code"))
+    group_code = Column(Integer)
     group_type = Column(String)
     market_name = Column(String)
     market_code = Column(String)
     market_type = Column(String)
-
-    linked_prices = relationship("StockPrice", backref="stock")
-    linked_capitals = relationship("StockCapital", backref="stock")
 
     _price_cached = False
     _price_counter = 0

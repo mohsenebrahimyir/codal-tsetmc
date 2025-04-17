@@ -74,7 +74,7 @@ def db_is_empty():
     init_models = [
         Company, CompanyState, CompanyType,
         LetterType, ReportType, Auditor, FinancialYear,
-        StockGroup, Stock,
+        StockGroup,
     ]
 
     try:

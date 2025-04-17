@@ -6,8 +6,7 @@ from urllib.parse import urlencode
 
 from codal_tsetmc.tools.exception import *
 from codal_tsetmc.tools.string import (
-    LETTERS_CODE_TO_TITLE, FA_TO_EN_DIGITS,
-    df_col_to_snake_case, datetime_to_num
+    FA_TO_EN_DIGITS, df_col_to_snake_case, datetime_to_num
 )
 from codal_tsetmc.tools.api import get_dict_from_xml_api
 from codal_tsetmc.models import (
@@ -257,19 +256,15 @@ class CodalQuery:
     def get_letters(self, pages: int = 0, show=False) -> None | pd.DataFrame:
         letters = self.get_api_multi_page(pages)
         df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
-        df["LetterSerial"] = df["Url"].replace(regex={
+        df["Serial"] = df["Url"].replace(regex={
             r"^.*LetterSerial=": "",
             r"\&.*$": ""
         })
-        df["LetterTypes"] = df["LetterCode"].replace(regex=LETTERS_CODE_TO_TITLE)
         df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_num)
         df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_num)
-        df["LetterTitle"] = df["Title"]
-        df["CompanySymbol"] = df["Symbol"]
         df = df[[
             "PublishDateTime", "SentDateTime", "TracingNo",
-            "LetterSerial", "LetterCode", "LetterTypes", "LetterTitle",
-            "CompanySymbol", "CompanyName",
+            "Serial", "Code", "Types", "Title", "Symbol", "CompanyName",
         ]]
         df = df_col_to_snake_case(df)
         self.letters = df

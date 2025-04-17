@@ -18,7 +18,7 @@ class BadValueInput:
             raise TypeError("status must be String")
 
     def int_str_type(self):
-        pattern = "^[0-9]*$"
+        pattern = "^.+-[0-9]+$"
         if not bool(re.match(pattern, self.value)):
             raise TypeError("status must be Integer String")
 

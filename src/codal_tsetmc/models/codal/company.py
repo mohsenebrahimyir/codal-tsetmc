@@ -1,8 +1,6 @@
 from codal_tsetmc.config.engine import (
     Column, Integer, String, Base
 )
-from sqlalchemy import ForeignKey
-from sqlalchemy.orm import relationship
 
 
 class Company(Base):
@@ -12,10 +10,8 @@ class Company(Base):
     symbol = Column(String, unique=True)
     name = Column(String)
     isic = Column(Integer)
-    type_code = Column(Integer, ForeignKey("company_type.code"))
-    status_code = Column(Integer, ForeignKey("company_state.code"))
-
-    linked_letters = relationship("Letter", backref="company")
+    type_code = Column(Integer)
+    status_code = Column(Integer)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

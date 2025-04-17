@@ -10,7 +10,7 @@ from codal_tsetmc.config.engine import session
 from codal_tsetmc.models import Stock, Letter
 from codal_tsetmc.tools.api import GET_HEADERS_REQUEST
 from codal_tsetmc.tools.string import (
-    FA_TO_EN_DIGITS, LETTERS_CODE_TO_TITLE,
+    FA_TO_EN_DIGITS,
     datetime_to_num, df_col_to_snake_case,
 )
 
@@ -22,21 +22,66 @@ from codal_tsetmc.download.codal.query import CodalQuery
 ################"""
 
 
+LETTERS_CODE_TO_TYPE = {
+    "ن-10": "اطلاعات و صورتهای مالی میاندوره ای",
+    "ن-11": "گزارش فعالیت هیئت مدیره",
+    "ن-12": "گزارش کنترل های داخلی",
+    "ن-13": "زمانبندی پرداخت سود",
+    "ن-20": "افشای اطلاعات با اهمیت",
+    "ن-21": "شفاف سازی در خصوص شایعه، خبر یا گزارش منتشر شده",
+    "ن-22": "شفاف سازی در خصوص نوسان قیمت سهام",
+    "ن-23": "اطلاعات حاصل از برگزاری کنفرانس اطلاع رسانی",
+    "ن-24": "درخواست ارایه مهلت جهت رعایت ماده  19 مکرر 1/ 12 مکرر 4 دستورالعمل اجرایی نحوه انجام معاملات",
+    "ن-25": "برنامه ناشر جهت خروج از شمولیت ماده 141 لایحه قانونی اصلاحی قسمتی از قانون تجارت",
+    "ن-26": "توضیحات در خصوص اطلاعات و صورت های مالی منتشر شده",
+    "ن-30": "گزارش فعالیت ماهانه",
+    "ن-41": "مشخصات کمیته حسابرسی و واحد حسابرسی داخلی",
+    "ن-42": "آگهی ثبت تصمیمات مجمع عادی سالیانه",
+    "ن-43": "اساسنامه شرکت مصوب مجمع عمومی فوق العاده",
+    "ن-45": "معرفی یا تغییر در ترکیب اعضای هیئت‌مدیره",
+    "ن-50": "آگهی دعوت به مجمع عمومی عادی سالیانه",
+    "ن-51": "خلاصه تصمیمات مجمع عمومی عادی سالیانه",
+    "ن-52": "تصمیمات مجمع عمومی عادی سالیانه",
+    "ن-53": "آگهی دعوت به مجمع عمومی عادی سالیانه نوبت دوم",
+    "ن-54": "آگهی دعوت به مجمع عمومی عادی بطور فوق العاده",
+    "ن-55": "تصمیمات مجمع عمومی عادی به‌طور فوق‌العاده",
+    "ن-56": "آگهی دعوت به مجمع عمومی فوق العاده",
+    "ن-57": "تصمیمات مجمع عمومی فوق‌العاده",
+    "ن-58": "لغو  آگهی (اطلاعیه) دعوت به مجمع عمومی",
+    "ن-59": "مجوز بانک مرکزی جهت برگزاری مجمع عمومی عادی سالیانه",
+    "ن-60": "پیشنهاد هیئت مدیره به مجمع عمومی فوق العاده در خصوص افزایش سرمایه",
+    "ن-61": "اظهارنظر حسابرس و بازرس قانونی نسبت به گزارش توجیهی هیئت مدیره در خصوص افزایش سرمایه",
+    "ن-62": "مدارک و مستندات درخواست افزایش سرمایه",
+    "ن-63": "تمدید مهلت استفاده از مجوز افزایش سرمایه",
+    "ن-64": "مهلت استفاده از حق تقدم خرید سهام",
+    "ن-65": "اعلامیه پذیره نویسی عمومی",
+    "ن-66": "نتایج حاصل از فروش حق تقدم های استفاده نشده",
+    "ن-67": "آگهی ثبت افزایش سرمایه",
+    "ن-69": "توزیع گواهی نامه نقل و انتقال و سپرده سهام",
+    "ن-70": "تصمیم هیئت مدیره به انجام افزایش سرمایه تفویض شده در مجمع فوق العاده",
+    "ن-71": "زمان تشکیل جلسه هیئت‌مدیره در خصوص افزایش سرمایه",
+    "ن-72": "لغو اطلاعیه زمان تشکیل جلسه هیات مدیره در خصوص افزایش سرمایه",
+    "ن-73": "تصمیمات هیئت‌مدیره در خصوص افزایش سرمایه",
+    "ن-80": "تغییر نشانی",
+    "ن-81": "درخواست تکمیل مشخصات سهامداران",
+}
+
+LETTERS_TYPE_TO_CODE = {y: x for x, y in LETTERS_CODE_TO_TYPE.items()}
+
+
 def convert_letter_list_to_df(data) -> pd.DataFrame:
     df = pd.DataFrame(data).replace(regex=FA_TO_EN_DIGITS)
-    df["LetterSerial"] = df["Url"].replace(regex={
+    df["Serial"] = df["Url"].replace(regex={
         r"^.*LetterSerial=": "",
         r"\&.*$": ""
     })
-    df["LetterTypes"] = df["LetterCode"].replace(regex=LETTERS_CODE_TO_TITLE)
+    df["Code"] = df["LetterCode"]
+    df["Type"] = df["LetterCode"].replace(regex=LETTERS_CODE_TO_TYPE)
     df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_num)
     df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_num)
-    df["LetterTitle"] = df["Title"]
-    df["Name"] = df["CompanyName"]
     df = df[[
         "PublishDateTime", "SentDateTime", "TracingNo",
-        "LetterSerial", "LetterCode", "LetterTypes", "LetterTitle",
-        "Symbol", "Name",
+        "Serial", "Title", "Code", "Type", "Symbol", "CompanyName",
     ]]
     df = df_col_to_snake_case(df)
 
@@ -105,10 +150,10 @@ async def update_letters_by_url_async(ses, url: str):
         async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
             data = await response.json()
 
-        model = Letter
-        create_table_if_not_exist(model)
         df = convert_letter_list_to_df(data["Letters"])
 
+        model = Letter
+        create_table_if_not_exist(model)
         fill_table_of_db_with_df(df, model.__tablename__, "tracing_no")
         return True
     except Exception as e:
