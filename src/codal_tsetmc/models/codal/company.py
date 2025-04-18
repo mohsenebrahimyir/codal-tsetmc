@@ -12,6 +12,8 @@ class Company(Base):
     isic = Column(Integer)
     type_code = Column(Integer)
     status_code = Column(Integer)
+    industry_group_code = Column(Integer)
+    reporting_type = Column(Integer)
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -19,5 +21,3 @@ class Company(Base):
     def __repr__(self):
         return f"({self.symbol}, "\
                f"{self.name}, "
-
-

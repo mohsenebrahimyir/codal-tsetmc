@@ -1,18 +1,15 @@
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.config.engine import (
     HOME_PATH,
     CDL_TSE_FOLDER,
     default_db_path,
     CONFIG_PATH,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.tools.database import (
     read_table_by_conditions,
     read_table_by_sql_query,
     fill_table_of_db_with_df,
     is_table_exist_in_db,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.models import (
     Stock,
     StockPrice,
@@ -27,9 +24,7 @@ from codal_tsetmc.models import (
     ReportType,
     Auditor,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.download.codal.query import CodalQuery
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.download.tsetmc.stock import (
     get_stock_detail,
     get_stock_ids,
@@ -39,7 +34,6 @@ from codal_tsetmc.download.tsetmc.stock import (
     fill_stocks_groups_table,
     fill_stocks_table,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.download.tsetmc.price import (
     get_stock_price_daily,
     get_stock_prices_history,
@@ -51,7 +45,6 @@ from codal_tsetmc.download.tsetmc.price import (
     update_stocks_group_prices,
     fill_stocks_prices_table,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.download.tsetmc.capital import (
     get_stock_capital_daily,
     get_stock_capitals_history,
@@ -60,7 +53,6 @@ from codal_tsetmc.download.tsetmc.capital import (
     update_stocks_group_capitals,
     fill_stocks_capitals_table,
 )
-# noinspection PyUnresolvedReferences
 from codal_tsetmc.initializer import (
     create_db,
     init_db,

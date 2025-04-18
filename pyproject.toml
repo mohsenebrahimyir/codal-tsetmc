@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codal-tsetmc"
-version = "1.7.0"
+version = "2.0.0"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = ["Mohsen Ebrahimi <mohsenebrahimy.ir@gmail.com>"]
 license = "MIT"

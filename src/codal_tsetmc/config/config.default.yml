@@ -1,15 +1,11 @@
-database:
-  engine: sqlite
-  host: None
-  port: None
-  user: None
-  password: None
-  database: None
+config:
+  database:
+    engine: sqlite
+    host: None
+    port: None
+    user: None
+    password: None
+    database: None
 
-# database:
-#  database: postgres
-#  engine: postgresql
-#  host: localhost
-#  password: postgres
-#  port: 5433
-#  user: postgres
+  token:
+    license_key: None
