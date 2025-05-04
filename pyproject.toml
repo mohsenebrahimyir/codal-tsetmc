@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "codal-tsetmc"
-version = "2.0.0"
+version = "2.0.2"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = ["Mohsen Ebrahimi <mohsenebrahimy.ir@gmail.com>"]
 license = "MIT"
@@ -26,12 +26,12 @@ include = ["README.md", "LICENSE"]
 where = ["src"]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.10,<4.0"
 requests = "^2.25"
 SQLAlchemy = "^2.0"
 jalali-pandas = "^0.2"
-pandas = "^2.0"
-lxml = "^4.9"
+pandas = "^2.2"
+lxml = "^5.4"
 nest-asyncio = "^1.5"
 aiohttp = "^3.8"
 aiosignal = "^1.2"

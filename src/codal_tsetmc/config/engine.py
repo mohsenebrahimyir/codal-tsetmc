@@ -15,7 +15,7 @@ def in_venv():
 
 
 if in_venv():
-    HOME_PATH = str(os.environ["VIRTUAL_ENV"])+"/.."
+    HOME_PATH = str(Path(sys.prefix).parent)
 else:
     HOME_PATH = str(Path.home())
 

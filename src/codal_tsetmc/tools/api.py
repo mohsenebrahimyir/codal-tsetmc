@@ -5,8 +5,11 @@ from urllib.request import urlopen
 import requests
 import pandas as pd
 import asyncio
-import nest_asyncio
 
+try:
+    import nest_asyncio
+except ImportError:
+    nest_asyncio = None
 
 GET_HEADERS_REQUEST = {
     'User-Agent':
@@ -45,17 +48,36 @@ def get_csv_from_github(name):
 
 
 def get_results_by_asyncio_loop(tasks):
-    nest_asyncio.apply()
-
-    if sys.platform == 'win32':
-        loop = asyncio.ProactorEventLoop()
-        asyncio.set_event_loop(loop)
-    else:
-        loop = asyncio.get_event_loop()
-        asyncio.set_event_loop(loop)
+    async def run_all():
+        return await asyncio.gather(*tasks)
 
     try:
-        loop.run_until_complete(asyncio.gather(*tasks))
+        loop = asyncio.get_event_loop()
+        if loop.is_closed():
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+
+        if sys.platform == "win32":
+            if isinstance(loop, asyncio.SelectorEventLoop):
+                loop = asyncio.ProactorEventLoop()
+                asyncio.set_event_loop(loop)
+
+        if loop.is_running():
+            if nest_asyncio:
+                nest_asyncio.apply()
+                return loop.run_until_complete(run_all())
+            else:
+                raise RuntimeError(
+                    "Event loop is running and nest_asyncio is not available."
+                )
+
+        return loop.run_until_complete(run_all())
+
+    except RuntimeError:
+        # fallback در صورت بسته بودن یا مشکل در حلقه قبلی
+        new_loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(new_loop)
+        return new_loop.run_until_complete(run_all())
 
     except Exception as e:
-        print(e.__context__)
+        print("Async loop error:", e.__context__ or e)
