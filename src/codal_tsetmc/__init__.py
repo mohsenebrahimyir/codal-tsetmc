@@ -65,8 +65,7 @@ from codal_tsetmc.initializer import (
 def db_is_empty():
     init_models = [
         Company, CompanyState, CompanyType,
-        LetterType, ReportType, Auditor, FinancialYear,
-        StockGroup,
+        LetterType, ReportType, Auditor, FinancialYear
     ]
 
     try:
