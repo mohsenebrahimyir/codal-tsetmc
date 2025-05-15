@@ -34,9 +34,9 @@ def digit_string_to_integer(string: str) -> int | None:
 
 
 def datetime_to_num(dt):
-    if dt == "" or dt is None:
-        return None
     try:
+        if dt == "" or dt is None:
+            return None
         dt = replace_all(dt, {"[^0-9]": ""})
         return int(dt) * 10 ** (14 - len(dt))
     except Exception as e:

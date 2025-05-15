@@ -269,16 +269,6 @@ class CodalQuery:
     def get_letters(self, pages: int = 0, show=False) -> pd.DataFrame:
         letters = self.get_api_multi_page(pages)
         df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
-        df["Serial"] = df["Url"].replace(regex={
-            r"^.*LetterSerial=": "",
-            r"\&.*$": ""
-        })
-        df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_num)
-        df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_num)
-        df = df[[
-            "PublishDateTime", "SentDateTime", "TracingNo",
-            "Serial", "Code", "Types", "Title", "Symbol", "CompanyName",
-        ]]
         df = df_col_to_snake_case(df)
         self.letters = df
         if show:

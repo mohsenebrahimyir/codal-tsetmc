@@ -1,5 +1,5 @@
 from codal_tsetmc.config.engine import Base
-from sqlalchemy import Integer, Column, BigInteger, String
+from sqlalchemy import Integer, Column, BigInteger, String, Boolean
 
 
 class Letter(Base):
@@ -14,6 +14,11 @@ class Letter(Base):
     code = Column(String)
     type = Column(String)
     symbol = Column(String)
+    has_html = Column(Boolean)
+    has_pdf = Column(Boolean)
+    has_excel = Column(Boolean)
+    has_xbrl = Column(Boolean)
+    has_attachment = Column(Boolean)
     company_name = Column(String)
 
     def __repr__(self):

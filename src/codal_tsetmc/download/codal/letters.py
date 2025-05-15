@@ -84,6 +84,7 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
     df = df[[
         "PublishDateTime", "SentDateTime", "TracingNo",
         "Serial", "Title", "Code", "Type", "Symbol", "CompanyName",
+        "HasHtml", "HasAttachment", "HasPdf", "HasXbrl", "HasExcel"
     ]]
     df = df_col_to_snake_case(df)
 
