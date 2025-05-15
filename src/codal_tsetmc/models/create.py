@@ -8,16 +8,20 @@ from . import (
     CompanyType,
     CompanyState,
     FinancialYear,
-    ReportType,
+    ReportingType,
     LetterType,
     Auditor,
-    Letter
+    Letter,
+    LetterGroup,
+    IndustryGroup
 )
 
 models = [
     Auditor,
     FinancialYear,
-    ReportType,
+    ReportingType,
+    LetterGroup,
+    IndustryGroup,
     LetterType,
     CompanyType,
     CompanyState,

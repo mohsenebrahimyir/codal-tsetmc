@@ -55,7 +55,7 @@ class Categories:
 
             letter_groups += [{"code": item["Code"], "title": item["Name"]}]
 
-        self.result["letter_groups"] = pd.DataFrame(letter_groups) \
+        self.result["letter_group"] = pd.DataFrame(letter_groups) \
             .sort_values("code").reset_index(drop=True)
         self.result["company_type"] = pd.DataFrame(company_types)
         self.result["company_type"].loc[-1] = [-1, "همه موارد"]
@@ -125,7 +125,7 @@ class Categories:
 
         api = get_dict_from_xml_api(self.url + "IndustryGroup")
         self.result["industry_group"] = pd.DataFrame(api)
-        self.result["industry_group"].columns = self.result["industry_group"].columns.str.lower()
+        self.result["industry_group"].columns = ["code", "name"]
         self.result["industry_group"].loc[-1] = [-1, "همه موارد"]
         self.result["industry_group"].sort_values("code").reset_index(drop=True, inplace=True)
 

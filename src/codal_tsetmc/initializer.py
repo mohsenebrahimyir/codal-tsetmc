@@ -52,7 +52,10 @@ def create_db():
 def init_db():
     print("downloading company and stock info from CODAL and TSETMC")
     models = [
-        FinancialYear, Auditor, LetterType, LetterGroup, ReportingType, CompanyState, CompanyType, IndustryGroup
+        FinancialYear, Auditor,
+        LetterType, LetterGroup,
+        ReportingType, CompanyState,
+        CompanyType, IndustryGroup
     ]
     for model in models:
         create_table_if_not_exist(model)
