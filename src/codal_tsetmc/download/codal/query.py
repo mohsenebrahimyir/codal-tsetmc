@@ -26,7 +26,7 @@ def remove_none(dictionary) -> dict:
 class CodalQuery:
 
     def __init__(self):
-        # جستجوی اطاعیه‌های سایت کودال
+        # جستجوی اطاعیه‌های سایت کدال
         self.page = None
         self.total = None
         self.letters = None
@@ -34,7 +34,7 @@ class CodalQuery:
         self.report_list_html = f"https://{self.base_url}/ReportList.aspx?"
         self.search_query_xml = f"https://search.{self.base_url}/api/search/v2/q?"
         self.pages = None
-        self.params = {
+        self.default = {
             "PageNumber": 1,
             "Symbol": -1,
             "name": -1,
@@ -60,73 +60,74 @@ class CodalQuery:
             "YearEndToDate": -1,
             "Publisher": "false",
         }
+        self.params = self.default
 
     """###################
     تنظیمات لازم برای کوئری
     ###################"""
 
-    # تنظیم نام نماد
-    def set_symbol(self, symbol: str = "") -> None:
+    # تنظیم نماد
+    def set_symbol(self, symbol: str = ""):
         BadValueInput(symbol).string_type()
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
-    # تنظیم نام نماد
-    def set_name(self, name: str = "") -> None:
+    # تنظیم نام
+    def set_name(self, name: str = ""):
         BadValueInput(name).string_type()
         self.params['name'] = name if bool(name) else -1
 
     # تنظیم شماره ISIC
-    def set_isic(self, isic: str = "") -> None:
+    def set_isic(self, isic: str = ""):
         BadValueInput(isic).string_type()
         self.params['Isic'] = -1 if isic == "" else isic
 
     # تنظیم وضعیت ناشر
-    def set_publisher_status(self, title: str = "") -> None:
+    def set_publisher_status(self, title: str = ""):
         BadValueInput(title).string_type()
         code = CompanyState.query.filter_by(title=title).first()
         self.params['CompanyState'] = code.code if bool(code) else -1
 
-    # تنظیم گروع اطلاعیه
-    def set_category(self, title: str = "") -> None:
-        BadValueInput(title).string_type()
-        code = LetterGroup.query.filter_by(title=title).first()
-        self.params["Category"] = code.code if bool(code) else -1
-
     # تنظیم نوع شرکت
-    def set_company_type(self, title: str = "") -> None:
+    def set_company_type(self, title: str = ""):
         BadValueInput(title).string_type()
         code = CompanyType.query.filter_by(title=title).first()
         self.params["CompanyType"] = code.code if bool(code) else -1  # تنظیم نوع شرکت
 
     # تنظیم نوع صنعت
-    def set_industry_group(self, name: str = "") -> None:
+    def set_industry_group(self, name: str = ""):
         BadValueInput(name).string_type()
         code = IndustryGroup.query.filter_by(name=name).first()
         self.params["IndustryGroup"] = code.code if bool(code) else -1
 
+    # تنظیم گروه اطلاعیه
+    def set_category(self, title: str = ""):
+        BadValueInput(title).string_type()
+        code = LetterGroup.query.filter_by(title=title).first()
+        self.params["Category"] = code.code if bool(code) else -1
+
     # تنظیم نوع اطلاعیه
-    def set_letter_type(self, title: str = "") -> None:
+    def set_letter_type(self, title: str = ""):
         BadValueInput(title).string_type()
         code = LetterType.query.filter_by(title=title).first()
         self.params["LetterType"] = code.code if bool(code) else -1
 
     # تنظیم موضوع اطلاعیه
-    def set_subject(self, subject: str = "") -> None:
+    def set_subject(self, subject: str = ""):
         BadValueInput(subject).string_type()
         self.params["Subject"] = -1 if subject == "" else subject
 
     # تنظیم شماره پیگیری
-    def set_tracing_no(self, no: str = "") -> None:
+    def set_tracing_no(self, no: str = ""):
         BadValueInput(no).int_str_type()
         self.params["TracingNo"] = -1 if no == "" else no
 
     # تنظیم کد اطلاعیه
-    def set_letter_code(self, code: str = "") -> None:
+    def set_letter_code(self, code: str = ""):
         BadValueInput(code).int_str_type()
         self.params["LetterCode"] = -1 if code == "" else code
 
     # تنظیم طول دوره
-    def set_length_period(self, period=-1) -> None:
+    def set_length_period(self, period=-1):
         # طول دوره
         length_period = {
             None: -1, 'همه موارد': -1, '-۱': -1, '۰': -1,
@@ -139,65 +140,63 @@ class CodalQuery:
         self.params["Length"] = -1 if period == "" else length_period[period]
 
     # تنظیم از تاریخ
-    def set_from_date(self, date: str = "1300/01/01") -> None:
+    def set_from_date(self, date: str = "1300/01/01"):
         BadValueInput(date).date_type()
         self.params["FromDate"] = -1 if date == "" else date
 
     # تنظیم تا تاریخ
-    def set_to_date(self, date: str = "1500/01/01") -> None:
+    def set_to_date(self, date: str = "1500/01/01"):
         BadValueInput(date).date_type()
         self.params["ToDate"] = -1 if date == "" else date
 
     # تنظیم حسابرسی شده
-    def set_audited(self, status: bool = True) -> None:
+    def set_audited(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["Audited"] = str(status).lower()
 
     # تنظیم حسابرسی نشده
-    def set_not_audited(self, status: bool = True) -> None:
+    def set_not_audited(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["NotAudited"] = str(status).lower()
 
     # تنظیم اصلی
-    def set_consolidate_table(self, status: bool = True) -> None:
+    def set_consolidate_table(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["Consolidatable"] = str(status).lower()
 
     # تنظیم تلفیقی
-    def set_not_consolidate_table(self, status: bool = True) -> None:
+    def set_not_consolidate_table(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["NotConsolidatable"] = str(status).lower()
 
     # تنظیم فقط زیرمجموعه ها
-    def set_childs(self, status: bool = True) -> None:
+    def set_childs(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["Childs"] = str(status).lower()
 
     # تنظیم فقط شرکت اصلی
-    def set_mains(self, status: bool = True) -> None:
+    def set_mains(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["Mains"] = str(status).lower()
 
     # تنظیم موسسه حسابرسی شرکت
-    def set_auditor_ref(self, name: str = None) -> None:
+    def set_auditor_ref(self, name: str = None):
         BadValueInput(name).string_type()
         code = Auditor.query.filter_by(name=name).first()
         self.params["AuditorRef"] = code.code if bool(code) else -1
 
     # سالی مالی منتهی به
-    def set_year_end_to_date(self, date: str = "1300/01/01") -> None:
+    def set_year_end_to_date(self, date: str = "1300/01/01"):
         BadValueInput(date).date_type()
         self.params["YearEndToDate"] = -1 if date == "" else date
 
     # تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
-    def set_publisher(self, status: bool = True) -> None:
+    def set_publisher(self, status: bool = True):
         BadValueInput(status).boolean_type()
         self.params["Publisher"] = str(status).lower()
 
-    # حذف تنظیمات
-
     # تنظیم شماره صفحه
-    def set_page_number(self, number: int = 0) -> None:
+    def set_page_number(self, number: int = 0):
         if bool(number):
             BadValueInput(number).integer_type()
             self.params['PageNumber'] = number
@@ -207,10 +206,14 @@ class CodalQuery:
     def get_page_number(self) -> int:
         return self.params['PageNumber']
 
-    def set_pages_number(self, number: int = 0) -> None:
+    def set_pages_number(self, number: int = 0):
         if bool(number):
             BadValueInput(number).integer_type()
             self.pages = number
+
+    # تنظیمات پیشفرض
+    def reset_params(self):
+        self.params = self.default
 
     """################
     گرفتن لینک کوئری کدال 
@@ -232,7 +235,7 @@ class CodalQuery:
     def get_report_list_url(self) -> str:
         return self.get_query_url(False)
 
-    # گرفتن کوئری جستوجو
+    # گرفتن کوئری جستجو
     def get_api_search_url(self) -> str:
         return self.get_query_url(True)
 

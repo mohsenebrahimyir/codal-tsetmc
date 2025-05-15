@@ -58,68 +58,74 @@ from codal_tsetmc import CodalQuery
 # ساختن یک شی از شی جستجوی کدال
 query = CodalQuery()
 
-#1. تنظیم نام نماد
+# تنظیم نماد
 query.set_symbol(symbol: str = "")
 
-#2. تنظیم وضعیت ناشر
+# تنظیم نام
+query.set_name(name: str = "")
+
+# تنظیم وضعیت ناشر
 query.set_publisher_status(title: str = "")
 
-#3. تنظیم گروع اطلاعیه
-query.set_category(title: str = "")
-
-#4. تنظیم نوع شرکت
+# تنظیم نوع شرکت
 query.set_company_type(title: str = "")
 
-#5. تنظیم نوع اطلاعیه
+# تنظیم نوع صنعت
+query.set_industry_group(name: str = "")
+
+# تنظیم گروه اطلاعیه
+query.set_category(title: str = "")
+
+# تنظیم نوع اطلاعیه
 query.set_letter_type(title: str = "")
 
-#6. تنظیم موضوع اطلاعیه
+# تنظیم موضوع اطلاعیه
 query.set_subject(subject: str = "")
 
-#7. تنظیم شماره پیگیری
+# تنظیم شماره پیگیری
 query.set_tracing_no(no: str = "")
 
-#8. تنظیم کد اطلاعیه
+# تنظیم کد اطلاعیه
 query.set_letter_code(code: str = "")
 
-#9. تنظیم طول دوره
+# تنظیم طول دوره
 query.set_length_period(period=-1)
 
-#10. تنظیم از تاریخ
+# تنظیم از تاریخ
 query.set_from_date(date: str = "1300/01/01")
 
-#11. تنظیم تا تاریخ
+# تنظیم تا تاریخ
 query.set_to_date(date: str = "1500/01/01")
 
-#12. تنظیم حسابرسی شده
+# تنظیم حسابرسی شده
 query.set_audited(status: bool = True)
 
-#13. تنظیم حسابرسی نشده
+# تنظیم حسابرسی نشده
 query.set_not_audited(status: bool = True)
 
-#14. تنظیم اصلی
+# تنظیم اصلی
 query.set_consolidatable(status: bool = True)
 
-#15. تنظیم تلفیقی
+# تنظیم تلفیقی
 query.set_not_consolidatable(status: bool = True)
 
-#16. تنظیم فقط زیرمجموعه ها
+# تنظیم فقط زیرمجموعه ها
 query.set_childs(status: bool = True)
 
-#17. تنظیم فقط شرکت اصلی
+# تنظیم فقط شرکت اصلی
 query.set_mains(status: bool = True)
 
-#18. تنظیم موسسه حسابرسی شرکت
+# تنظیم موسسه حسابرسی شرکت
 query.set_auditor_ref(name: str = None)
 
-#19. سالی مالی منتهی به
+# سالی مالی منتهی به
 query.set_year_end_to_date(date: str = "1300/01/01")
 
-#20. تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
+# تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
 query.set_publisher(status: bool = True)
 
-#21. حذف تنظیمات
-query.remove_none(dictionary)
+# تنظیمات پیشفرض
+query.reset_params()
 
 # تنظیم شماره ISIC
 query.set_isic(isic: str = "")
