@@ -32,10 +32,9 @@ book:
     - intro.qmd
     
     - installation.qmd
-    - guide.qmd
     - codal.qmd
-    - tsetmc.qmd
-    - treasury-bill.qmd
+    # - tsetmc.qmd
+    # - treasury-bill.qmd
 
     - references.qmd
 

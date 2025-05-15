@@ -52,79 +52,81 @@ fill_categories_table()
 
 ```python
 #| eval: false
-# وارد کردن یک شی جستجوی کدال
 from codal_tsetmc import CodalQuery
 
-# ساختن یک شی از شی جستجوی کدال
+# شی جستجوی کدال
 query = CodalQuery()
 
-# تنظیم نماد
+# 1. نماد
 query.set_symbol(symbol: str = "")
 
-# تنظیم نام
+# 2. نام
 query.set_name(name: str = "")
 
-# تنظیم وضعیت ناشر
+# 3. وضعیت ناشر
 query.set_publisher_status(title: str = "")
 
-# تنظیم نوع شرکت
+# 4. ماهیت شرکت
+query.set_company_nature(title: str = "")
+
+# 5. نوع شرکت
 query.set_company_type(title: str = "")
 
-# تنظیم نوع صنعت
+# 6. نوع صنعت
 query.set_industry_group(name: str = "")
 
-# تنظیم گروه اطلاعیه
+# 7. گروه اطلاعیه
 query.set_category(title: str = "")
 
-# تنظیم نوع اطلاعیه
+# 8. نوع اطلاعیه
 query.set_letter_type(title: str = "")
 
-# تنظیم موضوع اطلاعیه
+# 9. موضوع اطلاعیه
 query.set_subject(subject: str = "")
 
-# تنظیم شماره پیگیری
+# 10. شماره پیگیری
 query.set_tracing_no(no: str = "")
 
-# تنظیم کد اطلاعیه
+# 11. کد اطلاعیه
 query.set_letter_code(code: str = "")
 
-# تنظیم طول دوره
+# 12. طول دوره
 query.set_length_period(period=-1)
 
-# تنظیم از تاریخ
+# 13. از تاریخ
 query.set_from_date(date: str = "1300/01/01")
 
-# تنظیم تا تاریخ
+# 14. تا تاریخ
 query.set_to_date(date: str = "1500/01/01")
 
-# تنظیم حسابرسی شده
+# 15. حسابرسی شده
 query.set_audited(status: bool = True)
 
-# تنظیم حسابرسی نشده
+# 16. حسابرسی نشده
 query.set_not_audited(status: bool = True)
 
-# تنظیم اصلی
+# 17. اصلی
 query.set_consolidatable(status: bool = True)
 
-# تنظیم تلفیقی
+# 18. تلفیقی
 query.set_not_consolidatable(status: bool = True)
 
-# تنظیم فقط زیرمجموعه ها
+# 19. فقط زیرمجموعه ها
 query.set_childs(status: bool = True)
 
-# تنظیم فقط شرکت اصلی
+# 20. فقط شرکت اصلی
 query.set_mains(status: bool = True)
 
-# تنظیم موسسه حسابرسی شرکت
+# 21. موسسه حسابرسی شرکت
 query.set_auditor_ref(name: str = None)
 
-# سالی مالی منتهی به
+# 22. سالی مالی منتهی به
 query.set_year_end_to_date(date: str = "1300/01/01")
 
-# تنظیم فقط اطلاعیه های منتشر شده از طرف سازمان
+# 23. فقط اطلاعیه های منتشر شده از طرف سازمان
 query.set_publisher(status: bool = True)
 
-# تنظیمات پیشفرض
+# 24. تنظیمات پیشفرض 
 query.reset_params()
 
 # تنظیم شماره ISIC
@@ -146,13 +148,13 @@ query.params
 گرفتن لینک کوئری کدال
 ################"""
 
-#22. گرفتن لینک
+# گرفتن لینک
 query.get_query_url(api: bool = True)
 
-#22. گرفتن لیست گزارش
+# گرفتن لیست گزارش
 query.get_report_list_url()
 
-#22. گرفتن کوئری جستوجو
+# گرفتن کوئری جستوجو
 query.get_api_search_url()
 
 """################
@@ -303,20 +305,24 @@ update_letters_table(query, ["فولاد", "فملی", "شپنا"])
 #| eval: true
 from codal_tsetmc.tools.database import read_table_by_conditions
 
-read_table_by_conditions(table="letters", variable="symbol", value="فولاد")
+read_table_by_conditions(
+  table="letter", 
+  variable="symbol",
+  value="فولاد"
+)
 ```
 
 1.  گرفتن لیست گزارشات از دیتابیس با کوئری
 
 
 ```{python}
-#| eval: true
+# | eval: true
 from codal_tsetmc.tools.database import read_table_by_sql_query
 
 df = read_table_by_sql_query(
-  """
+    """
   SELECT *
-  FROM letters 
+  FROM letter
   WHERE symbol IN (
     'فولاد',
     'فملی',

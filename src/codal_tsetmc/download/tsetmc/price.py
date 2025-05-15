@@ -33,7 +33,7 @@ def edit_index_prices(data, code, symbol):
     df["symbol"] = symbol
     df["value"] = pd.NA
     df["volume"] = pd.NA
-    df["up_date"] = jdt.now().strftime("%Y%m%d000000").apply(datetime_to_num)
+    df["up_date"] = datetime_to_num(jdt.now().strftime("%Y%m%d000000"))
     df = df.sort_values("date")
 
     return df

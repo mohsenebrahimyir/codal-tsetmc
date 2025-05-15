@@ -87,6 +87,12 @@ class CodalQuery:
         code = CompanyState.query.filter_by(title=title).first()
         self.params['CompanyState'] = code.code if bool(code) else -1
 
+    # تنظیم ماهیت شرکت
+    def set_company_nature(self, title: str = ""):
+        BadValueInput(title).string_type()
+        code = ReportingType.query.filter_by(title=title).first()
+        self.params["ReportingType"] = code.code if bool(code) else -1
+
     # تنظیم نوع شرکت
     def set_company_type(self, title: str = ""):
         BadValueInput(title).string_type()
