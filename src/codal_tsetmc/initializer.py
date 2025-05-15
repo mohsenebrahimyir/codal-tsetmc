@@ -1,9 +1,19 @@
 import os
 
 from codal_tsetmc.models import (
-    Stock, StockGroup, StockCapital, StockPrice,
-    CompanyState, Company, LetterType, ReportType,
-    Auditor, FinancialYear, CompanyType
+    Stock,
+    StockGroup,
+    StockCapital,
+    StockPrice,
+    CompanyState,
+    Company,
+    LetterType,
+    LetterGroup,
+    ReportingType,
+    Auditor,
+    FinancialYear,
+    CompanyType,
+    IndustryGroup,
 )
 
 from codal_tsetmc.tools.database import (
@@ -42,7 +52,7 @@ def create_db():
 def init_db():
     print("downloading company and stock info from CODAL and TSETMC")
     models = [
-        FinancialYear, Auditor, LetterType, ReportType, CompanyState, CompanyType, 
+        FinancialYear, Auditor, LetterType, LetterGroup, ReportingType, CompanyState, CompanyType, IndustryGroup
     ]
     for model in models:
         create_table_if_not_exist(model)
@@ -60,13 +70,6 @@ def init_db():
     )
     if df.empty:
         fill_companies_table()
-
-    # create_table_if_not_exist(StockGroup)
-    # df = read_table_by_sql_query(
-    #     f"SELECT * FROM {StockGroup.__tablename__} LIMIT 1;"
-    # )
-    # if df.empty:
-    #     fill_stocks_groups_table()
 
 
 def fill_db():

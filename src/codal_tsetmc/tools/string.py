@@ -26,8 +26,15 @@ def replace_all(text, dic):
     return text
 
 
+def digit_string_to_integer(string: str) -> int | None:
+    try:
+        return int(string)
+    except ValueError:
+        return None
+
+
 def datetime_to_num(dt):
-    if dt == "":
+    if dt == "" or dt is None:
         return None
     try:
         dt = replace_all(dt, {"[^0-9]": ""})
@@ -92,4 +99,3 @@ def to_snake_case(name):
 def df_col_to_snake_case(df):
     df.columns = map(to_snake_case, df.columns)
     return df
-

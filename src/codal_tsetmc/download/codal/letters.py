@@ -14,13 +14,15 @@ from codal_tsetmc.tools.string import (
     datetime_to_num, df_col_to_snake_case,
 )
 
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
+from codal_tsetmc.tools.database import (
+    fill_table_of_db_with_df,
+    create_table_if_not_exist
+)
 from codal_tsetmc.download.codal.query import CodalQuery
 
 """################
 گرفتن اطلاعات از کدال
 ################"""
-
 
 LETTERS_CODE_TO_TYPE = {
     "ن-10": "اطلاعات و صورتهای مالی میاندوره ای",
@@ -91,11 +93,13 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
 async def get_letters_urls_from_page_100000_async(ses, url: str):
     nest_asyncio.apply()
 
-    async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
+    async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST,
+                       data="") as response:
         data = await response.json()
 
     u = url.split("100000")
-    return [f'{u[0]}{data["Page"] + 1 - i}{u[1]}' for i in range(1, data["Page"] + 1)]
+    return [f'{u[0]}{data["Page"] + 1 - i}{u[1]}' for i in
+            range(1, data["Page"] + 1)]
 
 
 async def get_letters_urls_async(urls: list):
@@ -147,7 +151,8 @@ async def update_letters_by_url_async(ses, url: str):
     nest_asyncio.apply()
 
     try:
-        async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST, data="") as response:
+        async with ses.get(url, cookies={}, headers=GET_HEADERS_REQUEST,
+                           data="") as response:
             data = await response.json()
 
         df = convert_letter_list_to_df(data["Letters"])
@@ -191,7 +196,8 @@ def update_letter_table_by_urls(urls: list):
 
             return wrapper
 
-        _ProactorBasePipeTransport.__del__ = silence_event_loop_closed(_ProactorBasePipeTransport.__del__)
+        _ProactorBasePipeTransport.__del__ = silence_event_loop_closed(
+            _ProactorBasePipeTransport.__del__)
 
         ##############################################################################
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
@@ -219,8 +225,11 @@ def update_letters_table(query: CodalQuery, symbols: list = None):
 
 
 def update_companies_group_letters(query: CodalQuery, group_code: str):
-    print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
-    print("Note: If database is not updated, You can run the fill_stocks_table function first!")
+    print("\033[93m",
+          "Warning: Sure that stock table in database must be updated!",
+          "\033[0m")
+    print(
+        "Note: If database is not updated, You can run the fill_stocks_table function first!")
     stocks = session.query(Stock.symbol).filter_by(group_code=group_code).all()
     print(f"Letters group: {group_code} Started.")
     symbols = [stock[0] for stock in stocks]
@@ -230,8 +239,11 @@ def update_companies_group_letters(query: CodalQuery, group_code: str):
 
 def fill_letters_table(query: CodalQuery):
     start_time = time()
-    print("\033[93m", "Warning: Sure that stock table in database must be updated!", "\033[0m")
-    print("Note: If database is not updated, You can run the fill_stocks_table function first!")
+    print("\033[93m",
+          "Warning: Sure that stock table in database must be updated!",
+          "\033[0m")
+    print(
+        "Note: If database is not updated, You can run the fill_stocks_table function first!")
     codes = session.query(Stock.group_code).distinct().all()
     for i, code in enumerate(codes):
         print(f"Total progress: {100 * (i + 1) / len(codes):.2f}%")

@@ -10,8 +10,8 @@ from codal_tsetmc.tools.string import (
 )
 from codal_tsetmc.tools.api import get_dict_from_xml_api
 from codal_tsetmc.models import (
-    CompanyState, CompanyType,
-    ReportType, LetterType, Auditor,
+    CompanyState, CompanyType, Company, IndustryGroup,
+    LetterGroup, LetterType, Auditor, ReportingType
 )
 
 
@@ -37,11 +37,13 @@ class CodalQuery:
         self.params = {
             "PageNumber": 1,
             "Symbol": -1,
-            "PublisherStatus": -1,
-            "Category": -1,
+            "name": -1,
+            "ReportingType": -1,
             "CompanyType": -1,
+            "IndustryGroup": -1,
             "CompanyState": -1,
             "LetterType": -1,
+            "Category": -1,
             "Subject": -1,
             "TracingNo": -1,
             "LetterCode": -1,
@@ -56,7 +58,7 @@ class CodalQuery:
             "Mains": "true",
             "AuditorRef": -1,
             "YearEndToDate": -1,
-            "Publisher": "false"
+            "Publisher": "false",
         }
 
     """###################
@@ -68,12 +70,17 @@ class CodalQuery:
         BadValueInput(symbol).string_type()
         self.params['Symbol'] = symbol if bool(symbol) else -1
 
+    # تنظیم نام نماد
+    def set_name(self, name: str = "") -> None:
+        BadValueInput(name).string_type()
+        self.params['name'] = name if bool(name) else -1
+
     # تنظیم شماره ISIC
     def set_isic(self, isic: str = "") -> None:
         BadValueInput(isic).string_type()
         self.params['Isic'] = -1 if isic == "" else isic
 
-    # تنظیم وضعیت ناشز
+    # تنظیم وضعیت ناشر
     def set_publisher_status(self, title: str = "") -> None:
         BadValueInput(title).string_type()
         code = CompanyState.query.filter_by(title=title).first()
@@ -82,14 +89,20 @@ class CodalQuery:
     # تنظیم گروع اطلاعیه
     def set_category(self, title: str = "") -> None:
         BadValueInput(title).string_type()
-        code = ReportType.query.filter_by(title=title).first()
+        code = LetterGroup.query.filter_by(title=title).first()
         self.params["Category"] = code.code if bool(code) else -1
 
     # تنظیم نوع شرکت
     def set_company_type(self, title: str = "") -> None:
         BadValueInput(title).string_type()
         code = CompanyType.query.filter_by(title=title).first()
-        self.params["CompanyType"] = code.code if bool(code) else -1
+        self.params["CompanyType"] = code.code if bool(code) else -1  # تنظیم نوع شرکت
+
+    # تنظیم نوع صنعت
+    def set_industry_group(self, name: str = "") -> None:
+        BadValueInput(name).string_type()
+        code = IndustryGroup.query.filter_by(name=name).first()
+        self.params["IndustryGroup"] = code.code if bool(code) else -1
 
     # تنظیم نوع اطلاعیه
     def set_letter_type(self, title: str = "") -> None:
@@ -180,7 +193,7 @@ class CodalQuery:
     def set_publisher(self, status: bool = True) -> None:
         BadValueInput(status).boolean_type()
         self.params["Publisher"] = str(status).lower()
-    
+
     # حذف تنظیمات
 
     # تنظیم شماره صفحه
@@ -190,15 +203,15 @@ class CodalQuery:
             self.params['PageNumber'] = number
         else:
             self.params['PageNumber'] += 1
-    
+
     def get_page_number(self) -> int:
         return self.params['PageNumber']
-    
+
     def set_pages_number(self, number: int = 0) -> None:
         if bool(number):
             BadValueInput(number).integer_type()
             self.pages = number
-    
+
     """################
     گرفتن لینک کوئری کدال 
     ################"""
@@ -222,7 +235,7 @@ class CodalQuery:
     # گرفتن کوئری جستوجو
     def get_api_search_url(self) -> str:
         return self.get_query_url(True)
-    
+
     """################
     گرفتن اطلاعات از کدال 
     ################"""
@@ -233,7 +246,7 @@ class CodalQuery:
         response = get_dict_from_xml_api(url)
         self.total = response["Total"]
         self.page = response["Page"]
-        
+
         return response["Letters"]
 
     # گرفتن اطلاعات کلی در همه صفحات
@@ -247,13 +260,13 @@ class CodalQuery:
             print(f"get page {page} of {pages}")
             self.set_page_number(page)
             letters += self.get_api_single_page()
-        
+
         letters += last_letters
 
         return letters
 
     # گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
-    def get_letters(self, pages: int = 0, show=False) -> None | pd.DataFrame:
+    def get_letters(self, pages: int = 0, show=False) -> pd.DataFrame:
         letters = self.get_api_multi_page(pages)
         df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
         df["Serial"] = df["Url"].replace(regex={

@@ -1,7 +1,9 @@
 import pandas as pd
 
 from codal_tsetmc.models import (
-    CompanyState, CompanyType, LetterType, ReportType, Auditor, FinancialYear
+    CompanyState, CompanyType,
+    ReportingType, LetterType, LetterGroup,
+    Auditor, FinancialYear,
 )
 from codal_tsetmc.tools.api import get_dict_from_xml_api
 from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
@@ -9,8 +11,9 @@ from codal_tsetmc.tools.string import datetime_to_num
 
 models = [
     CompanyState, CompanyType,
-    LetterType, ReportType,
+    LetterType, LetterGroup,
     Auditor, FinancialYear,
+    ReportingType
 ]
 
 
@@ -22,9 +25,9 @@ class Categories:
 
     def get_data(self):
         api = get_dict_from_xml_api(self.url + "categories")
-        report_types = []
         company_types = []
         letter_types = []
+        letter_groups = []
         categories = []
 
         for item in api:
@@ -50,9 +53,9 @@ class Categories:
                         "title": publisher_type["Name"]
                     }]
 
-            report_types += [{"code": item["Code"], "title": item["Name"]}]
+            letter_groups += [{"code": item["Code"], "title": item["Name"]}]
 
-        self.result["report_type"] = pd.DataFrame(report_types) \
+        self.result["letter_groups"] = pd.DataFrame(letter_groups) \
             .sort_values("code").reset_index(drop=True)
         self.result["company_type"] = pd.DataFrame(company_types)
         self.result["company_type"].loc[-1] = [-1, "همه موارد"]
@@ -75,6 +78,41 @@ class Categories:
             ]
         }).sort_values("code").reset_index(drop=True)
 
+        self.result["reporting_type"] = (
+            pd.DataFrame(
+                {
+                    "code": [
+                        -1,
+                        1000000,
+                        1000001,
+                        1000002,
+                        1000003,
+                        1000004,
+                        1000005,
+                        1000006,
+                        1000007,
+                        1000008,
+                        1000009,
+                    ],
+                    "title": [
+                        "همه موارد",
+                        "تولیدی",
+                        "ساختمانی",
+                        "سرمایه گذاری",
+                        "بانک",
+                        "لیزینگ",
+                        "خدماتی",
+                        "بیمه",
+                        "حمل و نقل دریایی",
+                        "کشاورزی",
+                        "تامین سرمایه",
+                    ],
+                }
+            )
+            .sort_values("code")
+            .reset_index(drop=True)
+        )
+
         api = get_dict_from_xml_api(self.url + "auditors")
         self.result["auditor"] = pd.DataFrame(api)
         self.result["auditor"].columns = ["name", "code"]
@@ -84,6 +122,12 @@ class Categories:
         self.result["financial_year"] = pd.DataFrame(api)
         self.result["financial_year"].columns = ["date"]
         self.result["financial_year"]["code"] = self.result["financial_year"]["date"].apply(datetime_to_num)
+
+        api = get_dict_from_xml_api(self.url + "IndustryGroup")
+        self.result["industry_group"] = pd.DataFrame(api)
+        self.result["industry_group"].columns = self.result["industry_group"].columns.str.lower()
+        self.result["industry_group"].loc[-1] = [-1, "همه موارد"]
+        self.result["industry_group"].sort_values("code").reset_index(drop=True, inplace=True)
 
     def fill_categories_table(self):
         self.get_data()

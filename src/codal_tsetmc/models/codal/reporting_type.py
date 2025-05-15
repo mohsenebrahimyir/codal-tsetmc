@@ -1,9 +1,9 @@
 from codal_tsetmc.config.engine import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Integer, Column, String
 
 
-class ReportType(Base):
-    __tablename__ = "report_type"
+class ReportingType(Base):
+    __tablename__ = "reporting_type"
 
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
@@ -11,4 +11,3 @@ class ReportType(Base):
 
     def __repr__(self):
         return f"({self.code}, {self.title})"
-

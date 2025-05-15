@@ -19,9 +19,11 @@ from codal_tsetmc.models import (
     CompanyType,
     CompanyState,
     LetterType,
+    LetterGroup,
+    IndustryGroup,
+    ReportingType,
     Letter,
     FinancialYear,
-    ReportType,
     Auditor,
 )
 from codal_tsetmc.download.codal.query import CodalQuery
@@ -64,8 +66,8 @@ from codal_tsetmc.initializer import (
 
 def db_is_empty():
     init_models = [
-        Company, CompanyState, CompanyType,
-        LetterType, ReportType, Auditor, FinancialYear
+        Company, CompanyState, CompanyType, IndustryGroup,
+        LetterType, LetterGroup, ReportingType, Auditor, FinancialYear
     ]
 
     try:
