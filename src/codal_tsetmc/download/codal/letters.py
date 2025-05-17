@@ -113,7 +113,7 @@ async def get_letters_urls_async(urls: list):
         results = await asyncio.gather(*tasks)
     return results
 
-
+ 
 def get_letter_urls_parallel(urls: list):
     nest_asyncio.apply()
     if sys.platform == 'win32':
@@ -216,13 +216,15 @@ def update_letter_table_by_urls(urls: list):
 
 def update_letters_table(query: CodalQuery, symbols: list = None):
     urls_list = get_letters_urls(query, symbols)
+    if not urls_list:
+        return False
 
     letter_urls = []
     for urls in urls_list:
         for url in urls:
             letter_urls += [url]
 
-    update_letter_table_by_urls(letter_urls)
+    return update_letter_table_by_urls(letter_urls)
 
 
 def update_companies_group_letters(query: CodalQuery, group_code: str):

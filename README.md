@@ -4,7 +4,7 @@
 
 - [آموزش بسته](https://mohsenebrahimyir.github.io/codal-tsetmc/)
 - [تلگرام @codal_tsetmc_package](https://t.me/codal_tsetmc_package)
-- [ایتا @codal_tsetmc_package](https://eitaa.com/codal_tsetmc_package)
+
 
 ## هشدار
 
@@ -20,29 +20,9 @@ python3 -m build
 python3 -m twine upload --repository pypi dist/*
 ```
 
-## پایگاه داده
-
-### TSETMC
-
-- [X] `tehran_stocks`: الهام از بسته
-- [X] `stock`: لیست تمام سهام‌ها و صندوق‌ها و ...
-- [X] `stock_capital`: پایگاه داده افزایش سرمایه
-  - باید دقت کنیم که بعضی از افزایش سرمایه‌‌های سایت tsetmc بروز نیست و باید برای محاسبه مقدار دقیق از صورت‌های مالی شرکت‌ها استفاده کرد.
-- [X] `stock_price`: قیمت و حجم معاملات روزانه
-- [X] `stock_group`:
-
-### CODAL
-
-- [X] `company`: لیست تمام شرکت‌ها
-- [X] `company_state`: وضعیت شرکت‌ها
-- [X] `company_type`: نوع شرکت‌ها
-- [X] `report_type`: گروه اطلاعیه‌ها
-- [X] `letter_type`: نوع گزارش
-- [X] `auditor`: حسابرس‌ها
-- [X] `financial_year`: سال مالی‌ها
-- [X] `letter`: گزارشات مالی
-
 ## نصب پکیج
+
+نسخه‌های مجاز پایتون از ۳.۱۰ بالاتر باید باشد.
 
 برای استفاده از این بسته پیشنهاد می‌شود از محیط مجازی استفاده کنید.
 
