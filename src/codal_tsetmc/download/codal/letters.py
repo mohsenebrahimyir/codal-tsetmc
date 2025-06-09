@@ -103,7 +103,7 @@ async def get_letters_urls_from_page_100000_async(ses, url: str):
             range(1, data["Page"] + 1)]
 
 
-async def get_letters_urls_async(urls: list):
+async def get_letters_urls_async(urls: list[str]):
     nest_asyncio.apply()
 
     tasks = []
@@ -114,7 +114,7 @@ async def get_letters_urls_async(urls: list):
     return results
 
  
-def get_letter_urls_parallel(urls: list):
+def get_letter_urls_parallel(urls: list[str]):
     nest_asyncio.apply()
     if sys.platform == 'win32':
         loop = asyncio.ProactorEventLoop()
@@ -131,7 +131,10 @@ def get_letter_urls_parallel(urls: list):
         return False
 
 
-def get_letters_urls(query: CodalQuery, symbols=None):
+def get_letters_urls(
+    query: CodalQuery,
+    symbols: list[str] | None = None
+):
     query.set_page_number(100000)
     urls = []
 
@@ -214,7 +217,10 @@ def update_letter_table_by_urls(urls: list):
         return False
 
 
-def update_letters_table(query: CodalQuery, symbols: list = None):
+def update_letters_table(
+    query: CodalQuery,
+    symbols: list[str] | None = None
+):
     urls_list = get_letters_urls(query, symbols)
     if not urls_list:
         return False
@@ -227,7 +233,10 @@ def update_letters_table(query: CodalQuery, symbols: list = None):
     return update_letter_table_by_urls(letter_urls)
 
 
-def update_companies_group_letters(query: CodalQuery, group_code: str):
+def update_companies_group_letters(
+    query: CodalQuery, 
+    group_code: str
+):
     print("\033[93m",
           "Warning: Sure that stock table in database must be updated!",
           "\033[0m")

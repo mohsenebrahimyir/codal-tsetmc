@@ -30,6 +30,9 @@ class Categories:
         letter_types = []
         letter_groups = []
         categories = []
+        
+        if not api:
+            raise Exception("Check Network connection")
 
         for item in api:
             publisher_types_items = item.pop("PublisherTypes")

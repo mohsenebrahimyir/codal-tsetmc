@@ -27,8 +27,8 @@ class CodalQuery:
 
     def __init__(self):
         # جستجوی اطاعیه‌های سایت کدال
-        self.page = None
-        self.total = None
+        self.page = 0
+        self.total = 0
         self.letters = None
         self.base_url = "codal.ir"
         self.report_list_html = f"https://{self.base_url}/ReportList.aspx?"
@@ -106,7 +106,7 @@ class CodalQuery:
         self.params["IndustryGroup"] = code.code if bool(code) else -1
 
     # تنظیم گروه اطلاعیه
-    def set_category(self, title: str = ""):
+    def set_letter_group(self, title: str = ""):
         BadValueInput(title).string_type()
         code = LetterGroup.query.filter_by(title=title).first()
         self.params["Category"] = code.code if bool(code) else -1
@@ -118,7 +118,7 @@ class CodalQuery:
         self.params["LetterType"] = code.code if bool(code) else -1
 
     # تنظیم موضوع اطلاعیه
-    def set_subject(self, subject: str = ""):
+    def set_letter_subject(self, subject: str = ""):
         BadValueInput(subject).string_type()
         self.params["Subject"] = -1 if subject == "" else subject
 
@@ -186,7 +186,7 @@ class CodalQuery:
         self.params["Mains"] = str(status).lower()
 
     # تنظیم موسسه حسابرسی شرکت
-    def set_auditor_ref(self, name: str = None):
+    def set_auditor_ref(self, name: str | None = None):
         BadValueInput(name).string_type()
         code = Auditor.query.filter_by(name=name).first()
         self.params["AuditorRef"] = code.code if bool(code) else -1
@@ -253,6 +253,9 @@ class CodalQuery:
     def get_api_single_page(self) -> dict:
         url = self.get_api_search_url()
         response = get_dict_from_xml_api(url)
+        if not response:
+            raise Exception("Check your network connection")
+        
         self.total = response["Total"]
         self.page = response["Page"]
 
@@ -275,10 +278,10 @@ class CodalQuery:
         return letters
 
     # گرفتن اطلاعات کلی تمام صفحات به صورت یک فرمت داده
-    def get_letters(self, pages: int = 0, show=False) -> pd.DataFrame:
+    def get_letters(self, pages: int = 0, show=False):
         letters = self.get_api_multi_page(pages)
         df = pd.DataFrame(letters).replace(regex=FA_TO_EN_DIGITS)
         df = df_col_to_snake_case(df)
         self.letters = df
         if show:
-            return df
+            print(df)

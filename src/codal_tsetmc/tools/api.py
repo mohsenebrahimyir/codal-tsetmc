@@ -74,7 +74,6 @@ def get_results_by_asyncio_loop(tasks):
         return loop.run_until_complete(run_all())
 
     except RuntimeError:
-        # fallback در صورت بسته بودن یا مشکل در حلقه قبلی
         new_loop = asyncio.new_event_loop()
         asyncio.set_event_loop(new_loop)
         return new_loop.run_until_complete(run_all())
