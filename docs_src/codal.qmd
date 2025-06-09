@@ -76,13 +76,13 @@ query.set_company_type(title: str = "")
 query.set_industry_group(name: str = "")
 
 # 7. گروه اطلاعیه
-query.set_category(title: str = "")
+query.set_letter_group(title: str = "")
 
 # 8. نوع اطلاعیه
 query.set_letter_type(title: str = "")
 
 # 9. موضوع اطلاعیه
-query.set_subject(subject: str = "")
+query.set_letter_subject(subject: str = "")
 
 # 10. شماره پیگیری
 query.set_tracing_no(no: str = "")
@@ -183,7 +183,7 @@ from codal_tsetmc.download.codal.letters import *
 # گرفتن و ذخیره لیست گزارشات با یک جستجوی مشابه برای لیستی از نمادها و ذخیره در دیتابیس
 update_letters_table(
   query: CodalQuery,
-  symbols: list,
+  symbols: list[str],
   msg: str = ""
 )
 ```
@@ -219,7 +219,7 @@ query.set_from_date("1400/01/01")
 
 ```{python}
 #| eval: true
-query.set_category('اطلاعات و صورت مالی سالانه')
+query.set_letter_group('اطلاعات و صورت مالی سالانه')
 ```
 
 5. نوع اطلاعیه

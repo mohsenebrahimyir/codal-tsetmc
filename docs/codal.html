@@ -229,7 +229,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">اصلاح شده</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">2025-05-15</p>
+      <p class="date-modified">2025-06-09</p>
     </div>
   </div>
     
@@ -242,7 +242,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <div class="proof remark">
 <p><span class="proof-title"><em>نکته</em>. </span><strong>اگر از محیط ژوپیتر استفاده می‌کنید این کد را اجرا کنید.</strong></p>
-<div id="97d0f6cb" class="cell" data-execution_count="1">
+<div id="b47811e4" class="cell" data-execution_count="1">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nest_asyncio</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nest_asyncio.<span class="bu">apply</span>()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال" class="level2">
 <h2 class="anchored" data-anchor-id="گرفتن-لینک-با-تنظیم-فیلتر-برای-جستجوی-گزارشات-از-کدال">گرفتن لینک با تنظیم فیلتر برای جستجوی گزارشات از کدال</h2>
 <p>پر کردن جدول شرکت‌های لیست شده در کدال</p>
-<div id="4e2419c2" class="cell" data-execution_count="2">
+<div id="5fe8d90c" class="cell" data-execution_count="2">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_companies_table</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>fill_companies_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -259,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>دانلود داده‌های مورد نیاز برای جستجو</p>
-<div id="3490729d" class="cell" data-execution_count="3">
+<div id="2ae5ed30" class="cell" data-execution_count="3">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> fill_categories_table</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>fill_categories_table()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -314,13 +314,13 @@ Table industry_group updated.</code></pre>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>query.set_industry_group(name: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. گروه اطلاعیه</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>query.set_category(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>query.set_letter_group(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a><span class="co"># 8. نوع اطلاعیه</span></span>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>query.set_letter_type(title: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 9. موضوع اطلاعیه</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>query.set_subject(subject: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>query.set_letter_subject(subject: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
 <span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 10. شماره پیگیری</span></span>
 <span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>query.set_tracing_no(no: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>)</span>
@@ -418,7 +418,7 @@ Table industry_group updated.</code></pre>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># گرفتن و ذخیره لیست گزارشات با یک جستجوی مشابه برای لیستی از نمادها و ذخیره در دیتابیس</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>update_letters_table(</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  query: CodalQuery,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  symbols: <span class="bu">list</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  symbols: <span class="bu">list</span>[<span class="bu">str</span>],</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  msg: <span class="bu">str</span> <span class="op">=</span> <span class="st">""</span></span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
@@ -428,7 +428,7 @@ Table industry_group updated.</code></pre>
 <ol type="1">
 <li>تنظیم فیلترهای دلخواه</li>
 </ol>
-<div id="8cfb9141" class="cell" data-execution_count="4">
+<div id="cd3dea17" class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc <span class="im">import</span> CodalQuery</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>query <span class="op">=</span> CodalQuery()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -436,44 +436,44 @@ Table industry_group updated.</code></pre>
 <ol start="2" type="1">
 <li>نام نماد</li>
 </ol>
-<div id="b2619413" class="cell" data-execution_count="5">
+<div id="24348031" class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>query.set_symbol(<span class="st">"وبملت"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="3" type="1">
 <li>از تاریخ</li>
 </ol>
-<div id="72c8b6c1" class="cell" data-execution_count="6">
+<div id="0214ab25" class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>query.set_from_date(<span class="st">"1400/01/01"</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="4" type="1">
 <li>گروه اطلاعیه</li>
 </ol>
-<div id="cf465325" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>query.set_category(<span class="st">'اطلاعات و صورت مالی سالانه'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="bdec5506" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>query.set_letter_group(<span class="st">'اطلاعات و صورت مالی سالانه'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="5" type="1">
 <li>نوع اطلاعیه</li>
 </ol>
-<div id="a2e5c89f" class="cell" data-execution_count="8">
+<div id="db1633e3" class="cell" data-execution_count="8">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>query.set_letter_type(<span class="st">'اطلاعات و صورتهای مالی میاندوره ای'</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="6" type="1">
 <li>حذف حسابرسی نشده‌ها یا حذف حسابرسی شده‌ها</li>
 </ol>
-<div id="7219c8e1" class="cell" data-execution_count="9">
+<div id="f2c26d5c" class="cell" data-execution_count="9">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>query.set_not_audited(<span class="va">False</span>)</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># query.set_audited(False)</span></span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="7" type="1">
 <li>فقط زیر مجموعه‌ها</li>
 </ol>
-<div id="edb16403" class="cell" data-execution_count="10">
+<div id="258146be" class="cell" data-execution_count="10">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>query.set_childs(<span class="va">False</span>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="8" type="1">
 <li>نمایش موارد تنظیم شده</li>
 </ol>
-<div id="6d1f42a3" class="cell" data-execution_count="11">
+<div id="2901126d" class="cell" data-execution_count="11">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>query.params</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>{'PageNumber': 1,
@@ -505,7 +505,7 @@ Table industry_group updated.</code></pre>
 <ol start="9" type="1">
 <li>گرفتن لینک برای مرورگر</li>
 </ol>
-<div id="d757b56d" class="cell" data-execution_count="12">
+<div id="24b30a16" class="cell" data-execution_count="12">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>query.get_report_list_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>'https://codal.ir/ReportList.aspx?search&amp;PageNumber=1&amp;Symbol=%D9%88%D8%A8%D9%85%D9%84%D8%AA&amp;LetterType=6&amp;Category=1&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false'</code></pre>
@@ -514,7 +514,7 @@ Table industry_group updated.</code></pre>
 <ol start="10" type="1">
 <li>گرفتن لینک برای api</li>
 </ol>
-<div id="569bfae3" class="cell" data-execution_count="13">
+<div id="b13e6a5a" class="cell" data-execution_count="13">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>query.get_query_url()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="13">
 <pre><code>'https://search.codal.ir/api/search/v2/q?&amp;PageNumber=1&amp;Symbol=%D9%88%D8%A8%D9%85%D9%84%D8%AA&amp;LetterType=6&amp;Category=1&amp;FromDate=1400%2F01%2F01&amp;Audited=true&amp;NotAudited=false&amp;Consolidatable=true&amp;NotConsolidatable=true&amp;Childs=false&amp;Mains=true&amp;Publisher=false&amp;search=true'</code></pre>
@@ -523,7 +523,7 @@ Table industry_group updated.</code></pre>
 <ol start="11" type="1">
 <li>گرفتن لیست گزارشات</li>
 </ol>
-<div id="3364dacb" class="cell" data-execution_count="14">
+<div id="4c59c727" class="cell" data-execution_count="14">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>query.get_api_multi_page()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>[{'SuperVision': {'UnderSupervision': 0, 'AdditionalInfo': '', 'Reasons': []},
@@ -699,13 +699,13 @@ Table industry_group updated.</code></pre>
 <ol start="12" type="1">
 <li>گرفتن تمام صفحات و ذخیره آن درون شی</li>
 </ol>
-<div id="65893f8c" class="cell" data-execution_count="15">
+<div id="35f1eb67" class="cell" data-execution_count="15">
 <div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>query.get_letters()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <ol start="13" type="1">
 <li>نمایش صفحات ذخیره شده</li>
 </ol>
-<div id="ec887fd0" class="cell" data-execution_count="16">
+<div id="75987784" class="cell" data-execution_count="16">
 <div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>query.letters</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="16">
 <div>
@@ -943,7 +943,7 @@ Table industry_group updated.</code></pre>
 <ol start="14" type="1">
 <li>گرفتن و ذخیره لیست گزارشات برای چند نماد با سرعت بالا در دیتابیس</li>
 </ol>
-<div id="5fdd42da" class="cell" data-execution_count="17">
+<div id="42dddb81" class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.download.codal.letters <span class="im">import</span> update_letters_table</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>update_letters_table(query, [<span class="st">"فولاد"</span>, <span class="st">"فملی"</span>, <span class="st">"شپنا"</span>])</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -956,18 +956,21 @@ Table letter updated.
 Table letter updated.
 None</code></pre>
 </div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>False</code></pre>
+</div>
 </div>
 <ol start="15" type="1">
 <li>گرفتن لیست گزارشات نماد خاص در دیتابیس</li>
 </ol>
-<div id="2af70c06" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_conditions</span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>read_table_by_conditions(</span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>  table<span class="op">=</span><span class="st">"letter"</span>, </span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>  variable<span class="op">=</span><span class="st">"symbol"</span>,</span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>  value<span class="op">=</span><span class="st">"فولاد"</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c84d80af" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_conditions</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>read_table_by_conditions(</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  table<span class="op">=</span><span class="st">"letter"</span>, </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  variable<span class="op">=</span><span class="st">"symbol"</span>,</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>  value<span class="op">=</span><span class="st">"فولاد"</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="18">
 <div>
 <div>
@@ -1149,22 +1152,22 @@ None</code></pre>
 <ol type="1">
 <li>گرفتن لیست گزارشات از دیتابیس با کوئری</li>
 </ol>
-<div id="e82f1957" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_sql_query</span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> read_table_by_sql_query(</span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT *</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM letter</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE symbol IN (</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="st">    'فولاد',</span></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="st">    'فملی',</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a><span class="st">    'شپنا'</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="st">  )</span></span>
-<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="st">  """</span></span>
-<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="c1210099" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> codal_tsetmc.tools.database <span class="im">import</span> read_table_by_sql_query</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> read_table_by_sql_query(</span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="st">  SELECT *</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="st">  FROM letter</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="st">  WHERE symbol IN (</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="st">    'فولاد',</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="st">    'فملی',</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="st">    'شپنا'</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="st">  )</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="st">  """</span></span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>df.head()</span></code><button title="کپی در Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-display" data-execution_count="19">
 <div>
 <div>
