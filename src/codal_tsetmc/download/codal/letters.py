@@ -113,7 +113,7 @@ async def get_letters_urls_async(urls: list[str]):
         results = await asyncio.gather(*tasks)
     return results
 
- 
+
 def get_letter_urls_parallel(urls: list[str]):
     nest_asyncio.apply()
     if sys.platform == 'win32':
@@ -163,7 +163,15 @@ async def update_letters_by_url_async(ses, url: str):
 
         model = Letter
         create_table_if_not_exist(model)
-        fill_table_of_db_with_df(df, model.__tablename__, "tracing_no")
+
+        conditions = f"""
+        WHERE (
+            serial IN ('{"','".join(df["serial"].to_list())}')
+        );
+        """
+        fill_table_of_db_with_df(
+            df=df, table=model.__tablename__, columns="serial", conditions=conditions
+        )
         return True
     except Exception as e:
         print(e.__context__)
