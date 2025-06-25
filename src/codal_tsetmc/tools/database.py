@@ -12,27 +12,43 @@ def fill_table_of_db_with_df(
         conditions: str = ""
 ):
     try:
+        # print("df:", df)
+        # print("table:", table)
+        # print("columns:", columns)
+        # print("conditions:", conditions)
+
         if not conditions:
-            conditions = f"""
-                WHERE {columns} IN ('{"','".join(set(df[columns].to_list()))}');
-            """
-        
+            conditions = (
+                f"""WHERE {columns} IN ('{"','".join(df[columns].to_list())}');"""
+            )
+
         q = f"SELECT {columns} FROM {table} {conditions}"
+        # print("q:", q)
 
         with engine.connect() as conn:
             result = conn.execute(text(q))
             exist_records = result.all()
 
+        # print("exist_records:", exist_records)
+
         if exist_records:
             temp = pd.DataFrame(exist_records)
-            df = df[~df[columns].isin(temp[columns])].replace(regex=AR_TO_FA_LETTER)
-
+            # print("temp:", temp)
+            df = df[~df[columns].isin(temp[columns].to_list())]
+            # print("df:", df)
+        
+        try:
+            df.replace(regex=AR_TO_FA_LETTER, inplace=True)
+        except Exception as e:
+            print("")
+            pass
+        
         df.to_sql(table, engine, if_exists="append", index=False)
         print(f"Table {table} updated.")
         return True
 
     except Exception as e:
-        print(f"Missing in {table} table with conditions: {conditions}", e.__context__)
+        print(f"Missing in fill_table_of_db_with_df:", e)
         return False
 
 
@@ -55,7 +71,7 @@ def read_table_by_conditions(table, variable="", value="", columns="*", conditio
             return pd.DataFrame()
 
     except Exception as e:
-        print(f"Missing in {table} table with conditions: {conditions}", e.__context__)
+        print(f"Missing in read_table_by_conditions:", e.__context__)
         return False
 
 
