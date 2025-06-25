@@ -164,13 +164,10 @@ async def update_letters_by_url_async(ses, url: str):
         model = Letter
         create_table_if_not_exist(model)
 
-        conditions = f"""
-        WHERE (
-            serial IN ('{"','".join(df["serial"].to_list())}')
-        );
-        """
         fill_table_of_db_with_df(
-            df=df, table=model.__tablename__, columns="serial", conditions=conditions
+            df=df,
+            table=model.__tablename__,
+            columns="serial"
         )
         return True
     except Exception as e:

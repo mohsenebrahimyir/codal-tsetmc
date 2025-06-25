@@ -11,6 +11,7 @@ from codal_tsetmc.tools.api import (
 )
 from codal_tsetmc.models import Stock, StockGroup
 from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
+from codal_tsetmc.tools.string import digit_string_to_integer
 
 INDEX_CODE = "32097828799138957"
 
@@ -67,8 +68,8 @@ def create_or_update_stock_from_dict(stock):
         session.rollback()
 
 
-async def update_stock_table_async(code: str) -> bool:
-    code = int(code)
+async def update_stock_table_async(code: str | None) -> bool:
+    code = digit_string_to_integer(code)
     create_table_if_not_exist(Stock)
     try:
         stock = Stock.query.filter_by(code=code).first()
@@ -119,7 +120,11 @@ def get_stocks_groups(timeout=10):
 def fill_stocks_groups_table():
     create_table_if_not_exist(StockGroup)
     df = get_stocks_groups()
-    fill_table_of_db_with_df(df, StockGroup.__tablename__, "code")
+    fill_table_of_db_with_df(
+        df=df,
+        table=StockGroup.__tablename__, 
+        columns="code"
+    )
 
 
 def fill_stocks_table(timeout=10, repeat=2):

@@ -4,7 +4,7 @@ import pandas as pd
 import urllib.parse as urlparse
 from urllib.parse import urlencode
 
-from codal_tsetmc.tools.exception import *
+from codal_tsetmc.tools.exception import BadValueInput
 from codal_tsetmc.tools.string import (
     FA_TO_EN_DIGITS, df_col_to_snake_case, datetime_to_num
 )

@@ -138,7 +138,11 @@ class Categories:
         for model in models:
             tablename = model.__tablename__
             create_table_if_not_exist(model)
-            fill_table_of_db_with_df(self.result[tablename], tablename, "code")
+            fill_table_of_db_with_df(
+                df=self.result[tablename], 
+                table=tablename,
+                columns="code"
+            )
 
 
 def fill_categories_table():

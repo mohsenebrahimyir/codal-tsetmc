@@ -12,6 +12,11 @@ def fill_table_of_db_with_df(
         conditions: str = ""
 ):
     try:
+        if not conditions:
+            conditions = f"""
+                WHERE {columns} IN ('{"','".join(set(df[columns].to_list()))}');
+            """
+        
         q = f"SELECT {columns} FROM {table} {conditions}"
 
         with engine.connect() as conn:
@@ -21,7 +26,6 @@ def fill_table_of_db_with_df(
         if exist_records:
             temp = pd.DataFrame(exist_records)
             df = df[~df[columns].isin(temp[columns])].replace(regex=AR_TO_FA_LETTER)
-
 
         df.to_sql(table, engine, if_exists="append", index=False)
         print(f"Table {table} updated.")

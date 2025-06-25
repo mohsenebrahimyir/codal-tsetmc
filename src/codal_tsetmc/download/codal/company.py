@@ -39,7 +39,11 @@ def get_companies():
 def fill_companies_table():
     df = get_companies()
     create_table_if_not_exist(Company)
-    fill_table_of_db_with_df(df, Company.__tablename__, "symbol")
+    fill_table_of_db_with_df(
+        df=df,
+        table=Company.__tablename__, 
+        columns="symbol"
+    )
 
 
 if __name__ == '__main__':

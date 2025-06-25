@@ -60,7 +60,10 @@ async def update_index_prices_async(code):
         df = edit_index_prices(data, code, stock.symbol)[StockPrice.__table__.columns.keys()[1:]]
 
         fill_table_of_db_with_df(
-            df, columns="date", table=StockPrice.__tablename__, conditions=f"where code = '{code}'"
+            df=df,
+            table=StockPrice.__tablename__,
+            columns="date",
+            conditions=f"where code = '{code}'",
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
         return True
@@ -69,7 +72,7 @@ async def update_index_prices_async(code):
         return False
 
 
-def update_indexes_prices(codes: list = None):
+def update_indexes_prices(codes: list[str] | None = None):
     if codes is None:
         codes = [INDEX_CODE]
     tasks = [update_index_prices_async(code) for code in codes]
@@ -83,7 +86,7 @@ def update_index_prices(code=None):
     update_indexes_prices([code])
 
 
-def get_stock_price_daily(code: str, date: str = None):
+def get_stock_price_daily(code: str, date: str | None = None):
     if date is None:
         date = datetime.now().strftime("%Y%m%d")
         
@@ -184,10 +187,10 @@ async def update_stock_prices_async(code: str):
         df["up_date"] = jdt.now().strftime("%Y%m%d000000").apply(datetime_to_num)
 
         fill_table_of_db_with_df(
-            df,
-            columns="date",
+            df=df,
             table=StockPrice.__tablename__,
-            conditions=f"where code = '{code}'"
+            columns="date",
+            conditions=f"where code = '{code}'",
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
         return True
