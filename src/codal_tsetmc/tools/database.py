@@ -20,12 +20,11 @@ def fill_table_of_db_with_df(
 
         if exist_records:
             temp = pd.DataFrame(exist_records)
-            new_df = df[~df[columns].isin(temp[columns])].replace(regex=AR_TO_FA_LETTER)
-            new_df.to_sql(table, engine, if_exists="append", index=False)
-            
-            print(f"Table {table} updated.")
-        else:
-            print(f"Records had already existed.")
+            df = df[~df[columns].isin(temp[columns])].replace(regex=AR_TO_FA_LETTER)
+
+
+        df.to_sql(table, engine, if_exists="append", index=False)
+        print(f"Table {table} updated.")
         return True
 
     except Exception as e:
