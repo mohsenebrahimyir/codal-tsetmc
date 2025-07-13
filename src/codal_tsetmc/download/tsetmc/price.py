@@ -10,15 +10,19 @@ import nest_asyncio
 import pandas as pd
 import requests
 
-from codal_tsetmc.tools.string import datetime_to_num
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
-from codal_tsetmc.models import Stock, StockPrice
-from codal_tsetmc.tools.database import (
-    fill_table_of_db_with_df, read_table_by_conditions, create_table_if_not_exist
+from ...tools.string import datetime_to_num
+from ...config.engine import session
+from ...download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
+from ...models import Stock, StockPrice
+from ...tools.database import (
+    fill_table_of_db_with_df,
+    read_table_by_conditions,
+    create_table_if_not_exist,
 )
-from codal_tsetmc.tools.api import (
-    get_data_from_cdn_tsetmec_api, get_results_by_asyncio_loop, GET_HEADERS_REQUEST
+from ...tools.api import (
+    get_data_from_cdn_tsetmec_api,
+    get_results_by_asyncio_loop,
+    GET_HEADERS_REQUEST,
 )
 
 INDEX_CODE = "32097828799138957"
@@ -28,7 +32,12 @@ def edit_index_prices(data, code, symbol):
     df = pd.DataFrame(data["indexB2"])[["dEven", "xNivInuClMresIbs"]]
     df.columns = ["date", "price"]
     df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
-    df["date"] = df["date"].jalali.to_jalali().apply(lambda x: x.strftime('%Y%m%d000000')).apply(datetime_to_num)
+    df["date"] = (
+        df["date"]
+        .jalali.to_jalali()
+        .apply(lambda x: x.strftime("%Y%m%d000000"))
+        .apply(datetime_to_num)
+    )
     df["code"] = code
     df["symbol"] = symbol
     df["value"] = pd.NA
@@ -62,8 +71,7 @@ async def update_index_prices_async(code):
         fill_table_of_db_with_df(
             df=df,
             table=StockPrice.__tablename__,
-            columns="date",
-            conditions=f"where code = '{code}'",
+            unique="date",
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
         return True
@@ -189,8 +197,7 @@ async def update_stock_prices_async(code: str):
         fill_table_of_db_with_df(
             df=df,
             table=StockPrice.__tablename__,
-            columns="date",
-            conditions=f"where code = '{code}'",
+            unique="date",
         )
         print(f"Stock prices updated. (code: {stock.code}, symbol: {stock.symbol})")
         return True

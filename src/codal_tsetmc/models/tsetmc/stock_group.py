@@ -1,6 +1,5 @@
-from codal_tsetmc.config.engine import (
-    Column, Integer, String, Base
-)
+from sqlalchemy import Column, Integer, String
+from ...config.engine import Base
 
 
 class StockGroup(Base):

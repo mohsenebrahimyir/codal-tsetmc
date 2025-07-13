@@ -4,12 +4,11 @@ import pandas as pd
 import asyncio
 
 os.chdir("../")
-
 ```
 
+
 ```{python}
-from src.codal_tsetmc.tools.database import fill_table_of_db_with_df
+import src.codal_tsetmc as ct
 
-
-
+ct.fill_companies_table()
 ```

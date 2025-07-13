@@ -21,7 +21,7 @@ else:
 
 CDL_TSE_FOLDER = ".cdl_tse"
 CONFIG_PATH = f"{os.path.join(HOME_PATH, CDL_TSE_FOLDER)}/config.yml"
-FINGERPRINT_PATH = f"{os.path.join(HOME_PATH, CDL_TSE_FOLDER)}/fingerprint.txt"
+GITIGNORE_PATH = f"{os.path.join(HOME_PATH, CDL_TSE_FOLDER)}/.gitignore"
 
 
 def create_config():
@@ -29,6 +29,9 @@ def create_config():
     path = os.path.join(HOME_PATH, CDL_TSE_FOLDER)
     if not os.path.exists(path):
         os.mkdir(path)
+    if not os.path.exists(GITIGNORE_PATH):
+        with open(GITIGNORE_PATH, "w") as file:
+            file.write("*")
     if not os.path.exists(CONFIG_PATH):
         with open(
             os.path.join(os.path.dirname(__file__), "config.default.yml"), "r"

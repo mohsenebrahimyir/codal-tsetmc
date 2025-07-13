@@ -17,7 +17,7 @@ nest_asyncio.apply()
 پر کردن جدول شرکت‌های لیست شده در کدال
 
 ```{python}
-#| eval: true
+# | eval: true
 from codal_tsetmc import fill_companies_table
 
 fill_companies_table()
@@ -73,7 +73,7 @@ query.set_company_nature(title: str = "")
 query.set_company_type(title: str = "")
 
 # 6. نوع صنعت
-query.set_industry_group(name: str = "")
+query.set_industry_group(title: str = "")
 
 # 7. گروه اطلاعیه
 query.set_letter_group(title: str = "")
@@ -118,7 +118,7 @@ query.set_childs(status: bool = True)
 query.set_mains(status: bool = True)
 
 # 21. موسسه حسابرسی شرکت
-query.set_auditor_ref(name: str = None)
+query.set_auditor_ref(title: str = None)
 
 # 22. سالی مالی منتهی به
 query.set_year_end_to_date(date: str = "1300/01/01")

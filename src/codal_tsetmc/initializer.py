@@ -1,6 +1,6 @@
 import os
 
-from codal_tsetmc.models import (
+from .models import (
     Stock,
     StockGroup,
     StockCapital,
@@ -9,25 +9,25 @@ from codal_tsetmc.models import (
     Company,
     LetterType,
     LetterGroup,
-    ReportingType,
+    CompanyNature,
     Auditor,
     FinancialYear,
     CompanyType,
     IndustryGroup,
 )
 
-from codal_tsetmc.tools.database import (
+from .tools.database import (
     read_table_by_sql_query, create_table_if_not_exist
 )
-from codal_tsetmc.config.engine import CDL_TSE_FOLDER, HOME_PATH
-from codal_tsetmc.models.create import create
-from codal_tsetmc.download.codal.company import fill_companies_table
-from codal_tsetmc.download.codal.category import fill_categories_table
-from codal_tsetmc.download.tsetmc.stock import (
+from .config.engine import CDL_TSE_FOLDER, HOME_PATH
+from .models.create import create
+from .download.codal.company import fill_companies_table
+from .download.codal.category import fill_categories_table
+from .download.tsetmc.stock import (
     fill_stocks_table, fill_stocks_groups_table
 )
-from codal_tsetmc.download.tsetmc.price import fill_stocks_prices_table
-from codal_tsetmc.download.tsetmc.capital import fill_stocks_capitals_table
+from .download.tsetmc.price import fill_stocks_prices_table
+from .download.tsetmc.capital import fill_stocks_capitals_table
 
 
 def create_db():
@@ -54,7 +54,7 @@ def init_db():
     models = [
         FinancialYear, Auditor,
         LetterType, LetterGroup,
-        ReportingType, CompanyState,
+        CompanyNature, CompanyState,
         CompanyType, IndustryGroup
     ]
     for model in models:

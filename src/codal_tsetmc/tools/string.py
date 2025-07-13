@@ -2,14 +2,35 @@ import re
 from jdatetime import date as jd
 from jdatetime import datetime as jdt
 
+
 FA_TO_EN_DIGITS = {
-    "۱": "1", "۲": "2", "۳": "3", "۴": "4", "۵": "5",
-    "۶": "6", "۷": "7", "۸": "8", "۹": "9", "۰": "0"
+    "۱": "1",
+    "۲": "2",
+    "۳": "3",
+    "۴": "4",
+    "۵": "5",
+    "۶": "6",
+    "۷": "7",
+    "۸": "8",
+    "۹": "9",
+    "۰": "0"
 }
 
-AR_TO_FA_LETTER = {
+REPLACE_INCORRECT_CHARS = {
     "ي": "ی",
-    "ك": "ک"
+    "ى": "ی",
+    "ك": "ک",
+    "‏": " ",  # Right-to-left mark
+    "‌": " ",  # Zero-width non-joiner
+    " ": " ",  # Non-breaking space
+    r"\s*،\s*": "، ",
+    r"\s*\)\s*": ") ",
+    r"\s*\(\s*": " (",
+    r"\s*-\s*": " - ",
+    r"\s*–\s*": " - ",
+    r"\s+": " ",  # Replace multiple spaces with a single space
+    r"^\s+": "",  # Remove space in first char
+    r"\s+$": "",  # Remove space in last char
 }
 
 EMPTY_TO_NONE = {
@@ -26,33 +47,50 @@ def replace_all(text, dic):
     return text
 
 
-def digit_string_to_integer(string: str) -> int | None:
+def digit_string_to_integer(string: str | None) -> int | None:
     try:
-        return int(string)
+        if not string:
+            return None
+        s = replace_all(string, {"[^0-9]": ""})
+        return int(s) if s else None
     except ValueError:
         return None
 
 
-def datetime_to_num(dt):
-    try:
-        if dt == "" or dt is None:
-            return None
-        dt = replace_all(dt, {"[^0-9]": ""})
-        return int(dt) * 10 ** (14 - len(dt))
-    except Exception as e:
-        print(e.__context__)
-
-    return dt
+def string_to_num(string: str | None, digit: int = 14) -> float | None:
+    if not string:
+        return None
+    s = replace_all(string, {"[^0-9]": ""})
+    return int(s) * 10 ** (digit - len(s))
 
 
-def num_to_datetime(num, datetime=True, d="/", t=":", sep=" "):
-    num = str(num)
-    date = f"{num[0:4]}{d}{num[4:6]}{d}{num[6:8]}"
-    time = f"{num[8:10]}{t}{num[10:12]}{t}{num[12:14]}"
+def datetime_to_num(dt: str) -> int:
+    n = string_to_num(dt, 14)
+    return int(n) if n else 0
+
+
+def date_to_num(d: str):
+    n = string_to_num(d, 8)
+    return int(n) if n else 0
+
+
+def num_to_datetime(num, datetime=True, d: str = "/", t: str = ":", sep: str = " "):
+    _n = str(num)
+    if _n.__len__() < 8:
+        _n += "0" * (8 - _n.__len__())
+
+    date = f"{_n[0:4]}{d}{_n[4:6]}{d}{_n[6:8]}"
     if datetime:
+        if _n.__len__() < 14:
+            _n += "0" * (14 - _n.__len__())
+        time = f"{_n[8:10]}{t}{_n[10:12]}{t}{_n[12:14]}"
         return f"{date}{sep}{time}"
-    else:
-        return date
+
+    return date
+
+
+def num_to_date(num, d: str = "/"):
+    return num_to_datetime(num, datetime=False, d=d)
 
 
 def yyyymmdd_to_shamsi(date):

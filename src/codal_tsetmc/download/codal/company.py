@@ -1,8 +1,8 @@
 import pandas as pd
 
-from codal_tsetmc import Company
-from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.tools.database import (
+from ...models.codal.company import Company
+from ...tools.api import get_dict_from_xml_api
+from ...tools.database import (
     fill_table_of_db_with_df,
     create_table_if_not_exist
 )
@@ -17,23 +17,21 @@ def get_companies():
         "symbol",
         "name",
         "isic",
-        "type_code",
-        "status_code",
-        "industry_group_code",
-        "reporting_type",
+        "type",
+        "status",
+        "industry",
+        "nature",
     ]
 
     for col in [
-        "isic",
-        "type_code",
-        "status_code",
-        "industry_group_code",
-        "reporting_type",
+        "type",
+        "status",
+        "industry",
+        "nature",
     ]:
         df[col] = pd.to_numeric(df[col])
 
-    df = df.drop_duplicates("symbol")
-    return df
+    return df.drop_duplicates(subset="symbol").reset_index(drop=True).copy()
 
 
 def fill_companies_table():
@@ -42,7 +40,7 @@ def fill_companies_table():
     fill_table_of_db_with_df(
         df=df,
         table=Company.__tablename__, 
-        columns="symbol"
+        unique="symbol"
     )
 
 

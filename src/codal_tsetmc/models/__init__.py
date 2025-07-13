@@ -4,7 +4,7 @@ from .codal import (
     CompanyState,
     Auditor,
     FinancialYear,
-    ReportingType,
+    CompanyNature,
     LetterGroup,
     LetterType,
     Letter,

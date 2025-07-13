@@ -6,19 +6,19 @@ import aiohttp
 import nest_asyncio
 import pandas as pd
 
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.models import Stock, Letter
-from codal_tsetmc.tools.api import GET_HEADERS_REQUEST
-from codal_tsetmc.tools.string import (
+from ...config.engine import session
+from ...models import Stock, Letter
+from ...tools.api import GET_HEADERS_REQUEST
+from ...tools.string import (
     FA_TO_EN_DIGITS,
     datetime_to_num, df_col_to_snake_case,
 )
 
-from codal_tsetmc.tools.database import (
+from ...tools.database import (
     fill_table_of_db_with_df,
     create_table_if_not_exist
 )
-from codal_tsetmc.download.codal.query import CodalQuery
+from ...download.codal.query import CodalQuery
 
 """################
 گرفتن اطلاعات از کدال
@@ -167,7 +167,7 @@ async def update_letters_by_url_async(ses, url: str):
         fill_table_of_db_with_df(
             df=df,
             table=model.__tablename__,
-            columns="serial"
+            unique="serial"
         )
         return True
     except Exception as e:

@@ -4,14 +4,15 @@ import requests
 import re
 import aiohttp
 import pandas as pd
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.tools.api import (
+from ...config.engine import session
+from ...tools.api import (
     get_csv_from_github,
-    get_results_by_asyncio_loop, GET_HEADERS_REQUEST
+    get_results_by_asyncio_loop,
+    GET_HEADERS_REQUEST,
 )
-from codal_tsetmc.models import Stock, StockGroup
-from codal_tsetmc.tools.database import fill_table_of_db_with_df, create_table_if_not_exist
-from codal_tsetmc.tools.string import digit_string_to_integer
+from ...models import Stock, StockGroup
+from ...tools.database import fill_table_of_db_with_df, create_table_if_not_exist
+from ...tools.string import digit_string_to_integer
 
 INDEX_CODE = "32097828799138957"
 
@@ -69,16 +70,19 @@ def create_or_update_stock_from_dict(stock):
 
 
 async def update_stock_table_async(code: str | None) -> bool:
-    code = digit_string_to_integer(code)
+    if not code:
+        return False
+
+    _code = digit_string_to_integer(code)
     create_table_if_not_exist(Stock)
     try:
-        stock = Stock.query.filter_by(code=code).first()
+        stock = Stock.query.filter_by(code=_code).first()
         if stock is not None:
-            if stock.code == code:
+            if stock.code == _code:
                 print(f"Stock exist: (code: {stock.code}, symbol: {stock.symbol}).")
                 return True
 
-        url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{code}"
+        url = f"http://cdn.tsetmc.com/api/Instrument/GetInstrumentInfo/{_code}"
         async with aiohttp.ClientSession() as ses:
             async with ses.get(url, headers=GET_HEADERS_REQUEST) as resp:
                 data = await resp.json()
@@ -123,7 +127,7 @@ def fill_stocks_groups_table():
     fill_table_of_db_with_df(
         df=df,
         table=StockGroup.__tablename__, 
-        columns="code"
+        unique="code"
     )
 
 

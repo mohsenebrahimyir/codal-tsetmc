@@ -1,7 +1,5 @@
-from codal_tsetmc.config.engine import (
-    Column, Integer, String, Base
-)
-from sqlalchemy import BigInteger
+from sqlalchemy import Column, BigInteger, Integer, String
+from ...config.engine import Base
 
 
 class StockCapital(Base):

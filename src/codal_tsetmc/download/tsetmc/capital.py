@@ -8,19 +8,19 @@ import nest_asyncio
 import pandas as pd
 import requests
 import io
-from codal_tsetmc.config.engine import session
-from codal_tsetmc.models import Stock, StockCapital
-from codal_tsetmc.tools.database import (
+from ...config.engine import session
+from ...models import Stock, StockCapital
+from ...tools.database import (
     fill_table_of_db_with_df,
     read_table_by_sql_query,
     create_table_if_not_exist
 )
-from codal_tsetmc.tools.api import (
+from ...tools.api import (
     get_data_from_cdn_tsetmec_api,
     get_results_by_asyncio_loop
 )
-from codal_tsetmc.tools.string import value_to_float, datetime_to_num
-from codal_tsetmc.download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
+from ...tools.string import value_to_float, datetime_to_num
+from ...download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 
 def get_stock_capital_daily(code: str):
@@ -108,8 +108,7 @@ async def update_stock_capitals_async(code: str):
         fill_table_of_db_with_df(
             df,
             table=StockCapital.__tablename__,
-            columns="date",
-            conditions=f"where code = '{code}'",
+            unique="date",
         )
 
         print(f"Stock Capital updated. (code: {stock.code}, symbol: {stock.symbol})")

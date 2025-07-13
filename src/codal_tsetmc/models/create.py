@@ -1,4 +1,4 @@
-from codal_tsetmc.config.engine import engine
+from ..config.engine import engine
 from . import (
     Stock,
     StockPrice,
@@ -8,7 +8,7 @@ from . import (
     CompanyType,
     CompanyState,
     FinancialYear,
-    ReportingType,
+    CompanyNature,
     LetterType,
     Auditor,
     Letter,
@@ -19,7 +19,7 @@ from . import (
 models = [
     Auditor,
     FinancialYear,
-    ReportingType,
+    CompanyNature,
     LetterGroup,
     IndustryGroup,
     LetterType,

@@ -1,7 +1,5 @@
-from codal_tsetmc.config.engine import (
-    Column, Integer, String, Base
-)
-from sqlalchemy import BigInteger, Float
+from sqlalchemy import Column, BigInteger, Integer, String, BigInteger, Float
+from ...config.engine import Base
 
 
 class StockPrice(Base):
@@ -18,4 +16,3 @@ class StockPrice(Base):
 
     def __repr__(self):
         return f"(symbol: {self.symbol}, code: {self.code})"
-

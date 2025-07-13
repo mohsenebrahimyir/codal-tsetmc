@@ -2,12 +2,11 @@ import numpy as np
 import pandas as pd
 # noinspection PyUnresolvedReferences
 import jalali_pandas
-from codal_tsetmc.config.engine import (
-    Column, Integer, String, Base, session
-)
-from codal_tsetmc.tools.database import read_table_by_conditions
-from sqlalchemy import BigInteger
+from sqlalchemy import Column, Integer, String, BigInteger
 
+
+from ...tools.database import read_table_by_conditions
+from ...config.engine import Base, session
 
 def add_event(df, event, ratio):
     df = df.merge(event[["date", ratio]], how="outer", on="date")
@@ -65,13 +64,13 @@ class Stock(Base):
         self._dollar = None
 
     @property
-    def price(self) -> pd.DataFrame:
+    def price(self) -> pd.DataFrame | None:
         self._price_counter += 1
         if self._price_cached:
             return self._price
 
         from codal_tsetmc import StockPrice
-        df = read_table_by_conditions(StockPrice.__tablename__, "code", self.code)
+        df = read_table_by_conditions(StockPrice.__tablename__, "code", str(self.code))
         if df.empty:
             self._price_cached = True
             self._price = df
@@ -83,13 +82,13 @@ class Stock(Base):
         return self._price
 
     @property
-    def prices(self) -> pd.DataFrame:
+    def prices(self) -> pd.DataFrame | None:
         self._prices_counter += 1
         if self._prices_cached:
             return self._prices
 
         from codal_tsetmc import StockPrice
-        df = read_table_by_conditions(StockPrice.__tablename__, "code", self.code)
+        df = read_table_by_conditions(StockPrice.__tablename__, "code", str(self.code))
         if df.empty:
             self._prices_cached = True
             self._prices = df
@@ -106,13 +105,15 @@ class Stock(Base):
         return self._prices
 
     @property
-    def cap(self) -> pd.DataFrame:
+    def cap(self) -> pd.DataFrame | None:
         self._capital_counter += 1
         if self._capital_cached:
             return self._capital
 
         from codal_tsetmc import StockCapital
-        df = read_table_by_conditions(StockCapital.__tablename__, "code", self.code)
+        df = read_table_by_conditions(
+            StockCapital.__tablename__, "code", str(self.code)
+        )
         if df.empty:
             self._capital_cached = True
             self._capital = df
@@ -124,13 +125,15 @@ class Stock(Base):
         return self._capital
 
     @property
-    def capitals(self) -> pd.DataFrame:
+    def capitals(self) -> pd.DataFrame | None:
         self._capitals_counter += 1
         if self._capitals_cached:
             return self._prices
 
         from codal_tsetmc import StockCapital
-        df = read_table_by_conditions(StockCapital.__tablename__, "code", self.code)
+        df = read_table_by_conditions(
+            StockCapital.__tablename__, "code", str(self.code)
+        )
         if df.empty:
             self._capitals_cached = True
             self._prices = df
@@ -147,22 +150,20 @@ class Stock(Base):
         return self._capitals
 
     @property
-    def market(self) -> pd.DataFrame:
+    def market(self) -> pd.DataFrame | None:
         self._market_counter += 1
         if self._market_cached:
             return self._market
 
         df = self.prices
-        if df.empty:
+        if df is None or df.empty:
             self._market_cached = True
             self._market = df
             return self._market
 
         from codal_tsetmc import StockCapital
         capitals = read_table_by_conditions(
-            StockCapital.__tablename__,
-            "code",
-            self.code
+            StockCapital.__tablename__, "code", str(self.code)
         ).rename(columns={"new": "capital"})
         capitals["date"] = capitals["date"].jalali.parse_jalali("%Y%m%d%H%M%S").jalali.to_gregorian()
         capitals.set_index("date", inplace=True)
@@ -182,13 +183,13 @@ class Stock(Base):
         return self._market
 
     @property
-    def index(self) -> pd.DataFrame:
+    def index(self) -> pd.DataFrame | None:
         self._index_counter += 1
         if self._index_cached:
             return self._index
 
         df = self.market
-        if df.empty:
+        if df is None or df.empty:
             self._index_cached = True
             self._index = df
             return self._index
@@ -210,8 +211,11 @@ class Stock(Base):
 
         return self._index
 
-    def beta(self, during=3650):
-        df = self.index[["market", "index"]][-during:].pct_change().dropna()
+    def beta(self, during=3650) -> pd.DataFrame | None:
+        df = self.index
+        if df is None or df.empty:
+            return None
+        df = df[["market", "index"]][-during:].pct_change().dropna()
         return np.cov(df["market"], df["index"])[0, 1] / np.var(df["index"])
 
     def update_price(self):

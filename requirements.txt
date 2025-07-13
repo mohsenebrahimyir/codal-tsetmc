@@ -15,5 +15,6 @@ pylint~=3.2.6
 pytest~=6.2.5
 ipython~=8.10.0
 ipdb~=0.13.9
+psycopg2-binary
 build
 twine

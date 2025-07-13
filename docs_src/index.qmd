@@ -1,7 +1,7 @@
 # پیش گفتار {-}
 
 ```{python}
-#| echo: false
+# | echo: false
 from assets.py.string_tools import digit_en_to_fa
 
 from jdatetime import datetime as jdt
@@ -9,7 +9,6 @@ from jdatetime import datetime as jdt
 now = jdt.now().strftime("%Y-%m-%d")
 now = digit_en_to_fa(now)
 ```
-
 
 این بسته توسط محسن ابراهیمی
 @mohsenebrahimy.ir

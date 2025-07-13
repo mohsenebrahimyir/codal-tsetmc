@@ -1,16 +1,16 @@
-from codal_tsetmc.config.engine import (
+from .config.engine import (
     HOME_PATH,
     CDL_TSE_FOLDER,
     default_db_path,
     CONFIG_PATH,
 )
-from codal_tsetmc.tools.database import (
+from .tools.database import (
     read_table_by_conditions,
     read_table_by_sql_query,
     fill_table_of_db_with_df,
     is_table_exist_in_db,
 )
-from codal_tsetmc.models import (
+from .models import (
     Stock,
     StockPrice,
     StockCapital,
@@ -21,13 +21,13 @@ from codal_tsetmc.models import (
     LetterType,
     LetterGroup,
     IndustryGroup,
-    ReportingType,
+    CompanyNature,
     Letter,
     FinancialYear,
     Auditor,
 )
-from codal_tsetmc.download.codal.query import CodalQuery
-from codal_tsetmc.download.tsetmc.stock import (
+from .download.codal.query import CodalQuery
+from .download.tsetmc.stock import (
     get_stock_detail,
     get_stock_ids,
     get_stocks_groups,
@@ -36,7 +36,7 @@ from codal_tsetmc.download.tsetmc.stock import (
     fill_stocks_groups_table,
     fill_stocks_table,
 )
-from codal_tsetmc.download.tsetmc.price import (
+from .download.tsetmc.price import (
     get_stock_price_daily,
     get_stock_prices_history,
     get_index_prices_history,
@@ -47,7 +47,7 @@ from codal_tsetmc.download.tsetmc.price import (
     update_stocks_group_prices,
     fill_stocks_prices_table,
 )
-from codal_tsetmc.download.tsetmc.capital import (
+from .download.tsetmc.capital import (
     get_stock_capital_daily,
     get_stock_capitals_history,
     update_stock_capitals,
@@ -55,7 +55,7 @@ from codal_tsetmc.download.tsetmc.capital import (
     update_stocks_group_capitals,
     fill_stocks_capitals_table,
 )
-from codal_tsetmc.initializer import (
+from .initializer import (
     create_db,
     init_db,
     fill_db,
@@ -67,7 +67,7 @@ from codal_tsetmc.initializer import (
 def db_is_empty():
     init_models = [
         Company, CompanyState, CompanyType, IndustryGroup,
-        LetterType, LetterGroup, ReportingType, Auditor, FinancialYear
+        LetterType, LetterGroup, CompanyNature, Auditor, FinancialYear
     ]
 
     try:

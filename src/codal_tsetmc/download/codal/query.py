@@ -4,14 +4,14 @@ import pandas as pd
 import urllib.parse as urlparse
 from urllib.parse import urlencode
 
-from codal_tsetmc.tools.exception import BadValueInput
-from codal_tsetmc.tools.string import (
+from ...tools.exception import BadValueInput
+from ...tools.string import (
     FA_TO_EN_DIGITS, df_col_to_snake_case, datetime_to_num
 )
-from codal_tsetmc.tools.api import get_dict_from_xml_api
-from codal_tsetmc.models import (
+from ...tools.api import get_dict_from_xml_api
+from ...models import (
     CompanyState, CompanyType, Company, IndustryGroup,
-    LetterGroup, LetterType, Auditor, ReportingType
+    LetterGroup, LetterType, Auditor, CompanyNature
 )
 
 
@@ -90,7 +90,7 @@ class CodalQuery:
     # تنظیم ماهیت شرکت
     def set_company_nature(self, title: str = ""):
         BadValueInput(title).string_type()
-        code = ReportingType.query.filter_by(title=title).first()
+        code = CompanyNature.query.filter_by(title=title).first()
         self.params["ReportingType"] = code.code if bool(code) else -1
 
     # تنظیم نوع شرکت
@@ -100,9 +100,9 @@ class CodalQuery:
         self.params["CompanyType"] = code.code if bool(code) else -1  # تنظیم نوع شرکت
 
     # تنظیم نوع صنعت
-    def set_industry_group(self, name: str = ""):
-        BadValueInput(name).string_type()
-        code = IndustryGroup.query.filter_by(name=name).first()
+    def set_industry_group(self, title: str = ""):
+        BadValueInput(title).string_type()
+        code = IndustryGroup.query.filter_by(title=title).first()
         self.params["IndustryGroup"] = code.code if bool(code) else -1
 
     # تنظیم گروه اطلاعیه
@@ -186,9 +186,9 @@ class CodalQuery:
         self.params["Mains"] = str(status).lower()
 
     # تنظیم موسسه حسابرسی شرکت
-    def set_auditor_ref(self, name: str | None = None):
-        BadValueInput(name).string_type()
-        code = Auditor.query.filter_by(name=name).first()
+    def set_auditor_ref(self, title: str | None = None):
+        BadValueInput(title).string_type()
+        code = Auditor.query.filter_by(title=title).first()
         self.params["AuditorRef"] = code.code if bool(code) else -1
 
     # سالی مالی منتهی به
@@ -255,7 +255,7 @@ class CodalQuery:
         response = get_dict_from_xml_api(url)
         if not response:
             raise Exception("Check your network connection")
-        
+
         self.total = response["Total"]
         self.page = response["Page"]
 

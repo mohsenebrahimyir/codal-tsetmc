@@ -1,5 +1,5 @@
-from codal_tsetmc.config.engine import Base
 from sqlalchemy import Integer, Column, String
+from ...config.engine import Base
 
 
 class IndustryGroup(Base):
@@ -7,7 +7,7 @@ class IndustryGroup(Base):
 
     id = Column(Integer, primary_key=True)
     code = Column(Integer, unique=True)
-    name = Column(String)
+    title = Column(String)
 
     def __repr__(self):
-        return f"({self.code}, {self.name})"
+        return f"({self.code}, {self.title})"

@@ -1,5 +1,5 @@
-from codal_tsetmc.config.engine import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Integer, Column, String
+from ...config.engine import Base
 
 
 class LetterGroup(Base):
@@ -11,4 +11,3 @@ class LetterGroup(Base):
 
     def __repr__(self):
         return f"({self.code}, {self.title})"
-
