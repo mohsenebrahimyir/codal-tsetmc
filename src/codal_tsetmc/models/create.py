@@ -27,10 +27,10 @@ models = [
     CompanyState,
     Company,
     Letter,
-    StockGroup,
-    Stock,
-    StockPrice,
-    StockCapital,
+    # StockGroup,
+    # Stock,
+    # StockPrice,
+    # StockCapital,
 ]
 
 

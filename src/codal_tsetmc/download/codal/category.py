@@ -174,11 +174,13 @@ class Categories:
             tablename = model.__tablename__
             create_table_if_not_exist(model)
             df = self.result[tablename].copy()
-            try:
-                for col in ["title"]:
-                    df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
-            except Exception as e:
-                print(f"Data cleaning warning: {e}")
+            for col in ["title"]:
+                try:
+                    if col in df.columns and df[col].notna().any():
+                        df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+                except Exception as e:
+                    print(f"Data cleaning warning: {e}")
+                    print(col)
 
             fill_table_of_db_with_df(df=df, table=tablename, unique="code")
 

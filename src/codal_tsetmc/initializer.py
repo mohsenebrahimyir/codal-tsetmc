@@ -57,12 +57,12 @@ def init_db():
         CompanyNature, CompanyState,
         CompanyType, IndustryGroup
     ]
-    for model in models:
-        create_table_if_not_exist(model)
+    for _m in models:
+        create_table_if_not_exist(_m)
 
-    for model in models:
+    for _m in models:
         df = read_table_by_sql_query(
-            f"SELECT * FROM {model.__tablename__} LIMIT 1;"
+            f"SELECT * FROM {_m.__tablename__} LIMIT 1;"
         )
         if df.empty:
             fill_categories_table()

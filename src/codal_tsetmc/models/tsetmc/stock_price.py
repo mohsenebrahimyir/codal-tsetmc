@@ -12,7 +12,7 @@ class StockPrice(Base):
     volume = Column(BigInteger)
     value = Column(BigInteger)
     price = Column(Float)
-    up_date = Column(BigInteger)
+    up_date = Column(Integer)
 
     def __repr__(self):
         return f"(symbol: {self.symbol}, code: {self.code})"

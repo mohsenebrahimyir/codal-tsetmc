@@ -163,12 +163,13 @@ async def update_letters_by_url_async(ses, url: str):
 
         model = Letter
         create_table_if_not_exist(model)
-
-        try:
-            for col in ["title", "symbol", "company_name"]:
-                df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
-        except Exception as e:
-            print(f"Data cleaning warning: {e}")
+        for col in ["title", "symbol", "company_name"]:
+            try:
+                if col in df.columns and df[col].notna().any():
+                    df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+            except Exception as e:
+                print(f"Data cleaning warning: {e}")
+                print(col)
 
         fill_table_of_db_with_df(
             df=df,

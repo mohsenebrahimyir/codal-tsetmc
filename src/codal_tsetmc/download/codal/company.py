@@ -38,13 +38,14 @@ def get_companies():
 def fill_companies_table():
     df = get_companies()
     create_table_if_not_exist(Company)
-
-    try:
-        for col in ["symbol", "name"]:
-            df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
-    except Exception as e:
-        print(f"Data cleaning warning: {e}")
-
+    for col in ["symbol", "name"]:
+        try:
+            if col in df.columns and df[col].notna().any():
+                df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+        except Exception as e:
+            print(f"Data cleaning warning: {e}")
+            print(col)
+    
     fill_table_of_db_with_df(
         df=df,
         table=Company.__tablename__, 
