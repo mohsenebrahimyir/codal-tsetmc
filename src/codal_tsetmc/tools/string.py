@@ -20,9 +20,8 @@ REPLACE_INCORRECT_CHARS = {
     "ي": "ی",
     "ى": "ی",
     "ك": "ک",
-    "‏": " ",  # Right-to-left mark
-    "‌": " ",  # Zero-width non-joiner
-    " ": " ",  # Non-breaking space
+    r"[\u200c\u200f\u200e\u200d\u202a-\u202e]": " ",  # all space chars
+    r"\xa0": " ",  # Non-breaking space
     r"\s*،\s*": "، ",
     r"\s*\)\s*": ") ",
     r"\s*\(\s*": " (",
