@@ -10,7 +10,7 @@ from ...config.engine import session
 from ...models import Stock, Letter
 from ...tools.api import GET_HEADERS_REQUEST
 from ...tools.string import (
-    FA_TO_EN_DIGITS,
+    FA_TO_EN_DIGITS, REPLACE_INCORRECT_CHARS,
     datetime_to_num, df_col_to_snake_case,
 )
 
@@ -163,6 +163,12 @@ async def update_letters_by_url_async(ses, url: str):
 
         model = Letter
         create_table_if_not_exist(model)
+
+        try:
+            for col in ["title", "symbol", "company_name"]:
+                df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+        except Exception as e:
+            print(f"Data cleaning warning: {e}")
 
         fill_table_of_db_with_df(
             df=df,

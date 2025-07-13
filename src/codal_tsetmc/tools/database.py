@@ -2,7 +2,6 @@ import pandas as pd
 from sqlalchemy import Engine, inspect, text, bindparam
 
 from ..config.engine import engine as db, Base
-from ..tools.string import REPLACE_INCORRECT_CHARS
 from pandas.api.types import is_string_dtype
 
 
@@ -20,7 +19,6 @@ def fill_table_of_db_with_df(
             df = df.drop_duplicates(subset=unique).reset_index(drop=True).copy()
             if is_string_dtype(df[unique]):
                 conditions = ",".join([f"'{str(x)}'" for x in df[unique]])
-                df[unique] = df[unique].replace(regex=REPLACE_INCORRECT_CHARS)
             else:
                 conditions = ",".join([f"{str(x)}" for x in df[unique]])
 
@@ -35,13 +33,6 @@ def fill_table_of_db_with_df(
 
             if df.empty:
                 return True
-
-        try:
-            str_cols = df.select_dtypes(include=["object", "string"]).columns
-            for col in str_cols:
-                df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
-        except Exception as e:
-            print(f"Data cleaning warning: {e}")
 
         df.to_sql(table, engine, if_exists="append", index=False)
         print(f"Successfully updated table {table} with {len(df)} records.")

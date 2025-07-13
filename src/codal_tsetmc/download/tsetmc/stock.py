@@ -12,7 +12,7 @@ from ...tools.api import (
 )
 from ...models import Stock, StockGroup
 from ...tools.database import fill_table_of_db_with_df, create_table_if_not_exist
-from ...tools.string import digit_string_to_integer
+from ...tools.string import digit_string_to_integer, REPLACE_INCORRECT_CHARS, replace_all
 
 INDEX_CODE = "32097828799138957"
 
@@ -33,14 +33,16 @@ def is_stock_in_gam_bond(code):
 
 
 def extract_instrumentInfo(data):
-    return {
+    info = {
         "symbol": data["instrumentInfo"]["lVal18AFC"],
         "name": data["instrumentInfo"]["lVal30"],
         "name_en": data["instrumentInfo"]["lVal18"],
         "isin": data["instrumentInfo"]["cIsin"],
         "code": int(data["instrumentInfo"]["insCode"]),
         "capital": int(
-            data["instrumentInfo"]["zTitad"] if data["instrumentInfo"]["insCode"] != INDEX_CODE else 1
+            data["instrumentInfo"]["zTitad"]
+            if data["instrumentInfo"]["insCode"] != INDEX_CODE
+            else 1
         ),
         "instrument_code": int(data["instrumentInfo"]["insCode"]),
         "instrument_id": data["instrumentInfo"]["instrumentID"],
@@ -51,6 +53,11 @@ def extract_instrumentInfo(data):
         "market_code": data["instrumentInfo"]["flow"],
         "market_type": data["instrumentInfo"]["cgrValCotTitle"],
     }
+
+    for key in ["name", "symbol", "market_name", "group_name"]:
+        info[key] = replace_all(info[key], REPLACE_INCORRECT_CHARS)
+
+    return info
 
 
 def get_stock_detail(code: str, timeout=3):
@@ -124,6 +131,13 @@ def get_stocks_groups(timeout=10):
 def fill_stocks_groups_table():
     create_table_if_not_exist(StockGroup)
     df = get_stocks_groups()
+
+    try:
+        for col in ["name", "description"]:
+            df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+    except Exception as e:
+        print(f"Data cleaning warning: {e}")
+
     fill_table_of_db_with_df(
         df=df,
         table=StockGroup.__tablename__, 

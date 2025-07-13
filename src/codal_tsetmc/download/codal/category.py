@@ -12,7 +12,7 @@ from ...models import (
 )
 from ...tools.api import get_dict_from_xml_api
 from ...tools.database import fill_table_of_db_with_df, create_table_if_not_exist
-from ...tools.string import date_to_num
+from ...tools.string import date_to_num, REPLACE_INCORRECT_CHARS
 
 
 models = [
@@ -173,9 +173,14 @@ class Categories:
         for model in models:
             tablename = model.__tablename__
             create_table_if_not_exist(model)
-            fill_table_of_db_with_df(
-                df=self.result[tablename], table=tablename, unique="code"
-            )
+            df = self.result[tablename].copy()
+            try:
+                for col in ["title"]:
+                    df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+            except Exception as e:
+                print(f"Data cleaning warning: {e}")
+
+            fill_table_of_db_with_df(df=df, table=tablename, unique="code")
 
 
 def fill_categories_table():

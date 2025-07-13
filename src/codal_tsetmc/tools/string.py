@@ -25,8 +25,8 @@ REPLACE_INCORRECT_CHARS = {
     r"\s*،\s*": "، ",
     r"\s*\)\s*": ") ",
     r"\s*\(\s*": " (",
+    r"–": "-",
     r"\s*-\s*": " - ",
-    r"\s*–\s*": " - ",
     r"\s+": " ",  # Replace multiple spaces with a single space
     r"^\s+": "",  # Remove space in first char
     r"\s+$": "",  # Remove space in last char
