@@ -8,7 +8,7 @@ class StockPrice(Base):
     id = Column(Integer, primary_key=True)
     code = Column(BigInteger)
     symbol = Column(String)
-    date = Column(String)
+    date = Column(Integer)
     volume = Column(BigInteger)
     value = Column(BigInteger)
     price = Column(Float)

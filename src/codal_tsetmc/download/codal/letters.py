@@ -11,7 +11,7 @@ from ...models import Stock, Letter
 from ...tools.api import GET_HEADERS_REQUEST
 from ...tools.string import (
     FA_TO_EN_DIGITS, REPLACE_INCORRECT_CHARS,
-    datetime_to_num, df_col_to_snake_case,
+    datetime_to_digit, df_col_to_snake_case,
 )
 
 from ...tools.database import (
@@ -79,8 +79,8 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
     })
     df["Code"] = df["LetterCode"]
     df["Type"] = df["LetterCode"].replace(regex=LETTERS_CODE_TO_TYPE)
-    df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_num)
-    df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_num)
+    df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_digit)
+    df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_digit)
     df = df[[
         "PublishDateTime", "SentDateTime", "TracingNo",
         "Serial", "Title", "Code", "Type", "Symbol", "CompanyName",

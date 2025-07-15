@@ -5,9 +5,7 @@ import urllib.parse as urlparse
 from urllib.parse import urlencode
 
 from ...tools.exception import BadValueInput
-from ...tools.string import (
-    FA_TO_EN_DIGITS, df_col_to_snake_case, datetime_to_num
-)
+from ...tools.string import FA_TO_EN_DIGITS, df_col_to_snake_case
 from ...tools.api import get_dict_from_xml_api
 from ...models import (
     CompanyState, CompanyType, Company, IndustryGroup,

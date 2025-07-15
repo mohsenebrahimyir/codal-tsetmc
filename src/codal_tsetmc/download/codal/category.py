@@ -12,7 +12,7 @@ from ...models import (
 )
 from ...tools.api import get_dict_from_xml_api
 from ...tools.database import fill_table_of_db_with_df, create_table_if_not_exist
-from ...tools.string import date_to_num, REPLACE_INCORRECT_CHARS
+from ...tools.string import date_to_digit, REPLACE_INCORRECT_CHARS
 
 
 models = [
@@ -158,7 +158,7 @@ class Categories:
         self.result["financial_year"].columns = ["title"]
         self.result["financial_year"]["code"] = self.result["financial_year"][
             "title"
-        ].apply(date_to_num)
+        ].apply(date_to_digit)
 
         api = get_dict_from_xml_api(self.url + "IndustryGroup")
         self.result["industry_group"] = pd.DataFrame(api)

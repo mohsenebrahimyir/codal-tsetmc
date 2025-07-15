@@ -46,34 +46,34 @@ def replace_all(text, dic):
     return text
 
 
-def digit_string_to_integer(string: str | None) -> int | None:
+def extract_number(string: str | None) -> int | float | None:
     try:
         if not string:
             return None
-        s = replace_all(string, {"[^0-9]": ""})
-        return int(s) if s else None
+        s = replace_all(string, {"[^0-9.-]": ""})
+        return float(s) if "." in s else int(s) if s else None
     except ValueError:
         return None
 
 
-def string_to_num(string: str | None, digit: int = 14) -> float | None:
+def string_to_digit(string: str | None, digit: int = 14) -> float | None:
     if not string:
         return None
     s = replace_all(string, {"[^0-9]": ""})
     return int(s) * 10 ** (digit - len(s))
 
 
-def datetime_to_num(dt: str) -> int:
-    n = string_to_num(dt, 14)
+def datetime_to_digit(dt: str) -> int:
+    n = string_to_digit(dt, 14)
     return int(n) if n else 0
 
 
-def date_to_num(d: str):
-    n = string_to_num(d, 8)
+def date_to_digit(d: str):
+    n = string_to_digit(d, 8)
     return int(n) if n else 0
 
 
-def num_to_datetime(num, datetime=True, d: str = "/", t: str = ":", sep: str = " "):
+def digit_to_datetime(num, datetime=True, d: str = "/", t: str = ":", sep: str = " "):
     _n = str(num)
     if _n.__len__() < 8:
         _n += "0" * (8 - _n.__len__())
@@ -88,8 +88,8 @@ def num_to_datetime(num, datetime=True, d: str = "/", t: str = ":", sep: str = "
     return date
 
 
-def num_to_date(num, d: str = "/"):
-    return num_to_datetime(num, datetime=False, d=d)
+def digit_to_date(num, d: str = "/"):
+    return digit_to_datetime(num, datetime=False, d=d)
 
 
 def yyyymmdd_to_shamsi(date):

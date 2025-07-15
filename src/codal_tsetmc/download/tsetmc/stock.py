@@ -12,7 +12,7 @@ from ...tools.api import (
 )
 from ...models import Stock, StockGroup
 from ...tools.database import fill_table_of_db_with_df, create_table_if_not_exist
-from ...tools.string import digit_string_to_integer, REPLACE_INCORRECT_CHARS, replace_all
+from ...tools.string import extract_number, REPLACE_INCORRECT_CHARS, replace_all
 
 INDEX_CODE = "32097828799138957"
 
@@ -80,7 +80,7 @@ async def update_stock_table_async(code: str | None) -> bool:
     if not code:
         return False
 
-    _code = digit_string_to_integer(code)
+    _code = extract_number(code)
     create_table_if_not_exist(Stock)
     try:
         stock = Stock.query.filter_by(code=_code).first()

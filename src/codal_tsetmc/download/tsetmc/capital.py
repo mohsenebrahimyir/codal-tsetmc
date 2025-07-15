@@ -19,7 +19,7 @@ from ...tools.api import (
     get_data_from_cdn_tsetmec_api,
     get_results_by_asyncio_loop
 )
-from ...tools.string import value_to_float, datetime_to_num
+from ...tools.string import value_to_float, date_to_digit
 from ...download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 
 
@@ -35,8 +35,8 @@ def cleanup_stock_capitals_records(response):
     df["date"] = (
         df["date"]
         .jalali.parse_jalali("%Y/%m/%d")
-        .apply(lambda x: x.strftime('%Y%m%d000000'))
-        .apply(datetime_to_num)
+        .apply(lambda x: x.strftime("%Y%m%d"))
+        .apply(date_to_digit)
     )
     df = df.sort_index(ascending=False)
     df["old"] = df["old"].apply(value_to_float)
@@ -103,7 +103,7 @@ async def update_stock_capitals_async(code: str):
 
         df["code"] = code
         df["symbol"] = stock.symbol
-        df["up_date"] = jnow.apply(datetime_to_num)
+        df["up_date"] = jnow.apply(date_to_digit)
 
         fill_table_of_db_with_df(
             df,

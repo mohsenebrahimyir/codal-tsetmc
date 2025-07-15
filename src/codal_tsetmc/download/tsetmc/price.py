@@ -10,7 +10,7 @@ import nest_asyncio
 import pandas as pd
 import requests
 
-from ...tools.string import datetime_to_num
+from ...tools.string import digit_to_date
 from ...config.engine import session
 from ...download.tsetmc.stock import is_stock_in_bourse_or_fara_or_paye
 from ...models import Stock, StockPrice
@@ -35,14 +35,14 @@ def edit_index_prices(data, code, symbol):
     df["date"] = (
         df["date"]
         .jalali.to_jalali()
-        .apply(lambda x: x.strftime("%Y%m%d000000"))
-        .apply(datetime_to_num)
+        .apply(lambda x: x.strftime("%Y%m%d"))
+        .apply(digit_to_date)
     )
     df["code"] = code
     df["symbol"] = symbol
     df["value"] = pd.NA
     df["volume"] = pd.NA
-    df["up_date"] = datetime_to_num(jdt.now().strftime("%Y%m%d000000"))
+    df["up_date"] = digit_to_date(jdt.now().strftime("%Y%m%d"))
     df = df.sort_values("date")
 
     return df
@@ -111,8 +111,8 @@ def cleanup_stock_prices_records(data):
         df["date"]
         .apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
         .jalali.to_jalali()
-        .apply(lambda x: x.strftime('%Y%m%d000000'))
-        .apply(datetime_to_num)
+        .apply(lambda x: x.strftime("%Y%m%d"))
+        .apply(digit_to_date)
     )
     df = df.sort_values("date")
 
@@ -124,7 +124,11 @@ def get_stock_prices_history(code: str) -> pd.DataFrame:
     data = requests.get(url).text
     df = pd.read_csv(io.StringIO(data), delimiter="@", lineterminator=";", engine="c", header=None)
     df.columns = "date high low price close open yesterday value volume count".split()
-    df["date"] = df["date"].apply(lambda x: datetime.strptime(str(x), "%Y%m%d")).apply(datetime_to_num)
+    df["date"] = (
+        df["date"]
+        .apply(lambda x: datetime.strptime(str(x), "%Y%m%d"))
+        .apply(digit_to_date)
+    )
     df["code"] = code
 
     return df
@@ -192,7 +196,7 @@ async def update_stock_prices_async(code: str):
         df = cleanup_stock_prices_records(data)
         df["code"] = code
         df["symbol"] = stock.symbol
-        df["up_date"] = jdt.now().strftime("%Y%m%d000000").apply(datetime_to_num)
+        df["up_date"] = jdt.now().strftime("%Y%m%d").apply(digit_to_date)
 
         fill_table_of_db_with_df(
             df=df,
