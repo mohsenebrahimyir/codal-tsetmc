@@ -17,6 +17,7 @@ def fill_table_of_db_with_df(
 
         if unique:
             df = df.drop_duplicates(subset=unique).reset_index(drop=True).copy()
+            df = df[df[unique] != ""].copy()
             if is_string_dtype(df[unique]):
                 conditions = ",".join([f"'{str(x)}'" for x in df[unique]])
             else:

@@ -1,6 +1,6 @@
 [project]
 name = "codal-tsetmc"
-version = "3.0.3"
+version = "3.0.4"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = [
     {name = "Mohsen Ebrahimi", email = "mohsenebrahimy.ir@gmail.com"},
