@@ -14,6 +14,24 @@ ct.fill_companies_table()
 ```
 
 ```{python}
+from src.codal_tsetmc import CodalQuery
+from src.codal_tsetmc.download.codal.letters import update_letters_table
+
+LETTER_GROUP = "اطلاعات و صورت مالی سالانه"
+LETTER_TYPE = "اطلاعات و صورتهای مالی میاندوره ای"
+LETTER_CODE = "ن-10"
+
+cq = CodalQuery()
+
+cq.set_symbol("فولاد")
+cq.set_letter_group(LETTER_GROUP)
+cq.set_letter_type(LETTER_TYPE)
+
+update_letters_table(cq)
+```
+
+
+```{python}
 import re
 
 re.sub(r"\s*\(", " (", "سود(زيان) خالص عمليات در حال تداوم")

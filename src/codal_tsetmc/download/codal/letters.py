@@ -73,7 +73,7 @@ LETTERS_TYPE_TO_CODE = {y: x for x, y in LETTERS_CODE_TO_TYPE.items()}
 
 def convert_letter_list_to_df(data) -> pd.DataFrame:
     df = pd.DataFrame(data).replace(regex=FA_TO_EN_DIGITS)
-    df["Serial"] = df["Url"].replace(regex={
+    df["Id"] = df["Url"].replace(regex={
         r"^.*LetterSerial=": "",
         r"\&.*$": ""
     })
@@ -81,11 +81,24 @@ def convert_letter_list_to_df(data) -> pd.DataFrame:
     df["Type"] = df["LetterCode"].replace(regex=LETTERS_CODE_TO_TYPE)
     df["PublishDateTime"] = df["PublishDateTime"].apply(datetime_to_digit)
     df["SentDateTime"] = df["SentDateTime"].apply(datetime_to_digit)
-    df = df[[
-        "PublishDateTime", "SentDateTime", "TracingNo",
-        "Serial", "Title", "Code", "Type", "Symbol", "CompanyName",
-        "HasHtml", "HasAttachment", "HasPdf", "HasXbrl", "HasExcel"
-    ]]
+    df = df[
+        [
+            "Id",
+            "PublishDateTime",
+            "SentDateTime",
+            "TracingNo",
+            "Title",
+            "Code",
+            "Type",
+            "Symbol",
+            "CompanyName",
+            "HasHtml",
+            "HasAttachment",
+            "HasPdf",
+            "HasXbrl",
+            "HasExcel",
+        ]
+    ]
     df = df_col_to_snake_case(df)
 
     return df
@@ -174,7 +187,7 @@ async def update_letters_by_url_async(ses, url: str):
         fill_table_of_db_with_df(
             df=df,
             table=model.__tablename__,
-            unique="serial"
+            unique="id"
         )
         return True
     except Exception as e:

@@ -5,11 +5,10 @@ from ...config.engine import Base
 class Letter(Base):
     __tablename__ = "letter"
 
-    id = Column(Integer, primary_key=True)
+    id = Column(String, primary_key=True)
     publish_date_time = Column(BigInteger, nullable=False)
     sent_date_time = Column(BigInteger, nullable=False)
     tracing_no = Column(Integer)
-    serial = Column(String, unique=True, nullable=False)
     title = Column(String)
     code = Column(String)
     type = Column(String)
@@ -22,4 +21,4 @@ class Letter(Base):
     has_attachment = Column(Boolean)
 
     def __repr__(self):
-        return f"{self.serial} ({self.title})"
+        return f"{self.id} ({self.title})"
