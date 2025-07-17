@@ -64,7 +64,7 @@ def create_config():
 create_config()
 
 
-def get_config_value(env_var, config_path, default=None):
+def get_config_value(env_var, config_path: str = CONFIG_PATH, default=None):
     """Get value from env or config file with fallback to default"""
     value = os.getenv(env_var)
     if value is not None:
