@@ -1,6 +1,6 @@
 [project]
 name = "codal-tsetmc"
-version = "3.0.4"
+version = "3.0.5"
 description = "Data Downloader for Codal and Tehran stock market"
 authors = [
     {name = "Mohsen Ebrahimi", email = "mohsenebrahimy.ir@gmail.com"},
@@ -30,6 +30,8 @@ dependencies = [
     "html5lib>=1.1,<2.0",
     "lxml>=5.3,<6.0",
     "PyYAML>=6.0,<7.0",
+    "python-dotenv>=1.0",
+    "python-decouple>=3.8"
 ]
 
 [project.urls]

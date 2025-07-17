@@ -9,7 +9,7 @@ with open(path.join(THIS_DIRECTORY, "README.md"), encoding="utf-8") as f:
 
 setup(
     name="codal-tsetmc",
-    version="3.0.4",
+    version="3.0.5",
     description="Data Downloader for Codal and Tehran stock market",
     url="http://github.com/mohsenebrahimyir/codal-tsetmc",
     author="Mohsen Ebrahimi",
@@ -34,6 +34,8 @@ setup(
         "html5lib>=1.1",
         "lxml>=5.3",
         "PyYAML>=6.0",
+        "python-dotenv>=1.0",
+        "python-decouple>=3.8",
     ],
     zip_safe=False,
     python_requires=">=3.12",
