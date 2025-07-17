@@ -36,3 +36,9 @@ import re
 
 re.sub(r"\s*\(", " (", "سود(زيان) خالص عمليات در حال تداوم")
 ```
+
+```{python}
+from src.codal_tsetmc.config.engine import license_key
+
+license_key
+```

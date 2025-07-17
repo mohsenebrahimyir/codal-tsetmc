@@ -1,7 +1,6 @@
 from .config.engine import (
     HOME_PATH,
     CDL_TSE_FOLDER,
-    default_db_path,
     CONFIG_PATH,
 )
 from .tools.database import (
