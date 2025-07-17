@@ -2,6 +2,7 @@ from .config.engine import (
     HOME_PATH,
     CDL_TSE_FOLDER,
     CONFIG_PATH,
+    has_env_vars,
 )
 from .tools.database import (
     read_table_by_conditions,
@@ -84,5 +85,6 @@ def db_is_empty():
 
 
 if db_is_empty():
-    create_db()
+    if not has_env_vars():
+        create_db()
     init_db()
