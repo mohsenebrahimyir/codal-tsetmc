@@ -67,8 +67,7 @@ from .initializer import (
 def db_is_empty():
     init_models = [
         Company, CompanyState, CompanyType, IndustryGroup,
-        LetterType, LetterGroup, CompanyNature, Auditor, FinancialYear,
-        Letter
+        LetterType, LetterGroup, CompanyNature, Auditor, FinancialYear
     ]
 
     try:
