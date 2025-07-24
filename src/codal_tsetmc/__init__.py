@@ -83,7 +83,7 @@ def db_is_empty():
         return True
 
 
-if db_is_empty():
-    if not has_env_vars():
+if not has_env_vars():
+    if db_is_empty():
         create_db()
-    init_db()
+        init_db()
