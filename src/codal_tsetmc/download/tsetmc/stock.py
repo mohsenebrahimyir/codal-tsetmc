@@ -55,7 +55,7 @@ def extract_instrumentInfo(data):
     }
 
     for key in ["name", "symbol", "market_name", "group_name"]:
-        info[key] = replace_all(info[key], REPLACE_INCORRECT_CHARS)
+        info[key] = replace_all(info[key], REPLACE_INCORRECT_CHARS).strip()
 
     return info
 
@@ -135,6 +135,7 @@ def fill_stocks_groups_table():
     try:
         for col in ["name", "description"]:
             df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+            df[col] = df[col].str.strip()
     except Exception as e:
         print(f"Data cleaning warning: {e}")
 

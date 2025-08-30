@@ -178,6 +178,7 @@ class Categories:
                 try:
                     if col in df.columns and df[col].notna().any():
                         df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+                        df[col] = df[col].str.strip()
                 except Exception as e:
                     print(f"Data cleaning warning: {e}")
                     print(col)
