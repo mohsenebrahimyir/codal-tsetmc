@@ -17,19 +17,25 @@ FA_TO_EN_DIGITS = {
 }
 
 REPLACE_INCORRECT_CHARS = {
+    # Arabic -> Persian
     "ي": "ی",
     "ى": "ی",
     "ك": "ک",
+    # Hidden space
     r"[\u200c\u200f\u200e\u200d\u202a-\u202e]": " ",  # all space chars
     r"\xa0": " ",  # Non-breaking space
+    r"[ ﻿]": " ",  # Strange space
+    # Markup
     r"\s*،\s*": "، ",
     r"\s*\)\s*": ") ",
     r"\s*\(\s*": " (",
     r"\s*–\s*": " - ",
     r"\s*-\s*": " - ",
+    # Multi space
     r"\s+": " ",  # Replace multiple spaces with a single space
+    # Strip
     r"^\s+": "",  # Remove space in first char
-    r"\s+$": ""  # Remove space in last char
+    r"\s+$": "",  # Remove space in last char
 }
 
 EMPTY_TO_NONE = {
