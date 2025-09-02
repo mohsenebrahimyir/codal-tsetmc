@@ -41,8 +41,14 @@ def fill_companies_table():
     for col in ["symbol", "name"]:
         try:
             if col in df.columns and df[col].notna().any():
-                df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
-                df[col] = df[col].str.strip()
+                try:
+                    df[col] = df[col].replace(regex=REPLACE_INCORRECT_CHARS)
+                except Exception as e:
+                    pass
+                try:
+                    df[col] = df[col].str.strip()
+                except Exception as e:
+                    pass
         except Exception as e:
             print(f"Data cleaning warning: {e}")
             print(col)
