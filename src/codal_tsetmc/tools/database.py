@@ -88,12 +88,15 @@ def read_table_by_sql_query(
         return pd.DataFrame()
 
 
-def is_table_exist_in_db(table: str) -> bool:
-    return table in get_tables_name_in_db()
+def is_table_exist_in_db(
+    table: str,
+    engine: Engine = db,
+) -> bool:
+    return table in get_tables_name_in_db(engine)
 
 
 def create_table_if_not_exist(
-    model: Base,
+    model: Base, # type: ignore
     engine: Engine = db,
 ):
     if not is_table_exist_in_db(model.__tablename__):
@@ -121,7 +124,7 @@ def delete_table_in_db(
 
 def delete_all_tables_in_db(engine: Engine = db) -> bool:
     try:
-        for table in get_tables_name_in_db():
+        for table in get_tables_name_in_db(engine):
             delete_table_in_db(table, engine)
         return True
     except Exception as e:
