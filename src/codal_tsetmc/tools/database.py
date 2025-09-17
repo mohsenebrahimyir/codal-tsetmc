@@ -99,7 +99,7 @@ def create_table_if_not_exist(
     model: Base, # type: ignore
     engine: Engine = db,
 ):
-    if not is_table_exist_in_db(model.__tablename__):
+    if not is_table_exist_in_db(model.__tablename__, engine):
         model.__table__.create(engine)
 
 
